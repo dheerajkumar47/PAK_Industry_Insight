@@ -36,8 +36,10 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 
 @router.post("/register", response_model=UserResponse)
 async def register(user: UserCreate):
+    print(f"DEBUG: Register attempt for {user.email}")
     # Check if user already exists
     if db.users.find_one({"email": user.email}):
+        print("DEBUG: Email already registered")
         raise HTTPException(status_code=400, detail="Email already registered")
     
     # Create new user
@@ -49,12 +51,18 @@ async def register(user: UserCreate):
     )
     
     # Insert into DB
-    new_user = db.users.insert_one(user_in_db.dict())
-    created_user = db.users.find_one({"_id": new_user.inserted_id})
-    
-    # Format response
-    created_user["id"] = str(created_user["_id"])
-    return created_user
+    try:
+        print("DEBUG: Attempting to insert user into DB...")
+        new_user = db.users.insert_one(user_in_db.dict())
+        print(f"DEBUG: User inserted with ID: {new_user.inserted_id}")
+        created_user = db.users.find_one({"_id": new_user.inserted_id})
+        
+        # Format response
+        created_user["id"] = str(created_user["_id"])
+        return created_user
+    except Exception as e:
+        print(f"ERROR: Database insertion failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/login", response_model=Token)
 async def login(form_data: UserLogin):
