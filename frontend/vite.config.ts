@@ -58,17 +58,17 @@
       open: true,
       proxy: {
         '/auth': {
-          target: 'http://localhost:8000',
+          target: 'http://127.0.0.1:8000',
           changeOrigin: true,
           secure: false,
         },
         '/companies': {
-          target: 'http://localhost:8000',
+          target: 'http://127.0.0.1:8000',
           changeOrigin: true,
           secure: false,
         },
         '/industries': {
-          target: 'http://localhost:8000',
+          target: 'http://127.0.0.1:8000',
           changeOrigin: true,
           secure: false,
         },
