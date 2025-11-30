@@ -56,5 +56,22 @@
     server: {
       port: 3000,
       open: true,
+      proxy: {
+        '/auth': {
+          target: 'http://localhost:8000',
+          changeOrigin: true,
+          secure: false,
+        },
+        '/companies': {
+          target: 'http://localhost:8000',
+          changeOrigin: true,
+          secure: false,
+        },
+        '/industries': {
+          target: 'http://localhost:8000',
+          changeOrigin: true,
+          secure: false,
+        },
+      },
     },
   });

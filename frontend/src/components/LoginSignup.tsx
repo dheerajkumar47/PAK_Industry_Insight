@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from './Button';
+import { authService } from '../services/auth';
 
 interface LoginSignupProps {
   onLogin: () => void;
@@ -7,7 +8,46 @@ interface LoginSignupProps {
 }
 
 export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
-  const [isLogin, setIsLogin] = React.useState(true);
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      if (isLogin) {
+        await authService.login(email, password);
+        onLogin();
+      } else {
+        if (password !== confirmPassword) {
+          setError("Passwords do not match");
+          setLoading(false);
+          return;
+        }
+        // First register
+        await authService.register(email, password, fullName);
+        // Then login automatically
+        await authService.login(email, password);
+        onLogin();
+      }
+    } catch (err: any) {
+      console.error(err);
+      if (err.response && err.response.data && err.response.data.detail) {
+        setError(err.response.data.detail);
+      } else {
+        setError("An error occurred. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0F172A] to-[#1E293B] flex items-center justify-center p-6">
@@ -27,7 +67,7 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
         <div className="bg-white rounded-2xl p-8 shadow-2xl">
           <div className="flex gap-2 mb-6">
             <button
-              onClick={() => setIsLogin(true)}
+              onClick={() => { setIsLogin(true); setError(''); }}
               className={`flex-1 py-2 rounded-lg transition-colors ${
                 isLogin 
                   ? 'bg-[#10B981] text-white' 
@@ -37,7 +77,7 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
               Login
             </button>
             <button
-              onClick={() => setIsLogin(false)}
+              onClick={() => { setIsLogin(false); setError(''); }}
               className={`flex-1 py-2 rounded-lg transition-colors ${
                 !isLogin 
                   ? 'bg-[#10B981] text-white' 
@@ -48,13 +88,22 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
             </button>
           </div>
           
-          <form className="space-y-4">
+          {error && (
+            <div className="mb-4 p-3 bg-red-100 border border-red-200 text-red-700 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+          
+          <form className="space-y-4" onSubmit={handleSubmit}>
             {!isLogin && (
               <div>
                 <label className="block text-sm text-gray-700 mb-2">Full Name</label>
                 <input
                   type="text"
                   placeholder="Enter your full name"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  required={!isLogin}
                   className="w-full px-4 py-3 border border-[#E5E7EB] rounded-lg focus:outline-none focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20"
                 />
               </div>
@@ -65,6 +114,9 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
               <input
                 type="email"
                 placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
                 className="w-full px-4 py-3 border border-[#E5E7EB] rounded-lg focus:outline-none focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20"
               />
             </div>
@@ -74,6 +126,9 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
               <input
                 type="password"
                 placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
                 className="w-full px-4 py-3 border border-[#E5E7EB] rounded-lg focus:outline-none focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20"
               />
             </div>
@@ -84,6 +139,9 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
                 <input
                   type="password"
                   placeholder="Confirm your password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required={!isLogin}
                   className="w-full px-4 py-3 border border-[#E5E7EB] rounded-lg focus:outline-none focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20"
                 />
               </div>
@@ -103,9 +161,10 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
               variant="primary" 
               size="large" 
               className="w-full"
-              onClick={onLogin}
+              type="submit"
+              disabled={loading}
             >
-              {isLogin ? 'Login' : 'Create Account'}
+              {loading ? 'Processing...' : (isLogin ? 'Login' : 'Create Account')}
             </Button>
           </form>
           

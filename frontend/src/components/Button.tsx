@@ -1,21 +1,19 @@
 import React from 'react';
 
-interface ButtonProps {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   variant?: 'primary' | 'secondary' | 'outline';
   size?: 'small' | 'medium' | 'large';
-  onClick?: () => void;
-  className?: string;
 }
 
 export function Button({ 
   children, 
   variant = 'primary', 
   size = 'medium', 
-  onClick,
-  className = ''
+  className = '',
+  ...props
 }: ButtonProps) {
-  const baseStyles = 'rounded-lg transition-all duration-200 cursor-pointer border-none';
+  const baseStyles = 'rounded-lg transition-all duration-200 cursor-pointer border-none disabled:opacity-50 disabled:cursor-not-allowed';
   
   const variantStyles = {
     primary: 'bg-[#10B981] text-white hover:bg-[#059669]',
@@ -32,7 +30,7 @@ export function Button({
   return (
     <button 
       className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
-      onClick={onClick}
+      {...props}
     >
       {children}
     </button>

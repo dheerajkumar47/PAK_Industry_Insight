@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LandingPage } from './components/LandingPage';
 import { Dashboard } from './components/Dashboard';
 import { IndustryExplorer } from './components/IndustryExplorer';
@@ -7,11 +7,18 @@ import { NewsInsights } from './components/NewsInsights';
 import { LoginSignup } from './components/LoginSignup';
 import { MarketTrends } from './components/MarketTrends';
 import { SavedReports } from './components/SavedReports';
+import { authService } from './services/auth';
 
 type Page = 'landing' | 'login' | 'dashboard' | 'industry-explorer' | 'companies' | 'company-detail' | 'news' | 'market-trends' | 'saved';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('landing');
+
+  useEffect(() => {
+    if (authService.isAuthenticated()) {
+      setCurrentPage('dashboard');
+    }
+  }, []);
 
   const handleNavigation = (page: string) => {
     switch (page) {
