@@ -7,9 +7,11 @@ import { NewsInsights } from './components/NewsInsights';
 import { LoginSignup } from './components/LoginSignup';
 import { MarketTrends } from './components/MarketTrends';
 import { SavedReports } from './components/SavedReports';
+import { Profile } from './components/Profile';
+import { Settings } from './components/Settings';
 import { authService } from './services/auth';
 
-type Page = 'landing' | 'login' | 'dashboard' | 'industry-explorer' | 'companies' | 'company-detail' | 'news' | 'market-trends' | 'saved';
+type Page = 'landing' | 'login' | 'dashboard' | 'industry-explorer' | 'companies' | 'company-detail' | 'news' | 'market-trends' | 'saved' | 'profile' | 'settings';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('landing');
@@ -40,6 +42,12 @@ export default function App() {
       case 'saved':
         setCurrentPage('saved');
         break;
+      case 'profile':
+        setCurrentPage('profile');
+        break;
+      case 'settings':
+        setCurrentPage('settings');
+        break;
       default:
         setCurrentPage('dashboard');
     }
@@ -65,6 +73,11 @@ export default function App() {
     setCurrentPage('company-detail');
   };
 
+  const handleLogout = () => {
+    authService.logout();
+    setCurrentPage('landing');
+  };
+
   return (
     <div>
       {currentPage === 'landing' && (
@@ -74,22 +87,28 @@ export default function App() {
         <LoginSignup onLogin={handleLogin} onBackToHome={handleBackToHome} />
       )}
       {currentPage === 'dashboard' && (
-        <Dashboard onNavigate={handleNavigation} />
+        <Dashboard onNavigate={handleNavigation} onLogout={handleLogout} />
       )}
       {currentPage === 'industry-explorer' && (
-        <IndustryExplorer onNavigate={handleNavigation} onViewCompany={handleViewCompany} />
+        <IndustryExplorer onNavigate={handleNavigation} onViewCompany={handleViewCompany} onLogout={handleLogout} />
       )}
       {currentPage === 'company-detail' && (
-        <CompanyDetail onNavigate={handleNavigation} />
+        <CompanyDetail onNavigate={handleNavigation} onLogout={handleLogout} />
       )}
       {currentPage === 'news' && (
-        <NewsInsights onNavigate={handleNavigation} />
+        <NewsInsights onNavigate={handleNavigation} onLogout={handleLogout} />
       )}
       {currentPage === 'market-trends' && (
-        <MarketTrends onNavigate={handleNavigation} />
+        <MarketTrends onNavigate={handleNavigation} onLogout={handleLogout} />
       )}
       {currentPage === 'saved' && (
-        <SavedReports onNavigate={handleNavigation} />
+        <SavedReports onNavigate={handleNavigation} onLogout={handleLogout} />
+      )}
+      {currentPage === 'profile' && (
+        <Profile onNavigate={handleNavigation} onLogout={handleLogout} />
+      )}
+      {currentPage === 'settings' && (
+        <Settings onNavigate={handleNavigation} onLogout={handleLogout} />
       )}
     </div>
   );

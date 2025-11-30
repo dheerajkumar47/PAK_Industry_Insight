@@ -7,9 +7,10 @@ import { Building2, Users, TrendingUp, Calendar, MapPin, Globe, Sparkles, Extern
 
 interface CompanyDetailProps {
   onNavigate: (page: string) => void;
+  onLogout?: () => void;
 }
 
-export function CompanyDetail({ onNavigate }: CompanyDetailProps) {
+export function CompanyDetail({ onNavigate, onLogout }: CompanyDetailProps) {
   const [activeItem] = React.useState('companies');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = React.useState(false);
 
@@ -49,7 +50,14 @@ export function CompanyDetail({ onNavigate }: CompanyDetailProps) {
 
   return (
     <div className="min-h-screen bg-[#F9FAFB]">
-      <Navbar showSearch={true} showProfile={true} />
+      <Navbar 
+        showSearch={true} 
+        showProfile={true}
+        onMenuClick={() => setIsMobileSidebarOpen(true)}
+        onLogout={onLogout}
+        onProfileClick={() => onNavigate('profile')}
+        onSettingsClick={() => onNavigate('settings')}
+      />
       
       <div className="flex">
         <Sidebar activeItem={activeItem} onNavigate={onNavigate} />

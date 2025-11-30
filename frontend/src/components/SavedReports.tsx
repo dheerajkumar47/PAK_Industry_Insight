@@ -6,9 +6,10 @@ import { BookmarkCheck, FileText, Download, Trash2 } from 'lucide-react';
 
 interface SavedReportsProps {
   onNavigate: (page: string) => void;
+  onLogout?: () => void;
 }
 
-export function SavedReports({ onNavigate }: SavedReportsProps) {
+export function SavedReports({ onNavigate, onLogout }: SavedReportsProps) {
   const [activeItem] = React.useState('saved');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = React.useState(false);
 
@@ -18,6 +19,9 @@ export function SavedReports({ onNavigate }: SavedReportsProps) {
         showSearch={true} 
         showProfile={true}
         onMenuClick={() => setIsMobileSidebarOpen(true)}
+        onLogout={onLogout}
+        onProfileClick={() => onNavigate('profile')}
+        onSettingsClick={() => onNavigate('settings')}
       />
       
       <div className="flex">

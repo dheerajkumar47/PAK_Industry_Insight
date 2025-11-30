@@ -12,9 +12,10 @@ import {
 interface IndustryExplorerProps {
   onNavigate: (page: string) => void;
   onViewCompany?: () => void;
+  onLogout?: () => void;
 }
 
-export function IndustryExplorer({ onNavigate, onViewCompany }: IndustryExplorerProps) {
+export function IndustryExplorer({ onNavigate, onViewCompany, onLogout }: IndustryExplorerProps) {
   const [activeItem] = React.useState('industry-explorer');
   const [viewMode, setViewMode] = React.useState<'grid' | 'list'>('grid');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = React.useState(false);
@@ -110,6 +111,9 @@ export function IndustryExplorer({ onNavigate, onViewCompany }: IndustryExplorer
         showSearch={true} 
         showProfile={true}
         onMenuClick={() => setIsMobileSidebarOpen(true)}
+        onLogout={onLogout}
+        onProfileClick={() => onNavigate('profile')}
+        onSettingsClick={() => onNavigate('settings')}
       />
       
       <div className="flex">

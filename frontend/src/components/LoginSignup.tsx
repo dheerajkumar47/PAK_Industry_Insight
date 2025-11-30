@@ -33,9 +33,14 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
         }
         // First register
         await authService.register(email, password, fullName);
-        // Then login automatically
-        await authService.login(email, password);
-        onLogin();
+        
+        // Redirect to login view with success message
+        setIsLogin(true);
+        setError(""); // Clear any previous errors
+        // You might want to add a success state/message here, but for now we'll just switch to login
+        alert("Account created successfully! Please login.");
+        setPassword(""); // Clear password for security
+        setConfirmPassword("");
       }
     } catch (err: any) {
       console.error(err);

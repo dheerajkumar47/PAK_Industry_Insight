@@ -6,9 +6,10 @@ import { TrendingUp, BarChart2, PieChart, ArrowUpRight } from 'lucide-react';
 
 interface MarketTrendsProps {
   onNavigate: (page: string) => void;
+  onLogout?: () => void;
 }
 
-export function MarketTrends({ onNavigate }: MarketTrendsProps) {
+export function MarketTrends({ onNavigate, onLogout }: MarketTrendsProps) {
   const [activeItem] = React.useState('market-trends');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = React.useState(false);
 
@@ -18,6 +19,9 @@ export function MarketTrends({ onNavigate }: MarketTrendsProps) {
         showSearch={true} 
         showProfile={true}
         onMenuClick={() => setIsMobileSidebarOpen(true)}
+        onLogout={onLogout}
+        onProfileClick={() => onNavigate('profile')}
+        onSettingsClick={() => onNavigate('settings')}
       />
       
       <div className="flex">

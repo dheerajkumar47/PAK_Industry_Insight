@@ -1,14 +1,33 @@
 import React, { useState } from 'react';
-import { Search, Menu, User, X } from 'lucide-react';
+import { Search, Menu, User, X, LogOut, Settings } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 interface NavbarProps {
   showSearch?: boolean;
   showProfile?: boolean;
   onLoginClick?: () => void;
   onMenuClick?: () => void;
+  onLogout?: () => void;
+  onProfileClick?: () => void;
+  onSettingsClick?: () => void;
 }
 
-export function Navbar({ showSearch = true, showProfile = false, onLoginClick, onMenuClick }: NavbarProps) {
+export function Navbar({ 
+  showSearch = true, 
+  showProfile = false, 
+  onLoginClick, 
+  onMenuClick, 
+  onLogout,
+  onProfileClick,
+  onSettingsClick
+}: NavbarProps) {
   const [showMobileSearch, setShowMobileSearch] = useState(false);
 
   return (
@@ -69,9 +88,30 @@ export function Navbar({ showSearch = true, showProfile = false, onLoginClick, o
             )}
             
             {showProfile ? (
-              <button className="p-2 hover:bg-[#E5E7EB] rounded-lg transition-colors">
-                <User className="w-6 h-6 text-[#0F172A]" />
-              </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="p-2 hover:bg-[#E5E7EB] rounded-lg transition-colors outline-none">
+                    <User className="w-6 h-6 text-[#0F172A]" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="cursor-pointer" onClick={onProfileClick}>
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Profile</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer" onClick={onSettingsClick}>
+                    <Settings className="mr-2 h-4 w-4" />
+                    <span>Settings</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600" onClick={onLogout}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <button 
                 onClick={onLoginClick}

@@ -6,9 +6,10 @@ import { TrendingUp, TrendingDown, Users, DollarSign, Sparkles, ArrowUpRight, Bu
 
 interface DashboardProps {
   onNavigate: (page: string) => void;
+  onLogout?: () => void;
 }
 
-export function Dashboard({ onNavigate }: DashboardProps) {
+export function Dashboard({ onNavigate, onLogout }: DashboardProps) {
   const [activeItem, setActiveItem] = React.useState('dashboard');
 
   const industries = [
@@ -45,6 +46,9 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         showSearch={true} 
         showProfile={true} 
         onMenuClick={() => setIsMobileSidebarOpen(true)}
+        onLogout={onLogout}
+        onProfileClick={() => onNavigate('profile')}
+        onSettingsClick={() => onNavigate('settings')}
       />
       
       <div className="flex">

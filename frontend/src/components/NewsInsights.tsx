@@ -6,9 +6,10 @@ import { Filter, Newspaper, Youtube, Globe, TrendingUp } from 'lucide-react';
 
 interface NewsInsightsProps {
   onNavigate: (page: string) => void;
+  onLogout?: () => void;
 }
 
-export function NewsInsights({ onNavigate }: NewsInsightsProps) {
+export function NewsInsights({ onNavigate, onLogout }: NewsInsightsProps) {
   const [activeItem] = React.useState('news');
   const [activeFilter, setActiveFilter] = React.useState('all');
   const [showFilters, setShowFilters] = React.useState(false);
@@ -121,7 +122,13 @@ export function NewsInsights({ onNavigate }: NewsInsightsProps) {
 
   return (
     <div className="min-h-screen bg-[#F9FAFB]">
-      <Navbar showSearch={true} showProfile={true} />
+      <Navbar 
+        showSearch={true} 
+        showProfile={true} 
+        onLogout={onLogout}
+        onProfileClick={() => onNavigate('profile')}
+        onSettingsClick={() => onNavigate('settings')}
+      />
       
       <div className="flex">
         <Sidebar activeItem={activeItem} onNavigate={onNavigate} />
