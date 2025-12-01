@@ -44,3 +44,9 @@ button {
 input {
   font-family: 'Inter', sans-serif;
 }
+
+/* Hide default password reveal/clear icons (especially in Edge) so we can use our own */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}

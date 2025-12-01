@@ -2,8 +2,19 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from datetime import timedelta
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
 from ..database import db
-from ..schemas.user_schema import UserCreate, UserResponse, UserInDB, Token, TokenData, UserLogin
+from ..schemas.user_schema import (
+    UserCreate,
+    UserResponse,
+    UserInDB,
+    Token,
+    TokenData,
+    UserLogin,
+    GoogleLogin,
+    SimplePasswordReset,
+)
 from ..utils.auth import get_password_hash, verify_password, create_access_token
 from ..config import settings
 
@@ -67,7 +78,13 @@ async def register(user: UserCreate):
 @router.post("/login", response_model=Token)
 async def login(form_data: UserLogin):
     user = db.users.find_one({"email": form_data.email})
-    if not user or not verify_password(form_data.password, user["hashed_password"]):
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+
+    if not verify_password(form_data.password, user["hashed_password"]):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
@@ -83,3 +100,64 @@ async def login(form_data: UserLogin):
 @router.get("/me", response_model=UserResponse)
 async def read_users_me(current_user: dict = Depends(get_current_user)):
     return current_user
+
+
+@router.post("/google", response_model=Token)
+async def google_login(payload: GoogleLogin):
+    if not settings.GOOGLE_CLIENT_ID:
+        raise HTTPException(status_code=500, detail="Google login not configured")
+
+    try:
+        idinfo = id_token.verify_oauth2_token(
+            payload.credential,
+            google_requests.Request(),
+            settings.GOOGLE_CLIENT_ID,
+        )
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid Google token")
+
+    email = idinfo.get("email")
+    full_name = idinfo.get("name")
+
+    if not email:
+        raise HTTPException(status_code=400, detail="Google account has no email")
+
+    user = db.users.find_one({"email": email})
+
+    if not user:
+        # Create a user for Google login without a local password
+        user_in_db = UserInDB(
+            email=email,
+            full_name=full_name,
+            hashed_password="",  # marker for Google-only accounts
+        )
+        new_user = db.users.insert_one(user_in_db.dict())
+        user = db.users.find_one({"_id": new_user.inserted_id})
+
+    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": user["email"]}, expires_delta=access_token_expires
+    )
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.post("/reset-password")
+async def reset_password(payload: SimplePasswordReset):
+    """
+    Simple password reset: given an email and new password, update the stored hash.
+    In a production app you would protect this with a reset token emailed to the user.
+    """
+    user = db.users.find_one({"email": payload.email})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Reuse the same password strength rules as registration
+    try:
+        UserCreate.validate_password_strength(payload.new_password)  # type: ignore[arg-type]
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    new_hashed = get_password_hash(payload.new_password)
+    db.users.update_one({"_id": user["_id"]}, {"$set": {"hashed_password": new_hashed}})
+
+    return {"message": "Password has been reset successfully"}

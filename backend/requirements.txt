@@ -9,3 +9,5 @@ python-jose[cryptography]
 python-multipart
 dnspython
 email-validator
+google-auth
+requests

@@ -32,6 +32,24 @@ export const authService = {
     return response.data;
   },
 
+  async googleLogin(credential: string) {
+    const response = await api.post<AuthResponse>('/auth/google', {
+      credential,
+    });
+    if (response.data.access_token) {
+      localStorage.setItem('token', response.data.access_token);
+    }
+    return response.data;
+  },
+
+  async resetPassword(email: string, newPassword: string) {
+    const response = await api.post('/auth/reset-password', {
+      email,
+      new_password: newPassword,
+    });
+    return response.data;
+  },
+
   logout() {
     localStorage.removeItem('token');
   },
