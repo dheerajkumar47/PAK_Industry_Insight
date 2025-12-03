@@ -4,7 +4,13 @@ from .routes.company_routes import router as company_router
 from .routes.industry_routes import router as industry_router
 from .routes.auth_routes import router as auth_router
 
+from .config import settings
+
 app = FastAPI(title="PAK Industry Insight API")
+
+@app.on_event("startup")
+async def startup_event():
+    print(f"Startup Config: GOOGLE_CLIENT_ID={settings.GOOGLE_CLIENT_ID[:10]}... (masked)")
 
 # CORS Middleware
 app.add_middleware(

@@ -11,3 +11,4 @@ dnspython
 email-validator
 google-auth
 requests
+pydantic-settings

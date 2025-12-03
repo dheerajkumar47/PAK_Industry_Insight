@@ -104,17 +104,22 @@ async def read_users_me(current_user: dict = Depends(get_current_user)):
 
 @router.post("/google", response_model=Token)
 async def google_login(payload: GoogleLogin):
+    print(f"DEBUG: Google login request received")
     if not settings.GOOGLE_CLIENT_ID:
+        print("ERROR: GOOGLE_CLIENT_ID is not set in settings")
         raise HTTPException(status_code=500, detail="Google login not configured")
-
+    
+    print(f"DEBUG: Verifying token with Client ID: {settings.GOOGLE_CLIENT_ID}")
     try:
         idinfo = id_token.verify_oauth2_token(
             payload.credential,
             google_requests.Request(),
             settings.GOOGLE_CLIENT_ID,
         )
-    except Exception:
-        raise HTTPException(status_code=400, detail="Invalid Google token")
+        print("DEBUG: Token verified successfully")
+    except Exception as e:
+        print(f"ERROR: Token verification failed: {e}")
+        raise HTTPException(status_code=400, detail=f"Invalid Google token: {str(e)}")
 
     email = idinfo.get("email")
     full_name = idinfo.get("name")

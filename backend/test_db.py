@@ -1,8 +1,9 @@
 from pymongo import MongoClient
+from app.config import settings
 import sys
 
-# Current SRV string (Failing)
-uri = "mongodb://Friend_db:wBn5r9qtVYCkCkCB@ac-xv6ygzk-shard-00-00.hclwfbr.mongodb.net:27017,ac-xv6ygzk-shard-00-01.hclwfbr.mongodb.net:27017,ac-xv6ygzk-shard-00-02.hclwfbr.mongodb.net:27017/PAKIndustryDB?ssl=true&authSource=admin&retryWrites=true&w=majority"
+# Use URI from settings
+uri = settings.MONGODB_URI
 
 print(f"Testing connection to: {uri}")
 
