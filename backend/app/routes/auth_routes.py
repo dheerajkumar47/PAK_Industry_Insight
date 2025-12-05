@@ -162,6 +162,13 @@ async def reset_password(payload: SimplePasswordReset):
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+    # Check if new password is same as old password
+    if verify_password(payload.new_password, user["hashed_password"]):
+        raise HTTPException(
+            status_code=400, 
+            detail="New password cannot be the same as the current password."
+        )
+
     new_hashed = get_password_hash(payload.new_password)
     db.users.update_one({"_id": user["_id"]}, {"$set": {"hashed_password": new_hashed}})
 
