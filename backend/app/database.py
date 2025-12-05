@@ -1,7 +1,9 @@
 from pymongo import MongoClient
 from .config import settings
 
-client = MongoClient(settings.MONGODB_URI)
+import certifi
+
+client = MongoClient(settings.MONGODB_URI, tls=True, tlsCAFile=certifi.where(), tlsAllowInvalidCertificates=True)
 db = client["PAKIndustryDB"]
 
 try:
