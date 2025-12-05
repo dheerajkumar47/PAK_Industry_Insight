@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from './Button';
 import { authService } from '../services/auth';
+import { usePasswordValidation } from '../hooks/usePasswordValidation';
+import { PasswordRequirements } from './PasswordRequirements';
 
 declare global {
   interface Window {
@@ -20,8 +22,7 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
   const [fullName, setFullName] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-  const [passwordStrength, setPasswordStrength] = useState<'weak' | 'medium' | 'strong' | ''>('');
-  const [passwordHints, setPasswordHints] = useState<string[]>([]);
+  const passwordValidation = usePasswordValidation(password);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -79,7 +80,7 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
   const handleGoogleClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (!window.google) {
       setError('Google sign-in library is not loaded. Please refresh the page.');
       return;
@@ -104,7 +105,7 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
       tempDiv.style.left = '-9999px';
       tempDiv.style.top = '-9999px';
       document.body.appendChild(tempDiv);
-      
+
       try {
         window.google.accounts.id.renderButton(tempDiv, {
           theme: 'outline',
@@ -113,7 +114,7 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
           text: 'signin_with',
           shape: 'rectangular',
         });
-        
+
         // Wait for the button to be rendered, then click it
         const tryClick = (attempts = 0) => {
           const button = tempDiv.querySelector('div[role="button"]') as HTMLElement;
@@ -137,7 +138,7 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
             }
           }
         };
-        
+
         tryClick();
       } catch (renderErr) {
         console.error('Error rendering Google button:', renderErr);
@@ -182,8 +183,6 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
           setIsForgotPassword(false);
           setPassword('');
           setConfirmPassword('');
-          setPasswordStrength('');
-          setPasswordHints([]);
         } catch (err: any) {
           if (err.response?.status === 404) {
             setError("We don't recognize you.");
@@ -204,8 +203,7 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
         onLogin();
       } else {
         // Frontend password validation for signup
-        const hints = getPasswordValidationHints(password);
-        if (hints.length > 0) {
+        if (!passwordValidation.isValid) {
           setError("Please fix the password requirements before continuing.");
           setLoading(false);
           return;
@@ -218,7 +216,7 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
         }
         // First register
         await authService.register(email, password, fullName);
-        
+
         // Redirect to login view with success message
         setIsLogin(true);
         setError(""); // Clear any previous errors
@@ -226,8 +224,6 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
         alert("Account created successfully! Please login.");
         setPassword(""); // Clear password for security
         setConfirmPassword("");
-        setPasswordStrength('');
-        setPasswordHints([]);
       }
     } catch (err: any) {
       console.error(err);
@@ -244,38 +240,8 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
     }
   };
 
-  const getPasswordValidationHints = (value: string): string[] => {
-    const issues: string[] = [];
-    if (value.length < 8) {
-      issues.push("At least 8 characters");
-    }
-    if (!/[A-Z]/.test(value)) {
-      issues.push("At least 1 uppercase letter");
-    }
-    if (!/\d/.test(value)) {
-      issues.push("At least 1 number");
-    }
-    if (!/[^A-Za-z0-9]/.test(value)) {
-      issues.push("At least 1 special character");
-    }
-    return issues;
-  };
-
   const handlePasswordChange = (value: string) => {
     setPassword(value);
-
-    const hints = getPasswordValidationHints(value);
-    setPasswordHints(hints);
-
-    if (!value) {
-      setPasswordStrength('');
-    } else if (hints.length >= 3) {
-      setPasswordStrength('weak');
-    } else if (hints.length === 1 || hints.length === 2) {
-      setPasswordStrength('medium');
-    } else {
-      setPasswordStrength('strong');
-    }
   };
 
   return (
@@ -291,7 +257,7 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
           <h1 className="text-3xl text-white mb-2">PAK Industry Insight</h1>
           <p className="text-gray-300">Access real-time industry data and insights</p>
         </div>
-        
+
         {/* Login/Signup Card */}
         <div className="bg-white rounded-2xl p-8 shadow-2xl">
           <div className="flex gap-2 mb-6">
@@ -302,11 +268,10 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
                 setError('');
                 setShowSignupSuggestion(false);
               }}
-              className={`flex-1 py-2 rounded-lg transition-colors ${
-                isLogin 
-                  ? 'bg-[#10B981] text-white' 
-                  : 'bg-gray-100 text-[#0F172A]'
-              }`}
+              className={`flex-1 py-2 rounded-lg transition-colors ${isLogin
+                ? 'bg-[#10B981] text-white'
+                : 'bg-gray-100 text-[#0F172A]'
+                }`}
             >
               Login
             </button>
@@ -317,22 +282,21 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
                 setError('');
                 setShowSignupSuggestion(false);
               }}
-              className={`flex-1 py-2 rounded-lg transition-colors ${
-                !isLogin 
-                  ? 'bg-[#10B981] text-white' 
-                  : 'bg-gray-100 text-[#0F172A]'
-              }`}
+              className={`flex-1 py-2 rounded-lg transition-colors ${!isLogin
+                ? 'bg-[#10B981] text-white'
+                : 'bg-gray-100 text-[#0F172A]'
+                }`}
             >
               Sign Up
             </button>
           </div>
-          
+
           {error && (
             <div className="mb-4 p-3 bg-red-100 border border-red-200 text-red-700 rounded-lg text-sm">
               {error}
             </div>
           )}
-          
+
           <form className="space-y-4" onSubmit={handleSubmit}>
             {!isLogin && !isForgotPassword && (
               <div>
@@ -347,7 +311,7 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
                 />
               </div>
             )}
-            
+
             <div>
               <label className="block text-sm text-gray-700 mb-2">
                 {isForgotPassword ? 'Account Email' : 'Email Address'}
@@ -361,20 +325,20 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
                 className="w-full px-4 py-3 border border-[#E5E7EB] rounded-lg focus:outline-none focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20"
               />
             </div>
-            
+
             <div>
               <label className="block text-sm text-gray-700 mb-2">
                 {isForgotPassword ? 'New Password' : 'Password'}
               </label>
               <div className="relative">
-              <input
+                <input
                   type={showPassword ? 'text' : 'password'}
-                placeholder="Enter your password"
-                value={password}
+                  placeholder="Enter your password"
+                  value={password}
                   onChange={(e) => handlePasswordChange(e.target.value)}
                   onFocus={() => setIsPasswordFocused(true)}
                   onBlur={() => setIsPasswordFocused(false)}
-                required
+                  required
                   className="w-full px-4 py-3 pr-10 border border-[#E5E7EB] rounded-lg focus:outline-none focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20"
                 />
                 <button
@@ -425,77 +389,22 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
                 </button>
               </div>
 
-              {/* Password strength indicator & rules - only shown on signup while password field is focused */}
-              {!isLogin && !isForgotPassword && isPasswordFocused && (
-                <div className="mt-2 space-y-3">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-gray-600">Password strength</span>
-                    {passwordStrength && (
-                      <span
-                        className={
-                          passwordStrength === 'strong'
-                            ? 'text-green-600'
-                            : passwordStrength === 'medium'
-                            ? 'text-yellow-600'
-                            : 'text-red-600'
-                        }
-                      >
-                        {passwordStrength.charAt(0).toUpperCase() + passwordStrength.slice(1)}
-                      </span>
-                    )}
-                  </div>
-                  <div className="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden mt-1">
-                    <div
-                      className={
-                        'h-full transition-all duration-200 ' +
-                        (passwordStrength === 'strong'
-                          ? 'bg-green-500 w-full'
-                          : passwordStrength === 'medium'
-                          ? 'bg-yellow-400 w-2/3'
-                          : passwordStrength === 'weak'
-                          ? 'bg-red-500 w-1/3'
-                          : 'bg-transparent w-0')
-                      }
-                    />
-                  </div>
-
-                  <ul className="mt-4 space-y-0.5 text-xs">
-                    {['At least 8 characters', 'At least 1 uppercase letter', 'At least 1 number', 'At least 1 special character'].map(
-                      (rule) => {
-                        const satisfied = password.length > 0 && !passwordHints.includes(rule);
-                        return (
-                          <li
-                            key={rule}
-                            className="flex items-center gap-1 text-gray-600"
-                          >
-                            <span
-                              className={
-                                'inline-flex items-center justify-center w-4 h-4 rounded-full mr-1 text-[10px] ' +
-                                (satisfied ? 'bg-green-500 text-white' : 'bg-red-500 text-white')
-                              }
-                            >
-                              {satisfied ? '✓' : '✕'}
-                            </span>
-                            <span>{rule}</span>
-                          </li>
-                        );
-                      }
-                    )}
-                  </ul>
-                </div>
+              {/* Password strength indicator & rules - shown on signup and forgot password while password field is focused */}
+              {(!isLogin || isForgotPassword) && isPasswordFocused && (
+                <PasswordRequirements validationResult={passwordValidation} />
               )}
             </div>
-            
-            {!isLogin && !isForgotPassword && (
+
+            {(!isLogin || isForgotPassword) && (
               <div>
                 <label className="block text-sm text-gray-700 mb-2">Confirm Password</label>
                 <div className="relative">
-                <input
+                  <input
                     type={showConfirmPassword ? 'text' : 'password'}
-                  placeholder="Confirm your password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required={!isLogin}
+                    placeholder="Confirm your password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required={!isLogin}
                     className="w-full px-4 py-3 pr-10 border border-[#E5E7EB] rounded-lg focus:outline-none focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20"
                   />
                   <button
@@ -547,7 +456,7 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
                 </div>
               </div>
             )}
-            
+
             {isLogin && !isForgotPassword && (
               <div className="flex items-center justify-between text-sm">
                 <label className="flex items-center gap-2">
@@ -577,8 +486,6 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
                     setError('');
                     setPassword('');
                     setConfirmPassword('');
-                    setPasswordStrength('');
-                    setPasswordHints([]);
                   }}
                   className="text-[#10B981] hover:underline"
                 >
@@ -586,10 +493,10 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
                 </button>
               </div>
             )}
-            
-            <Button 
-              variant="primary" 
-              size="large" 
+
+            <Button
+              variant="primary"
+              size="large"
               className="w-full"
               type="submit"
               disabled={loading}
@@ -597,10 +504,10 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
               {loading
                 ? 'Processing...'
                 : isForgotPassword
-                ? 'Reset Password'
-                : isLogin
-                ? 'Login'
-                : 'Create Account'}
+                  ? 'Reset Password'
+                  : isLogin
+                    ? 'Login'
+                    : 'Create Account'}
             </Button>
 
             {showSignupSuggestion && (
@@ -642,9 +549,9 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
               <span>Continue with Google</span>
             </button>
           </div>
-          
+
           <div className="mt-6 text-center">
-            <button 
+            <button
               onClick={onBackToHome}
               className="text-sm text-gray-600 hover:text-[#10B981] transition-colors"
             >
@@ -652,7 +559,7 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
             </button>
           </div>
         </div>
-        
+
         <p className="text-center text-gray-400 text-sm mt-6">
           By continuing, you agree to our Terms of Service and Privacy Policy
         </p>
