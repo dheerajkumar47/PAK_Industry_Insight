@@ -14,6 +14,7 @@ import { authService } from './services/auth';
 type Page = 'landing' | 'login' | 'dashboard' | 'industry-explorer' | 'companies' | 'company-detail' | 'news' | 'market-trends' | 'saved' | 'profile' | 'settings';
 
 export default function App() {
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<Page>('landing');
 
   useEffect(() => {
@@ -69,7 +70,8 @@ export default function App() {
     setCurrentPage('landing');
   };
 
-  const handleViewCompany = () => {
+  const handleViewCompany = (id?: string) => {
+    if (id) setSelectedCompanyId(id);
     setCurrentPage('company-detail');
   };
 
@@ -87,13 +89,18 @@ export default function App() {
         <LoginSignup onLogin={handleLogin} onBackToHome={handleBackToHome} />
       )}
       {currentPage === 'dashboard' && (
-        <Dashboard onNavigate={handleNavigation} onLogout={handleLogout} />
+        <Dashboard onNavigate={handleNavigation} onViewCompany={handleViewCompany} onLogout={handleLogout} />
       )}
       {currentPage === 'industry-explorer' && (
         <IndustryExplorer onNavigate={handleNavigation} onViewCompany={handleViewCompany} onLogout={handleLogout} />
       )}
       {currentPage === 'company-detail' && (
-        <CompanyDetail onNavigate={handleNavigation} onLogout={handleLogout} />
+        <CompanyDetail 
+          companyId={selectedCompanyId} 
+          onNavigate={handleNavigation} 
+          onViewCompany={handleViewCompany}
+          onLogout={handleLogout} 
+        />
       )}
       {currentPage === 'news' && (
         <NewsInsights onNavigate={handleNavigation} onLogout={handleLogout} />

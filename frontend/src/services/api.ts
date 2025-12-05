@@ -23,4 +23,27 @@ api.interceptors.request.use(
   }
 );
 
+export const companyService = {
+  getAll: async (industry?: string) => {
+    const url = industry ? `/companies?industry=${encodeURIComponent(industry)}` : '/companies';
+    const response = await api.get(url);
+    return response.data;
+  },
+  getById: async (id: string) => {
+    const response = await api.get(`/companies/${id}`);
+    return response.data;
+  },
+  search: async (query: string) => {
+    const response = await api.get(`/companies/search?q=${query}`);
+    return response.data;
+  }
+};
+
+export const industryService = {
+  getAll: async () => {
+    const response = await api.get('/industries');
+    return response.data;
+  }
+};
+
 export default api;

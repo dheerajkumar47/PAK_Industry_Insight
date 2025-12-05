@@ -6,10 +6,11 @@ import { TrendingUp, TrendingDown, Users, DollarSign, Sparkles, ArrowUpRight, Bu
 
 interface DashboardProps {
   onNavigate: (page: string) => void;
+  onViewCompany?: (id: string) => void;
   onLogout?: () => void;
 }
 
-export function Dashboard({ onNavigate, onLogout }: DashboardProps) {
+export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProps) {
   const [activeItem, setActiveItem] = React.useState('dashboard');
 
   const industries = [
@@ -49,6 +50,7 @@ export function Dashboard({ onNavigate, onLogout }: DashboardProps) {
         onLogout={onLogout}
         onProfileClick={() => onNavigate('profile')}
         onSettingsClick={() => onNavigate('settings')}
+        onViewCompany={onViewCompany}
       />
       
       <div className="flex">
@@ -155,7 +157,7 @@ export function Dashboard({ onNavigate, onLogout }: DashboardProps) {
                   <div className="flex items-center justify-between mb-4 sm:mb-6">
                     <h2 className="text-lg sm:text-xl text-[#0F172A]">Trending Companies</h2>
                     <button 
-                      onClick={() => handleNavigation('companies')}
+                      onClick={() => handleNavigation('industry-explorer')}
                       className="text-[#10B981] text-xs sm:text-sm hover:underline"
                     >
                       View All

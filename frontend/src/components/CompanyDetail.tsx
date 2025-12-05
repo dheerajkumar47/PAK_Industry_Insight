@@ -1,48 +1,88 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navbar } from './Navbar';
 import { Sidebar } from './Sidebar';
 import { Card } from './Card';
 import { DataWidget } from './DataWidget';
 import { Building2, Users, TrendingUp, Calendar, MapPin, Globe, Sparkles, ExternalLink, Youtube, Newspaper } from 'lucide-react';
+import { companyService } from '../services/api';
 
 interface CompanyDetailProps {
   onNavigate: (page: string) => void;
   onLogout?: () => void;
+  onViewCompany?: (id: string) => void;
+  companyId?: string | null;
 }
 
-export function CompanyDetail({ onNavigate, onLogout }: CompanyDetailProps) {
+export function CompanyDetail({ onNavigate, onLogout, onViewCompany, companyId }: CompanyDetailProps) {
   const [activeItem] = React.useState('companies');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = React.useState(false);
+  const [company, setCompany] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCompany = async () => {
+      if (!companyId) {
+        setLoading(false);
+        return;
+      }
+      try {
+        const data = await companyService.getById(companyId);
+        setCompany(data);
+      } catch (error) {
+        console.error("Failed to fetch company:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCompany();
+  }, [companyId]);
+
+  if (loading) return <div className="p-8 text-center">Loading...</div>;
+  
+  if (!companyId) {
+    return (
+      <div className="min-h-screen bg-[#F9FAFB]">
+        <Navbar 
+          showSearch={true} 
+          showProfile={true}
+          onMenuClick={() => setIsMobileSidebarOpen(true)}
+          onLogout={onLogout}
+          onProfileClick={() => onNavigate('profile')}
+          onSettingsClick={() => onNavigate('settings')}
+          onViewCompany={onViewCompany}
+        />
+        <div className="flex">
+          <Sidebar activeItem={activeItem} onNavigate={onNavigate} />
+          <main className="flex-1 p-8 text-center">
+            <h2 className="text-xl text-gray-600">Please select a company from the Industry Explorer.</h2>
+            <button 
+              onClick={() => onNavigate('industry-explorer')}
+              className="mt-4 px-4 py-2 bg-[#10B981] text-white rounded-lg hover:bg-[#059669]"
+            >
+              Go to Explorer
+            </button>
+          </main>
+        </div>
+      </div>
+    );
+  }
+
+  if (!company) return <div className="p-8 text-center">Company not found</div>;
 
   const newsItems = [
     {
-      title: 'Systems Limited Reports Record Q4 Revenue',
-      summary: 'The company announced a 32% increase in quarterly revenue, driven by expansion in international markets.',
+      title: `${company.name} Reports Record Growth`,
+      summary: 'The company announced significant expansion in key markets.',
       source: 'Business Recorder',
       type: 'news',
       date: '2 days ago',
       sentiment: 'positive'
     },
-    {
-      title: 'New Office Opening in Dubai',
-      summary: 'Systems Limited expands Middle East operations with new regional headquarters.',
-      source: 'Dawn',
-      type: 'news',
-      date: '1 week ago',
-      sentiment: 'positive'
-    },
-    {
-      title: 'CEO Interview: Future of Pakistan\'s IT Industry',
-      summary: 'Discussion on digital transformation and export growth strategies.',
-      source: 'Tech Radar Pakistan',
-      type: 'youtube',
-      date: '2 weeks ago',
-      sentiment: 'neutral'
-    }
+    // ... more dummy news
   ];
 
   const sources = [
-    { type: 'website', label: 'Official Website', url: 'systemsltd.com' },
+    { type: 'website', label: 'Official Website', url: company.website },
     { type: 'news', label: 'Business Recorder', url: 'brecorder.com' },
     { type: 'news', label: 'Dawn Business', url: 'dawn.com' },
     { type: 'youtube', label: 'Tech Talks Pakistan', url: 'youtube.com' }
@@ -57,6 +97,7 @@ export function CompanyDetail({ onNavigate, onLogout }: CompanyDetailProps) {
         onLogout={onLogout}
         onProfileClick={() => onNavigate('profile')}
         onSettingsClick={() => onNavigate('settings')}
+        onViewCompany={onViewCompany}
       />
       
       <div className="flex">
@@ -68,29 +109,29 @@ export function CompanyDetail({ onNavigate, onLogout }: CompanyDetailProps) {
             <Card className="mb-8">
               <div className="flex items-start gap-6">
                 <div className="w-20 h-20 bg-[#0F172A] rounded-xl flex items-center justify-center flex-shrink-0">
-                  <span className="text-white text-2xl">S</span>
+                  <span className="text-white text-2xl">{company.name.charAt(0)}</span>
                 </div>
                 
                 <div className="flex-1">
-                  <h1 className="text-3xl text-[#0F172A] mb-2">Systems Limited</h1>
+                  <h1 className="text-3xl text-[#0F172A] mb-2">{company.name}</h1>
                   <div className="flex flex-wrap items-center gap-4 text-[#1E293B] mb-4">
                     <div className="flex items-center gap-2">
                       <Building2 className="w-4 h-4" />
-                      <span>Information Technology</span>
+                      <span>{company.industry}</span>
                     </div>
                     <span className="text-[#E5E7EB]">•</span>
                     <div className="flex items-center gap-2">
                       <MapPin className="w-4 h-4" />
-                      <span>Lahore, Pakistan</span>
+                      <span>{company.location}</span>
                     </div>
                     <span className="text-[#E5E7EB]">•</span>
                     <div className="flex items-center gap-2">
                       <Globe className="w-4 h-4" />
-                      <a href="#" className="text-[#10B981] hover:underline">systemsltd.com</a>
+                      <a href={`https://${company.website}`} target="_blank" rel="noreferrer" className="text-[#10B981] hover:underline">{company.website}</a>
                     </div>
                   </div>
                   <p className="text-[#1E293B]">
-                    Leading provider of IT services, business process outsourcing, and technology solutions serving clients across North America, Europe, Middle East, and Asia Pacific.
+                    {company.description}
                   </p>
                 </div>
               </div>
@@ -101,25 +142,25 @@ export function CompanyDetail({ onNavigate, onLogout }: CompanyDetailProps) {
               <DataWidget
                 icon={<Users className="w-6 h-6" />}
                 label="Employees"
-                value="4,500+"
+                value={company.employees_count?.toString() || "N/A"}
                 trend="up"
               />
               <DataWidget
                 icon={<TrendingUp className="w-6 h-6" />}
-                label="Growth Rate"
-                value="+32%"
+                label="Revenue"
+                value={company.revenue || "N/A"}
                 trend="up"
               />
               <DataWidget
                 icon={<Calendar className="w-6 h-6" />}
                 label="Founded"
-                value="1977"
+                value={company.founded_year?.toString() || "N/A"}
                 trend="neutral"
               />
               <DataWidget
                 icon={<Building2 className="w-6 h-6" />}
-                label="Credibility Score"
-                value="9.2/10"
+                label="Market Share"
+                value={company.market_share || "N/A"}
                 trend="up"
               />
             </div>

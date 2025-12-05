@@ -56,6 +56,7 @@
     server: {
       port: 3000,
       open: true,
+      host: true, // Expose to LAN
       proxy: {
         '/auth': {
           target: 'http://127.0.0.1:8000',

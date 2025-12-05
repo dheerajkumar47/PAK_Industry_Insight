@@ -10,4 +10,4 @@ class CompanySchema(BaseModel):
     growth_tags: List[str] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
