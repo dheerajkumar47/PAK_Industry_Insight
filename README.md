@@ -1,81 +1,56 @@
-# PAK Industry Insight 🏭
+# PAK Industry Insight 🚀
 
-A central platform to explore real-time and historical data about industries and companies across Pakistan. This project aims to aggregate data from various sources (News, YouTube, Reports) to provide actionable insights.
+An investor-grade market intelligence platform designed to track Pakistan's corporate sector, analyze trends, and aggregate real-time news.
 
-## 🚀 Project Status
+## 🌟 Key Features
 
-We are currently in **Phase 3 (Frontend Setup & Integration)**.
+### 1. **Industry Explorer** (Investor Grade)
+- View companies by sector (e.g., Cement, Banking, Technology).
+- Drill down into specific company profiles.
+- **Data Points**: CEO, Stock Symbol, Net Profit, Market Cap, and more.
 
-### ✅ Completed Phases
-**Phase 1: Planning & Setup**
-- [x] Defined core features & tech stack (React, FastAPI, MongoDB).
-- [x] Set up GitHub repository & folder structure.
+### 2. **Real-Time News Engine**
+- **Live Aggregation**: Automatically scrapes and displays news from *TechJuice* and *ProPakistani*.
+- **Smart Filtering**: Categorizes news by industry relevance.
 
-**Phase 2: Backend Foundation**
-- [x] **API**: Initialized FastAPI with JWT Authentication.
-- [x] **Database**: Connected MongoDB Atlas.
-- [x] **Models**: Created User, Company, and Industry models.
-- [x] **Data Scripting**: Implemented `seed_data.py` to populate the database with initial industry/company data.
-- [x] **Security**: Implemented password hashing (bcrypt) and strength validation.
+### 3. **Interactive Dashboard**
+- **Search**: Global search for any company or sector.
+- **Market Trends**: Visual insights into top performing sectors.
 
-**Phase 3: Frontend Setup**
-- [x] **UI/UX**: Built Landing Page, Dashboard, Industry Explorer, and Company Details.
-- [x] **Integration**: Connected Frontend to Backend APIs (Auth, Companies, Industries).
-- [x] **Search**: Implemented real-time company search in the Navbar.
-- [x] **Dynamic Data**: Replaced hardcoded content with data fetched from MongoDB.
-
-### 🚧 In Progress / Next Steps
-- [ ] **Phase 4: Data Aggregation**: Integrate NewsAPI and YouTube API for real-time insights.
-- [ ] **Forgot Password**: Implement secure password reset flow.
-- [ ] **Deployment**: Prepare for production deployment.
-
----
+### 4. **User Profile & Settings** (New!)
+- **Premium UI**: Clean, modern profile design.
+- **Google Integration**: Seamlessly syncs Google Profile Picture and Name.
+- **Smart Avatars**: Auto-generates initial avatars for email users.
+- **Notifications**: Manage Email and Push notification preferences.
+- **Security**: Secure session handling and password protection.
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React, Vite, TailwindCSS, Lucide Icons, Axios.
-- **Backend**: FastAPI, Python, PyMongo, Pydantic, Passlib (bcrypt), Python-JOSE (JWT).
-- **Database**: MongoDB Atlas.
+- **Frontend**: React (Vite), Tailwind CSS, Lucide Icons.
+- **Backend**: FastAPI (Python), MongoDB Atlas.
+- **Authentication**: JWT & OAuth2 (Google).
+- **Deployment**: Ready for standard web servers.
 
----
+## 🚀 Quick Start
 
-## ⚙️ Setup Instructions
-
-### 1. Clone the Repository
-```bash
-git clone <your-repo-url>
-cd PAK_Industry_Insight
-```
-
-### 2. Backend Setup
+### Backend
 ```bash
 cd backend
-# Create virtual environment
-python -m venv venv
-# Activate (Windows)
-venv\Scripts\activate
-# Install dependencies
-pip install -r requirements.txt
-# Run Seed Script (Optional - to populate DB)
-python seed_data.py
-# Run Server
+source venv/bin/activate  # or venv\Scripts\activate on Windows
 uvicorn app.main:app --reload
 ```
-*Server runs at `http://localhost:8000`*
 
-### 3. Frontend Setup
+### Frontend
 ```bash
 cd frontend
-# Install dependencies
 npm install
-# Run Development Server
 npm run dev
 ```
-*App runs at `http://localhost:3000`*
+
+## 📅 Recent Updates (Phase 5 Complete)
+- **Profile Redesign**: Complete overhaul of the user profile for a "Market Standard" look.
+- **Auth Polish**: Fixed login loops and synced Google user data.
+- **Settings**: Fully functional notification toggles.
 
 ---
-
-## 📝 Latest Updates
-- **Sector View**: Industry Explorer now groups companies by sector.
-- **Search**: Global search bar added to navigation.
-- **Security**: Enhanced password validation rules.
+*Built with ❤️ by the PAK Insight Team*
