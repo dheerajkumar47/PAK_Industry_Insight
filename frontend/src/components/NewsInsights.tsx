@@ -13,16 +13,25 @@ interface NewsInsightsProps {
 export function NewsInsights({ onNavigate, onLogout }: NewsInsightsProps) {
   const [activeItem] = React.useState('news');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = React.useState(false);
-  const [articles, setArticles] = useState<any[]>([]);
+
+  // State for articles
+  const [articles, setArticles] = useState<any[]>([]); // Store all fetched articles (for random mode)
+  const [visibleArticles, setVisibleArticles] = useState<any[]>([]); // Articles currently shown
   const [stats, setStats] = useState<any>(null);
+
+  // UI State
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+
+  // Pagination & Filters
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [selectedSource, setSelectedSource] = useState('All Sources');
   const [sortMode, setSortMode] = useState('random'); // 'random' or 'latest'
+
   const LIMIT = 10;
+  const RANDOM_FETCH_LIMIT = 100; // Fetch 100 items for client-side random shuffle
 
   const fetchStats = async () => {
     try {
@@ -33,30 +42,76 @@ export function NewsInsights({ onNavigate, onLogout }: NewsInsightsProps) {
     }
   };
 
-  const fetchNews = async (pageNum: number, isRefresh: boolean = false, mode: string = sortMode) => {
-    if (pageNum === 0) setLoading(true);
+  // Fisher-Yates Shuffle
+  const shuffleArray = (array: any[]) => {
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
+  };
+
+  const loadNews = async (isRefresh: boolean = false, mode: string = sortMode) => {
+    if (isRefresh) setLoading(true);
+
     try {
-      const skip = pageNum * LIMIT;
-      const data = await newsService.getAll(skip, LIMIT, mode);
+      if (mode === 'random') {
+        // --- RANDOM MODE: Client-side Pagination ---
+        if (isRefresh) {
+          // 1. Fetch a large batch of latest news
+          const data = await newsService.getAll(0, RANDOM_FETCH_LIMIT, 'latest');
 
-      if (Array.isArray(data)) {
-        if (data.length < LIMIT) setHasMore(false);
+          if (Array.isArray(data)) {
+            // 2. Shuffle locally
+            const shuffled = shuffleArray(data);
+            setArticles(shuffled);
 
-        if (isRefresh || pageNum === 0) {
-          setArticles(data);
+            // 3. Show first page
+            setVisibleArticles(shuffled.slice(0, LIMIT));
+            setPage(1); // Next page index
+            setHasMore(shuffled.length > LIMIT);
+          }
         } else {
-          // Filter out duplicates if any (especially for random mode)
-          setArticles(prev => {
-            const newArticles = data.filter(d => !prev.some(p => p.link === d.link));
-            return [...prev, ...newArticles];
-          });
+          // Load next slice from local 'articles'
+          const nextSliceEnd = (page + 1) * LIMIT;
+          const nextSlice = articles.slice(0, nextSliceEnd);
+
+          setVisibleArticles(nextSlice);
+          setPage(prev => prev + 1);
+
+          if (nextSlice.length >= articles.length) {
+            setHasMore(false);
+          }
         }
       } else {
-        console.error("Received invalid data format for news:", data);
-        if (isRefresh) setArticles([]);
+        // --- LATEST MODE: Server-side Pagination ---
+        const serverPage = isRefresh ? 0 : page;
+        const skip = serverPage * LIMIT;
+        const data = await newsService.getAll(skip, LIMIT, 'latest');
+
+        if (Array.isArray(data)) {
+          if (isRefresh) {
+            setArticles(data); // Not strictly needed for Latest, but keeps state consistent
+            setVisibleArticles(data);
+            setPage(1);
+          } else {
+            setVisibleArticles(prev => {
+              // Filter duplicates just in case
+              const existingIds = new Set(prev.map(p => p.link));
+              const newUnique = data.filter(d => !existingIds.has(d.link));
+              return [...prev, ...newUnique];
+            });
+            setPage(prev => prev + 1);
+          }
+
+          if (data.length < LIMIT) {
+            setHasMore(false);
+          }
+        }
       }
     } catch (error) {
-      console.error("Failed to fetch news:", error);
+      console.error("Failed to load news:", error);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -65,41 +120,39 @@ export function NewsInsights({ onNavigate, onLogout }: NewsInsightsProps) {
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    setPage(0);
-    setHasMore(true);
-    setSortMode('random'); // Reset to random on refresh
+    setSortMode('random'); // Reset to random
     setSelectedSource('All Sources'); // Reset filter
+    setHasMore(true);
+
     try {
       await newsService.fetchLatest(); // Trigger backend fetch
-      await fetchStats(); // Refresh stats
-      await fetchNews(0, true, 'random');
+      await fetchStats();
+      await loadNews(true, 'random');
     } catch (error) {
-      console.error("Failed to refresh news:", error);
+      console.error("Failed to refresh:", error);
       setRefreshing(false);
     }
   };
 
   const handleLoadMore = () => {
-    const nextPage = page + 1;
-    setPage(nextPage);
-    fetchNews(nextPage, false, sortMode);
+    loadNews(false, sortMode);
   };
 
   const handleSortChange = (mode: string) => {
     setSortMode(mode);
-    setPage(0);
     setHasMore(true);
-    fetchNews(0, true, mode);
+    loadNews(true, mode);
   };
 
   useEffect(() => {
     fetchStats();
-    fetchNews(0, false, 'random'); // Initial load is random
+    loadNews(true, 'random'); // Initial load
   }, []);
 
+  // Filter visible articles by source
   const filteredArticles = selectedSource === 'All Sources'
-    ? articles
-    : articles.filter(article => article.source.toLowerCase().includes(selectedSource.toLowerCase()));
+    ? visibleArticles
+    : visibleArticles.filter(article => article.source.toLowerCase().includes(selectedSource.toLowerCase()));
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] pb-20 lg:pb-0">
@@ -214,7 +267,7 @@ export function NewsInsights({ onNavigate, onLogout }: NewsInsightsProps) {
 
               {/* News List */}
               <div className="flex-1">
-                {loading && page === 0 ? (
+                {loading && page === 1 ? (
                   <div className="text-center py-12">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#10B981] mx-auto mb-4"></div>
                     <p className="text-gray-500">Loading news...</p>
