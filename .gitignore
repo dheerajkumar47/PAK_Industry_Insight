@@ -36,3 +36,7 @@ Thumbs.db
 dist/
 build/
 *.egg-info/
+
+#report
+generate_report.py
+project_status_report.docx

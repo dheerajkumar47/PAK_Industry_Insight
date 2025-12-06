@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navbar } from './Navbar';
 import { Sidebar } from './Sidebar';
 import { Card } from './Card';
-import { Filter, Newspaper, Youtube, Globe, TrendingUp } from 'lucide-react';
+import { Newspaper, ExternalLink, RefreshCw, Calendar, TrendingUp, Filter } from 'lucide-react';
+import { newsService } from '../services/api';
 
 interface NewsInsightsProps {
   onNavigate: (page: string) => void;
@@ -11,133 +12,123 @@ interface NewsInsightsProps {
 
 export function NewsInsights({ onNavigate, onLogout }: NewsInsightsProps) {
   const [activeItem] = React.useState('news');
-  const [activeFilter, setActiveFilter] = React.useState('all');
-  const [showFilters, setShowFilters] = React.useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = React.useState(false);
+  const [articles, setArticles] = useState<any[]>([]);
+  const [stats, setStats] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [selectedSource, setSelectedSource] = useState('All Sources');
+  const [sortMode, setSortMode] = useState('random'); // 'random' or 'latest'
+  const LIMIT = 10;
 
-  const newsData = [
-    {
-      title: 'Pakistan\'s IT Exports Reach $3.2 Billion Mark',
-      summary: 'The country\'s IT and IT-enabled services exports have shown remarkable growth, reaching a record $3.2 billion in FY2024, representing a 24% increase from the previous year.',
-      industry: 'Technology',
-      company: 'Industry-wide',
-      source: 'Dawn Business',
-      type: 'news',
-      date: '2 hours ago',
-      sentiment: 'positive',
-      tags: ['IT', 'Exports', 'Growth']
-    },
-    {
-      title: 'Textile Sector Shows Recovery with 15% Export Growth',
-      summary: 'Pakistan\'s textile and apparel sector has demonstrated strong recovery signals with exports growing by 15% in the last quarter, driven by new orders from European markets.',
-      industry: 'Textiles',
-      company: 'Industry-wide',
-      source: 'Business Recorder',
-      type: 'news',
-      date: '5 hours ago',
-      sentiment: 'positive',
-      tags: ['Textiles', 'Exports', 'Recovery']
-    },
-    {
-      title: 'Understanding Pakistan\'s Pharmaceutical Industry Growth',
-      summary: 'An in-depth video analysis of the pharmaceutical sector\'s expansion, covering key players, market dynamics, and future opportunities.',
-      industry: 'Pharmaceuticals',
-      company: 'Multiple',
-      source: 'Business Insights TV',
-      type: 'youtube',
-      date: '1 day ago',
-      sentiment: 'neutral',
-      tags: ['Healthcare', 'Analysis', 'Market']
-    },
-    {
-      title: 'Engro Corporation Announces Major Investment in Renewable Energy',
-      summary: 'Engro Corporation has announced a $500 million investment in renewable energy projects, marking the company\'s strategic shift towards sustainable energy solutions.',
-      industry: 'Energy',
-      company: 'Engro Corporation',
-      source: 'The News',
-      type: 'news',
-      date: '1 day ago',
-      sentiment: 'positive',
-      tags: ['Energy', 'Investment', 'Sustainability']
-    },
-    {
-      title: 'Systems Limited Opens New Office in Dubai',
-      summary: 'Leading IT services provider Systems Limited has expanded its Middle East operations with a new regional headquarters in Dubai, aiming to serve Gulf markets more effectively.',
-      industry: 'Technology',
-      company: 'Systems Limited',
-      source: 'TechJuice',
-      type: 'website',
-      date: '2 days ago',
-      sentiment: 'positive',
-      tags: ['IT', 'Expansion', 'International']
-    },
-    {
-      title: 'Lucky Cement Reports Strong Q4 Performance',
-      summary: 'Lucky Cement has announced impressive quarterly results with an 18% increase in revenue, driven by major infrastructure projects and improved market conditions.',
-      industry: 'Construction',
-      company: 'Lucky Cement',
-      source: 'ProPakistani',
-      type: 'website',
-      date: '3 days ago',
-      sentiment: 'positive',
-      tags: ['Construction', 'Earnings', 'Growth']
-    },
-    {
-      title: 'Agriculture Sector Challenges and Opportunities',
-      summary: 'A comprehensive video discussion on the current state of Pakistan\'s agriculture sector, covering challenges related to water management, technology adoption, and export potential.',
-      industry: 'Agriculture',
-      company: 'Industry-wide',
-      source: 'Farm Tech Pakistan',
-      type: 'youtube',
-      date: '4 days ago',
-      sentiment: 'neutral',
-      tags: ['Agriculture', 'Technology', 'Policy']
-    },
-    {
-      title: 'Bank Alfalah Launches Digital Banking Platform',
-      summary: 'Bank Alfalah has introduced a new digital banking platform with AI-powered features, targeting the growing segment of digitally-savvy customers.',
-      industry: 'Finance',
-      company: 'Bank Alfalah',
-      source: 'Dawn',
-      type: 'news',
-      date: '5 days ago',
-      sentiment: 'positive',
-      tags: ['Banking', 'Digital', 'Innovation']
-    }
-  ];
-
-  const getSourceIcon = (type: string) => {
-    switch (type) {
-      case 'youtube':
-        return <Youtube className="w-5 h-5 text-red-500" />;
-      case 'website':
-        return <Globe className="w-5 h-5 text-blue-500" />;
-      default:
-        return <Newspaper className="w-5 h-5 text-[#10B981]" />;
+  const fetchStats = async () => {
+    try {
+      const data = await newsService.getStats();
+      setStats(data);
+    } catch (error) {
+      console.error("Failed to fetch stats:", error);
     }
   };
 
-  const filteredNews = activeFilter === 'all' 
-    ? newsData 
-    : newsData.filter(item => item.type === activeFilter);
+  const fetchNews = async (pageNum: number, isRefresh: boolean = false, mode: string = sortMode) => {
+    if (pageNum === 0) setLoading(true);
+    try {
+      const skip = pageNum * LIMIT;
+      const data = await newsService.getAll(skip, LIMIT, mode);
+
+      if (Array.isArray(data)) {
+        if (data.length < LIMIT) setHasMore(false);
+
+        if (isRefresh || pageNum === 0) {
+          setArticles(data);
+        } else {
+          // Filter out duplicates if any (especially for random mode)
+          setArticles(prev => {
+            const newArticles = data.filter(d => !prev.some(p => p.link === d.link));
+            return [...prev, ...newArticles];
+          });
+        }
+      } else {
+        console.error("Received invalid data format for news:", data);
+        if (isRefresh) setArticles([]);
+      }
+    } catch (error) {
+      console.error("Failed to fetch news:", error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    setPage(0);
+    setHasMore(true);
+    setSortMode('random'); // Reset to random on refresh
+    setSelectedSource('All Sources'); // Reset filter
+    try {
+      await newsService.fetchLatest(); // Trigger backend fetch
+      await fetchStats(); // Refresh stats
+      await fetchNews(0, true, 'random');
+    } catch (error) {
+      console.error("Failed to refresh news:", error);
+      setRefreshing(false);
+    }
+  };
+
+  const handleLoadMore = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    fetchNews(nextPage, false, sortMode);
+  };
+
+  const handleSortChange = (mode: string) => {
+    setSortMode(mode);
+    setPage(0);
+    setHasMore(true);
+    fetchNews(0, true, mode);
+  };
+
+  useEffect(() => {
+    fetchStats();
+    fetchNews(0, false, 'random'); // Initial load is random
+  }, []);
+
+  const filteredArticles = selectedSource === 'All Sources'
+    ? articles
+    : articles.filter(article => article.source.toLowerCase().includes(selectedSource.toLowerCase()));
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
-      <Navbar 
-        showSearch={true} 
-        showProfile={true} 
+    <div className="min-h-screen bg-[#F9FAFB] pb-20 lg:pb-0">
+      <Navbar
+        showSearch={true}
+        showProfile={true}
+        onMenuClick={() => setIsMobileSidebarOpen(true)}
         onLogout={onLogout}
         onProfileClick={() => onNavigate('profile')}
         onSettingsClick={() => onNavigate('settings')}
       />
-      
+
       <div className="flex">
-        <Sidebar activeItem={activeItem} onNavigate={onNavigate} />
-        
-        <main className="flex-1 p-8">
+        <Sidebar
+          activeItem={activeItem}
+          onNavigate={onNavigate}
+          isMobileOpen={isMobileSidebarOpen}
+          onMobileClose={() => setIsMobileSidebarOpen(false)}
+        />
+
+        <main className="flex-1 p-4 sm:p-6 lg:p-8">
           <div className="max-w-[1600px] mx-auto">
-            <div className="mb-8">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
-                <h1 className="text-3xl text-[#0F172A]">News & Insights</h1>
+            <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-2xl sm:text-3xl text-[#0F172A] mb-2">News & Insights</h1>
+                <p className="text-sm sm:text-base text-[#1E293B]">Latest updates from Pakistan's business and tech sectors</p>
+              </div>
+
+              <div className="flex items-center gap-2">
                 <button
                   onClick={() => setShowFilters(!showFilters)}
                   className="lg:hidden px-4 py-2 bg-white text-[#0F172A] border border-[#E5E7EB] rounded-lg flex items-center gap-2"
@@ -145,186 +136,146 @@ export function NewsInsights({ onNavigate, onLogout }: NewsInsightsProps) {
                   <Filter className="w-4 h-4" />
                   <span className="text-sm">Filters</span>
                 </button>
+                <button
+                  onClick={handleRefresh}
+                  disabled={refreshing}
+                  className="px-4 py-2 bg-[#10B981] text-white rounded-lg flex items-center gap-2 hover:bg-[#059669] transition-colors disabled:opacity-50"
+                >
+                  <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+                  <span>{refreshing ? 'Refreshing...' : 'Refresh News'}</span>
+                </button>
               </div>
-              <p className="text-[#1E293B] mb-8">Stay updated with the latest industry news and market insights</p>
             </div>
-            
-            {/* Filter Tabs */}
-            <div className="flex items-center gap-4 mb-8">
-              <button
-                onClick={() => setActiveFilter('all')}
-                className={`px-6 py-3 rounded-lg transition-colors ${
-                  activeFilter === 'all' 
-                    ? 'bg-[#10B981] text-white' 
-                    : 'bg-white text-[#0F172A] border border-[#E5E7EB] hover:border-[#10B981]'
-                }`}
-              >
-                All Sources
-              </button>
-              <button
-                onClick={() => setActiveFilter('news')}
-                className={`px-6 py-3 rounded-lg transition-colors ${
-                  activeFilter === 'news' 
-                    ? 'bg-[#10B981] text-white' 
-                    : 'bg-white text-[#0F172A] border border-[#E5E7EB] hover:border-[#10B981]'
-                }`}
-              >
-                News Articles
-              </button>
-              <button
-                onClick={() => setActiveFilter('youtube')}
-                className={`px-6 py-3 rounded-lg transition-colors ${
-                  activeFilter === 'youtube' 
-                    ? 'bg-[#10B981] text-white' 
-                    : 'bg-white text-[#0F172A] border border-[#E5E7EB] hover:border-[#10B981]'
-                }`}
-              >
-                Videos
-              </button>
-              <button
-                onClick={() => setActiveFilter('website')}
-                className={`px-6 py-3 rounded-lg transition-colors ${
-                  activeFilter === 'website' 
-                    ? 'bg-[#10B981] text-white' 
-                    : 'bg-white text-[#0F172A] border border-[#E5E7EB] hover:border-[#10B981]'
-                }`}
-              >
-                Websites
-              </button>
-            </div>
-            
+
+            {/* Mini Dashboard */}
+            {stats && (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                <Card className="bg-blue-50 border-blue-100">
+                  <div className="text-blue-600 text-sm font-medium mb-1">Total Sources</div>
+                  <div className="text-2xl font-bold text-blue-900">{stats.total_sources}</div>
+                </Card>
+                <Card className="bg-green-50 border-green-100">
+                  <div className="text-green-600 text-sm font-medium mb-1">Total Articles</div>
+                  <div className="text-2xl font-bold text-green-900">{stats.total_articles}</div>
+                </Card>
+                <Card className="bg-purple-50 border-purple-100">
+                  <div className="text-purple-600 text-sm font-medium mb-1">Top Source</div>
+                  <div className="text-2xl font-bold text-purple-900">
+                    {Object.entries(stats.source_counts).sort(([, a], [, b]) => (b as number) - (a as number))[0]?.[0] || 'N/A'}
+                  </div>
+                </Card>
+              </div>
+            )}
+
             <div className="flex flex-col lg:flex-row gap-8">
-              {/* Advanced Filters Sidebar */}
+              {/* Advanced Filters Sidebar (Hidden on mobile by default) */}
               <div className={`${showFilters ? 'block' : 'hidden'} lg:block w-full lg:w-72`}>
                 <Card>
                   <div className="flex items-center gap-2 mb-4">
                     <Filter className="w-5 h-5 text-[#0F172A]" />
-                    <h3 className="text-[#0F172A]">Advanced Filters</h3>
+                    <h3 className="text-[#0F172A]">Filters</h3>
                   </div>
-                  
+
                   <div className="space-y-4">
                     <div>
-                      <label className="text-sm text-gray-600 mb-2 block">Industry</label>
-                      <select className="w-full p-2 border border-[#E5E7EB] rounded-lg focus:outline-none focus:border-[#10B981]">
-                        <option>All Industries</option>
-                        <option>Technology</option>
-                        <option>Textiles</option>
-                        <option>Finance</option>
-                        <option>Healthcare</option>
-                        <option>Energy</option>
-                      </select>
-                    </div>
-                    
-                    <div>
-                      <label className="text-sm text-gray-600 mb-2 block">Company</label>
-                      <select className="w-full p-2 border border-[#E5E7EB] rounded-lg focus:outline-none focus:border-[#10B981]">
-                        <option>All Companies</option>
-                        <option>Industry-wide</option>
-                        <option>Systems Limited</option>
-                        <option>Lucky Cement</option>
-                        <option>Engro Corporation</option>
-                      </select>
-                    </div>
-                    
-                    <div>
-                      <label className="text-sm text-gray-600 mb-2 block">Timeline</label>
-                      <select className="w-full p-2 border border-[#E5E7EB] rounded-lg focus:outline-none focus:border-[#10B981]">
-                        <option>All Time</option>
-                        <option>Today</option>
-                        <option>This Week</option>
-                        <option>This Month</option>
-                        <option>This Year</option>
-                      </select>
-                    </div>
-                    
-                    <div>
-                      <label className="text-sm text-gray-600 mb-2 block">Sentiment</label>
-                      <div className="space-y-2">
-                        {['Positive', 'Neutral', 'Negative'].map((sentiment) => (
-                          <label key={sentiment} className="flex items-center gap-2">
-                            <input type="checkbox" className="rounded" />
-                            <span className="text-sm text-[#0F172A]">{sentiment}</span>
-                          </label>
-                        ))}
+                      <label className="text-sm text-gray-600 mb-2 block">Sort Order</label>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleSortChange('random')}
+                          className={`flex-1 py-2 text-sm rounded-lg border ${sortMode === 'random' ? 'bg-blue-50 border-blue-200 text-blue-700' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}
+                        >
+                          Random
+                        </button>
+                        <button
+                          onClick={() => handleSortChange('latest')}
+                          className={`flex-1 py-2 text-sm rounded-lg border ${sortMode === 'latest' ? 'bg-blue-50 border-blue-200 text-blue-700' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}
+                        >
+                          Latest
+                        </button>
                       </div>
                     </div>
-                    
-                    <button className="w-full py-2 bg-[#10B981] text-white rounded-lg hover:bg-[#059669] transition-colors">
-                      Apply Filters
-                    </button>
-                  </div>
-                </Card>
-                
-                <Card className="mt-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <TrendingUp className="w-5 h-5 text-[#10B981]" />
-                    <h3 className="text-[#0F172A]">Trending Topics</h3>
-                  </div>
-                  <div className="space-y-2">
-                    {['IT Exports', 'Textile Recovery', 'Digital Banking', 'Renewable Energy', 'Investment'].map((topic, index) => (
-                      <button
-                        key={index}
-                        className="w-full text-left px-3 py-2 bg-[#F9FAFB] rounded-lg hover:bg-[#10B981]/10 hover:text-[#10B981] transition-colors text-sm text-[#0F172A]"
+
+                    <div>
+                      <label className="text-sm text-gray-600 mb-2 block">Source</label>
+                      <select
+                        value={selectedSource}
+                        onChange={(e) => setSelectedSource(e.target.value)}
+                        className="w-full p-2 border border-[#E5E7EB] rounded-lg focus:outline-none focus:border-[#10B981]"
                       >
-                        {topic}
-                      </button>
-                    ))}
+                        <option>All Sources</option>
+                        {stats && Object.keys(stats.source_counts).map(source => (
+                          <option key={source} value={source}>{source} ({stats.source_counts[source]})</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
                 </Card>
               </div>
-              
+
               {/* News List */}
-              <div className="flex-1 space-y-6">
-                {filteredNews.map((item, index) => (
-                  <Card key={index} hover>
-                    <div className="flex gap-4">
-                      <div className="w-12 h-12 bg-[#F9FAFB] rounded-lg flex items-center justify-center flex-shrink-0">
-                        {getSourceIcon(item.type)}
-                      </div>
-                      
-                      <div className="flex-1">
-                        <div className="flex items-start justify-between mb-2">
-                          <h3 className="text-lg text-[#0F172A] flex-1">{item.title}</h3>
-                          <span className={`ml-4 px-3 py-1 rounded-full text-xs flex-shrink-0 ${
-                            item.sentiment === 'positive' ? 'bg-green-100 text-green-700' :
-                            item.sentiment === 'negative' ? 'bg-red-100 text-red-700' :
-                            'bg-gray-100 text-gray-700'
-                          }`}>
-                            {item.sentiment}
-                          </span>
+              <div className="flex-1">
+                {loading && page === 0 ? (
+                  <div className="text-center py-12">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#10B981] mx-auto mb-4"></div>
+                    <p className="text-gray-500">Loading news...</p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                      {filteredArticles.length === 0 ? (
+                        <div className="col-span-full text-center py-10 text-gray-500">
+                          No news articles found. Click "Refresh News" to fetch the latest updates.
                         </div>
-                        
-                        <p className="text-gray-600 mb-3">{item.summary}</p>
-                        
-                        <div className="flex items-center gap-2 mb-3 flex-wrap">
-                          {item.tags.map((tag, i) => (
-                            <span key={i} className="px-3 py-1 bg-[#E5E7EB] text-xs rounded-full text-[#0F172A]">
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                        
-                        <div className="flex items-center justify-between text-sm">
-                          <div className="flex items-center gap-4 text-gray-500">
-                            <span>{item.source}</span>
-                            <span>•</span>
-                            <span>{item.industry}</span>
-                            <span>•</span>
-                            <span>{item.company}</span>
-                          </div>
-                          <span className="text-gray-400">{item.date}</span>
-                        </div>
-                      </div>
+                      ) : (
+                        filteredArticles.map((article, index) => (
+                          <Card key={index} hover className="flex flex-col h-full">
+                            <div className="flex flex-col h-full space-y-4">
+                              <div className="flex items-start justify-between">
+                                <span className="px-3 py-1 bg-blue-50 text-blue-600 text-xs font-medium rounded-full">
+                                  {article.source}
+                                </span>
+                                <span className="text-xs text-gray-500 flex items-center gap-1">
+                                  <Calendar className="w-3 h-3" />
+                                  {new Date(article.published).toLocaleDateString()}
+                                </span>
+                              </div>
+
+                              <h3 className="text-lg font-semibold text-[#0F172A] line-clamp-2">
+                                {article.title}
+                              </h3>
+
+                              <div className="text-sm text-gray-600 line-clamp-3 flex-1" dangerouslySetInnerHTML={{ __html: article.summary }} />
+
+                              <div className="pt-4 mt-auto border-t border-gray-100">
+                                <a
+                                  href={article.link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center justify-between text-sm font-medium text-[#10B981] hover:text-[#059669] transition-colors group"
+                                >
+                                  Read Full Article
+                                  <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                </a>
+                              </div>
+                            </div>
+                          </Card>
+                        ))
+                      )}
                     </div>
-                  </Card>
-                ))}
-                
-                {/* Load More */}
-                <div className="text-center py-8">
-                  <button className="px-8 py-3 bg-white border-2 border-[#E5E7EB] text-[#0F172A] rounded-lg hover:border-[#10B981] hover:text-[#10B981] transition-colors">
-                    Load More News
-                  </button>
-                </div>
+
+                    {hasMore && filteredArticles.length > 0 && (
+                      <div className="text-center pb-8">
+                        <button
+                          onClick={handleLoadMore}
+                          disabled={loading}
+                          className="px-6 py-2 bg-white border border-[#E5E7EB] text-[#0F172A] rounded-lg hover:border-[#10B981] hover:text-[#10B981] transition-colors disabled:opacity-50"
+                        >
+                          {loading ? 'Loading...' : 'Load More News'}
+                        </button>
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
             </div>
           </div>

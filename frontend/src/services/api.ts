@@ -46,4 +46,19 @@ export const industryService = {
   }
 };
 
+export const newsService = {
+  getAll: async (skip: number = 0, limit: number = 10, sort: string = 'latest') => {
+    const response = await api.get(`/news?skip=${skip}&limit=${limit}&sort=${sort}`);
+    return response.data;
+  },
+  getStats: async () => {
+    const response = await api.get('/news/stats');
+    return response.data;
+  },
+  fetchLatest: async () => {
+    const response = await api.get('/news/fetch');
+    return response.data;
+  }
+};
+
 export default api;

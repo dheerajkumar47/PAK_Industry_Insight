@@ -13,10 +13,14 @@ from bson import ObjectId
 from fastapi import HTTPException
 
 @router.get("/")
-def list_companies(industry: str = None):
+def list_companies(industry: str = None, location: str = None, growth: str = None):
     query = {}
     if industry:
         query["industry"] = industry
+    if location:
+        query["location"] = {"$regex": location, "$options": "i"}
+    if growth:
+        query["growth_tags"] = growth
     
     companies = list(db.companies.find(query))
     for company in companies:
