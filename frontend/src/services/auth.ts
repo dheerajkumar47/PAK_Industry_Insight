@@ -53,6 +53,14 @@ export const authService = {
     return response.data;
   },
 
+  async changePassword(currentPassword: string, newPassword: string) {
+    const response = await api.post('/auth/change-password', {
+        current_password: currentPassword,
+        new_password: newPassword,
+    });
+    return response.data;
+  },
+
   async updateUser(data: Partial<User>) {
     const response = await api.put<User>('/auth/me', data);
     return response.data;

@@ -69,7 +69,7 @@ export function CompanyDetail({ onNavigate, onLogout, onViewCompany, companyId }
 
   if (!companyId) {
     return (
-      <div className="min-h-screen bg-[#F9FAFB] dark:bg-slate-900 flex flex-col items-center justify-center">
+      <div className="min-h-screen bg-[#F9FAFB] dark:bg-slate-900">
         <Navbar 
           showSearch={true} 
           showProfile={true}

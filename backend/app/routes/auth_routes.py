@@ -14,7 +14,8 @@ from ..schemas.user_schema import (
     UserLogin,
     GoogleLogin,
     SimplePasswordReset,
-    UserUpdate
+    UserUpdate,
+    ChangePasswordRequest
 )
 from ..utils.auth import get_password_hash, verify_password, create_access_token
 from ..config import settings
@@ -208,3 +209,31 @@ async def update_user(user_update: UserUpdate, current_user: dict = Depends(get_
         return updated_user
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to update user: {str(e)}")
+
+@router.post("/change-password")
+async def change_password(payload: ChangePasswordRequest, current_user: dict = Depends(get_current_user)):
+    user_id = current_user["_id"]
+    stored_password = current_user.get("hashed_password")
+
+    # 1. Verify Current Password
+    if not stored_password:
+        # User might be Google-only or has no password set
+        raise HTTPException(status_code=400, detail="You do not have a password set (e.g., Google Login).")
+
+    if not verify_password(payload.current_password, stored_password):
+        raise HTTPException(status_code=400, detail="Incorrect current password")
+
+    # 2. Validate New Password
+    if payload.current_password == payload.new_password:
+        raise HTTPException(status_code=400, detail="New password cannot be the same as the old password")
+        
+    try:
+        UserCreate.validate_password_strength(payload.new_password)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    # 3. Update Database
+    new_hashed = get_password_hash(payload.new_password)
+    db.users.update_one({"_id": user_id}, {"$set": {"hashed_password": new_hashed}})
+
+    return {"message": "Password updated successfully"}

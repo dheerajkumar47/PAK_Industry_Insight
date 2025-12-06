@@ -75,7 +75,7 @@ export function Navbar({
 
   return (
     <nav className="bg-white dark:bg-slate-900 border-b border-[#E5E7EB] dark:border-slate-800 px-4 sm:px-6 py-4 relative z-50 transition-colors duration-200">
-      <div className="max-w-[1600px] mx-auto">
+      <div className="w-full">
         <div className="flex items-center justify-between">
           {/* Mobile Menu Button */}
           {showProfile && (
