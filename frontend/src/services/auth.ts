@@ -30,7 +30,7 @@ export const authService = {
       password,
     });
     if (response.data.access_token) {
-      sessionStorage.setItem('token', response.data.access_token);
+      localStorage.setItem('token', response.data.access_token);
     }
     return response.data;
   },
@@ -40,7 +40,7 @@ export const authService = {
       credential,
     });
     if (response.data.access_token) {
-      sessionStorage.setItem('token', response.data.access_token);
+      localStorage.setItem('token', response.data.access_token);
     }
     return response.data;
   },
@@ -67,7 +67,7 @@ export const authService = {
   },
 
   logout() {
-    sessionStorage.removeItem('token');
+    localStorage.removeItem('token');
   },
 
   async getCurrentUser() {
@@ -76,6 +76,6 @@ export const authService = {
   },
 
   isAuthenticated() {
-    return !!sessionStorage.getItem('token');
+    return !!localStorage.getItem('token');
   }
 };

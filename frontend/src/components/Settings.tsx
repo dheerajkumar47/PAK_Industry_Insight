@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Navbar } from './Navbar';
 import { Sidebar } from './Sidebar';
 import { Card } from './Card';
-import { Lock, Moon, Smartphone, Mail, ChevronRight, X } from 'lucide-react';
+import { Moon, Smartphone, Mail } from 'lucide-react';
 import { authService, User } from '../services/auth';
 
 interface SettingsProps {
@@ -84,39 +84,7 @@ export function Settings({ onNavigate, onLogout }: SettingsProps) {
       }
   };
 
-  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const [passwordSuccess, setPasswordSuccess] = useState('');
 
-  const handleChangePassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setPasswordError('');
-    setPasswordSuccess('');
-
-    if (newPassword !== confirmPassword) {
-      setPasswordError("New passwords do not match");
-      return;
-    }
-
-    if (newPassword.length < 8) {
-      setPasswordError("Password must be at least 8 characters");
-      return;
-    }
-
-    try {
-      await authService.changePassword(currentPassword, newPassword);
-      setPasswordSuccess("Password updated successfully");
-      setCurrentPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
-      setTimeout(() => setIsPasswordModalOpen(false), 2000);
-    } catch (err: any) {
-      setPasswordError(err.response?.data?.detail || "Failed to update password");
-    }
-  };
 
   return (
     <div className={`min-h-screen pb-20 lg:pb-0 transition-colors duration-200 ${darkMode ? 'bg-slate-900' : 'bg-[#F9FAFB]'}`}>
@@ -233,135 +201,10 @@ export function Settings({ onNavigate, onLogout }: SettingsProps) {
                 </div>
               </Card>
 
-              {/* Security Section */}
-              <Card className={`overflow-hidden border-0 shadow-lg rounded-2xl ${darkMode ? 'bg-slate-800' : 'bg-white'}`}>
-                <div className="p-6 border-b border-gray-100 dark:border-slate-700">
-                    <h2 className={`text-xl font-bold mb-1 ${darkMode ? 'text-white' : 'text-[#0F172A]'}`}>Account Security</h2>
-                    <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Keep your account safe and secure</p>
-                </div>
-                <div className="p-6">
-                  <div className={`flex items-center justify-between p-4 rounded-xl transition-colors ${darkMode ? 'bg-slate-700/50' : 'bg-gray-50'}`}>
-                    <div className="flex items-center gap-4">
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${darkMode ? 'bg-green-500/20 text-green-400' : 'bg-green-100 text-green-600'}`}>
-                        <Lock className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <div className={`font-semibold ${darkMode ? 'text-white' : 'text-[#0F172A]'}`}>Change Password</div>
-                        <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Update your password regularly</div>
-                      </div>
-                    </div>
-                    <button 
-                       onClick={() => setIsPasswordModalOpen(true)}
-                       className={`px-4 py-2 border rounded-lg transition-colors text-sm font-medium flex items-center gap-2 ${darkMode ? 'border-slate-600 text-gray-300 hover:bg-slate-700' : 'border-gray-300 hover:bg-gray-100 text-gray-700'}`}
-                    >
-                       Update <ChevronRight className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              </Card>
-
             </div>
           </div>
         </main>
       </div>
-
-      {/* Change Password Modal */}
-      {isPasswordModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className={`w-full max-w-md p-6 rounded-2xl shadow-xl ${darkMode ? 'bg-slate-800' : 'bg-white'}`}>
-            <div className="flex items-center justify-between mb-6">
-              <h3 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Change Password</h3>
-              <button 
-                onClick={() => setIsPasswordModalOpen(false)}
-                className={`p-2 rounded-lg transition-colors ${darkMode ? 'hover:bg-slate-700 text-gray-400' : 'hover:bg-gray-100 text-gray-500'}`}
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleChangePassword} className="space-y-4">
-              {passwordError && (
-                <div className="p-3 text-sm text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-lg">
-                  {passwordError}
-                </div>
-              )}
-              {passwordSuccess && (
-                <div className="p-3 text-sm text-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400 rounded-lg">
-                  {passwordSuccess}
-                </div>
-              )}
-
-              <div>
-                <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Current Password</label>
-                <input
-                  type="password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-[#10B981] outline-none transition-colors ${
-                    darkMode 
-                      ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400' 
-                      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
-                  }`}
-                  placeholder="Enter current password"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>New Password</label>
-                <input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-[#10B981] outline-none transition-colors ${
-                    darkMode 
-                      ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400' 
-                      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
-                  }`}
-                  placeholder="Enter new password"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Confirm New Password</label>
-                <input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-[#10B981] outline-none transition-colors ${
-                    darkMode 
-                      ? 'bg-slate-700 border-slate-600 text-white placeholder-gray-400' 
-                      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
-                  }`}
-                  placeholder="Confirm new password"
-                  required
-                />
-              </div>
-
-              <div className="flex gap-3 mt-6">
-                <button
-                  type="button"
-                  onClick={() => setIsPasswordModalOpen(false)}
-                  className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
-                    darkMode 
-                      ? 'bg-slate-700 text-gray-300 hover:bg-slate-600' 
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 px-4 py-2 bg-[#10B981] hover:bg-[#059669] text-white rounded-lg font-medium transition-colors"
-                >
-                  Update Password
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

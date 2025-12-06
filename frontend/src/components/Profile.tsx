@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar } from './Navbar';
 import { Sidebar } from './Sidebar';
 import { Card } from './Card';
-import { User, Mail, Shield, Smartphone } from 'lucide-react';
+import { User, Mail, Shield, Smartphone, PenSquare, X, Lock, Check, AlertCircle } from 'lucide-react';
 import { authService, User as UserType } from '../services/auth';
 
 interface ProfileProps {
@@ -16,6 +16,15 @@ export function Profile({ onNavigate, onLogout }: ProfileProps) {
   const [user, setUser] = useState<UserType | null>(null);
   const [loading, setLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
+
+  // Edit Modal State
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editName, setEditName] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [updateStatus, setUpdateStatus] = useState<{type: 'success' | 'error', message: string} | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -116,9 +125,26 @@ export function Profile({ onNavigate, onLogout }: ProfileProps) {
                              )}
                            </div>
                            
-                           <div className="text-center w-full mb-6">
+                            <div className="text-center w-full mb-6">
                                <h2 className="text-xl font-bold text-[#0F172A] dark:text-white">{user.full_name || 'User'}</h2>
                                <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
+                               
+                               {!isGoogleUser && (
+                                 <button 
+                                   onClick={() => {
+                                     setEditName(user.full_name || '');
+                                     setCurrentPassword('');
+                                     setNewPassword('');
+                                     setConfirmPassword('');
+                                     setUpdateStatus(null);
+                                     setIsEditModalOpen(true);
+                                   }}
+                                   className="mt-4 px-4 py-2 text-sm font-medium text-[#10B981] border border-[#10B981] rounded-lg hover:bg-[#10B981]/5 transition-colors inline-flex items-center gap-2"
+                                 >
+                                   <PenSquare className="w-4 h-4" />
+                                   Edit Profile
+                                 </button>
+                               )}
                            </div>
 
                            <div className="w-full space-y-4 border-t border-gray-100 dark:border-slate-700 pt-6">
@@ -136,15 +162,14 @@ export function Profile({ onNavigate, onLogout }: ProfileProps) {
                                        )}
                                    </span>
                                </div>
-                               <div className="flex items-center justify-between">
-                                   <span className="text-sm text-gray-500 dark:text-gray-400">Status</span>
-                                   <span className="text-sm font-medium text-green-600 dark:text-green-500 bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded">Active</span>
-                               </div>
+
                            </div>
                         </>
                     ) : (
                         <div className="text-center py-8">
                             <p className="text-gray-500 dark:text-gray-400 mb-4">Please log in to view your profile.</p>
+                            {/* Debug info in case of silent failures */}
+                            <div className="hidden">{JSON.stringify(imageError)}</div> 
                             <button 
                                 onClick={onLogout}
                                 className="px-6 py-2 bg-[#10B981] text-white rounded-lg hover:bg-[#059669] transition-colors"
@@ -195,6 +220,144 @@ export function Profile({ onNavigate, onLogout }: ProfileProps) {
           </div>
         </main>
       </div>
+
+
+      {/* Edit Profile Modal */}
+      {isEditModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="w-full max-w-md bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-slate-700">
+              <h3 className="text-xl font-bold text-[#0F172A] dark:text-white">Edit Profile</h3>
+              <button 
+                onClick={() => setIsEditModalOpen(false)}
+                className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-6">
+              {updateStatus && (
+                <div className={`p-4 rounded-lg flex items-start gap-3 ${
+                  updateStatus.type === 'success' 
+                    ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400' 
+                    : 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400'
+                }`}>
+                  {updateStatus.type === 'success' ? <Check className="w-5 h-5 mt-0.5" /> : <AlertCircle className="w-5 h-5 mt-0.5" />}
+                  <p className="text-sm">{updateStatus.message}</p>
+                </div>
+              )}
+
+              <div className="space-y-4">
+                {/* Name Update */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
+                  <input 
+                    type="text" 
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                    className="w-full p-2.5 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-[#0F172A] dark:text-white focus:ring-2 focus:ring-[#10B981] outline-none transition-all"
+                    placeholder="Your Name"
+                  />
+                </div>
+
+                <div className="border-t border-gray-100 dark:border-slate-700 pt-4">
+                  <h4 className="text-sm font-semibold text-[#0F172A] dark:text-white mb-4 flex items-center gap-2">
+                    <Lock className="w-4 h-4" /> Change Password
+                  </h4>
+                  
+                  <div className="space-y-3">
+                    <div>
+                      <input 
+                        type="password" 
+                        value={currentPassword}
+                        onChange={(e) => setCurrentPassword(e.target.value)}
+                        className="w-full p-2.5 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-[#0F172A] dark:text-white focus:ring-2 focus:ring-[#10B981] outline-none transition-all text-sm"
+                        placeholder="Current Password (Required for password change)"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <input 
+                        type="password" 
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        className="w-full p-2.5 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-[#0F172A] dark:text-white focus:ring-2 focus:ring-[#10B981] outline-none transition-all text-sm"
+                        placeholder="New Password"
+                      />
+                      <input 
+                        type="password" 
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className="w-full p-2.5 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-[#0F172A] dark:text-white focus:ring-2 focus:ring-[#10B981] outline-none transition-all text-sm"
+                        placeholder="Confirm New"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-gray-100 dark:border-slate-700 flex justify-end gap-3 bg-gray-50 dark:bg-slate-800/50">
+              <button 
+                onClick={() => setIsEditModalOpen(false)}
+                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                disabled={isUpdating}
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={async () => {
+                  setUpdateStatus(null);
+                  setIsUpdating(true);
+                  let successMsg = "";
+                  
+                  try {
+                    // Update Name
+                    if (editName !== user?.full_name) {
+                      await authService.updateUser({ full_name: editName });
+                      setUser((prev: UserType | null) => prev ? ({ ...prev, full_name: editName }) : null);
+                      successMsg += "Name updated. ";
+                    }
+
+                    // Update Password
+                    if (newPassword || confirmPassword) {
+                      if (!currentPassword) throw new Error("Current password is required to change password.");
+                      if (newPassword !== confirmPassword) throw new Error("New passwords do not match.");
+                      if (newPassword.length < 8) throw new Error("Password must be at least 8 characters.");
+                      
+                      await authService.changePassword(currentPassword, newPassword);
+                      successMsg += "Password updated. ";
+                      setCurrentPassword('');
+                      setNewPassword('');
+                      setConfirmPassword('');
+                    }
+
+                    if (!successMsg && editName === user?.full_name) {
+                      setIsEditModalOpen(false);
+                      return;
+                    }
+
+                    setUpdateStatus({ type: 'success', message: successMsg || "Profile updated successfully!" });
+                    setTimeout(() => {
+                        setIsEditModalOpen(false);
+                        setUpdateStatus(null);
+                    }, 1500);
+
+                  } catch (error: any) {
+                    setUpdateStatus({ type: 'error', message: error.response?.data?.detail || error.message || "Failed to update profile." });
+                  } finally {
+                    setIsUpdating(false);
+                  }
+                }}
+                className="px-4 py-2 text-sm font-medium text-white bg-[#10B981] hover:bg-[#059669] rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50"
+                disabled={isUpdating}
+              >
+                {isUpdating ? 'Saving...' : 'Save Changes'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

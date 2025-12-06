@@ -48,9 +48,10 @@ npm run dev
 ```
 
 ## 📅 Recent Updates (Phase 5 Complete)
-- **Profile Redesign**: Complete overhaul of the user profile for a "Market Standard" look.
-- **Auth Polish**: Fixed login loops and synced Google user data.
-- **Settings**: Fully functional notification toggles.
+- **Brand Identity**: New professional logo, animated video intro, and dashboard widget.
+- **Profile Overhaul**: Edit name/password directly from Profile. Auto-initials avatar.
+- **Security**: Secure "Edit Profile" modal (requires current password). Removed "Forgot Password".
+- **UX Improvements**: Persistent login (LocalStorage), Dark Mode, Notification toggles.
 
 ---
 *Built with ❤️ by the PAK Insight Team*
