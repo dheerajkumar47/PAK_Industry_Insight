@@ -7,9 +7,10 @@ import { Button } from './Button';
 interface LandingPageProps {
   onGetStarted: () => void;
   onLoginClick: () => void;
+  onNavigate: (page: string) => void;
 }
 
-export function LandingPage({ onGetStarted, onLoginClick }: LandingPageProps) {
+export function LandingPage({ onGetStarted, onLoginClick, onNavigate }: LandingPageProps) {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-[#E5E7EB]/30">
       <Navbar showSearch={false} showProfile={false} onLoginClick={onLoginClick} />
@@ -84,11 +85,11 @@ export function LandingPage({ onGetStarted, onLoginClick }: LandingPageProps) {
       {/* Footer */}
       <footer className="max-w-[1600px] mx-auto px-4 sm:px-6 py-8 sm:py-12 mt-12 sm:mt-20 border-t border-[#E5E7EB]">
         <div className="flex flex-wrap justify-center gap-4 sm:gap-8 text-[#1E293B] text-sm sm:text-base">
-          <a href="#" className="hover:text-[#10B981] transition-colors">About</a>
+          <button onClick={() => onNavigate('about')} className="hover:text-[#10B981] transition-colors">About</button>
           <span className="text-[#E5E7EB] hidden sm:inline">•</span>
-          <a href="#" className="hover:text-[#10B981] transition-colors">Contact</a>
+          <button onClick={() => onNavigate('contact')} className="hover:text-[#10B981] transition-colors">Contact</button>
           <span className="text-[#E5E7EB] hidden sm:inline">•</span>
-          <a href="#" className="hover:text-[#10B981] transition-colors">Terms</a>
+          <button onClick={() => onNavigate('terms')} className="hover:text-[#10B981] transition-colors">Terms</button>
         </div>
         <div className="text-center mt-4 sm:mt-6 text-gray-500 text-xs sm:text-sm px-4">
           © 2025 PAK Industry Insight. All rights reserved.

@@ -11,8 +11,9 @@ import { Profile } from './components/Profile';
 import { Settings } from './components/Settings';
 import { authService } from './services/auth';
 
-type Page = 'landing' | 'login' | 'dashboard' | 'industry-explorer' | 'companies' | 'company-detail' | 'news' | 'market-trends' | 'saved' | 'profile' | 'settings';
+import { About, Contact, Terms } from './components/StaticPages';
 
+type Page = 'landing' | 'login' | 'dashboard' | 'industry-explorer' | 'companies' | 'company-detail' | 'news' | 'market-trends' | 'saved' | 'profile' | 'settings' | 'about' | 'contact' | 'terms';
 
 function SplashScreen({ onFinish }: { onFinish: () => void }) {
   const [opacity, setOpacity] = useState(1);
@@ -48,7 +49,6 @@ function SplashScreen({ onFinish }: { onFinish: () => void }) {
           onEnded={handleFinish}
           onError={(e) => console.error("Splash video failed to load:", e)}
         />
-        {/* <h1 className="text-2xl font-bold text-[#0F172A] dark:text-white tracking-wider mt-4">PAK INDUSTRY INSIGHT</h1> */}
       </div>
     </div>
   );
@@ -60,46 +60,38 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('landing');
 
   useEffect(() => {
-    // Check if user is authenticated (using sessionStorage from authService)
+    // Check if user is authenticated (using localStorage from authService)
     if (authService.isAuthenticated()) {
-      setCurrentPage('dashboard');
+      if (currentPage === 'landing' || currentPage === 'login') {
+         setCurrentPage('dashboard');
+      }
     } else {
-	    // If not authenticated, ensure we start at landing or login
-	    if (currentPage !== 'landing' && currentPage !== 'login') {
+	    // If not authenticated, ensure we start at landing, login, or public pages
+        const publicPages = ['landing', 'login', 'about', 'contact', 'terms'];
+	    if (!publicPages.includes(currentPage)) {
 		    setCurrentPage('landing');
 	    }
     }
+  }, [currentPage]); // Add currentPage dependency to re-check when it changes? actually no, just run once or when auth state changes. 
+  // Better logic: run once on mount. If logged in -> go dashboard. If not -> stay on landing. 
+  // Navigation handling will enforce other rules. 
+  
+  // Revised useEffect for initial load:
+  useEffect(() => {
+      const isPublic = ['landing', 'login', 'about', 'contact', 'terms'].includes(currentPage);
+      if (authService.isAuthenticated()) {
+          if (currentPage === 'landing' || currentPage === 'login') {
+             setCurrentPage('dashboard');
+          }
+      } else if (!isPublic) {
+          setCurrentPage('landing');
+      }
   }, []);
 
   const handleNavigation = (page: string) => {
-    switch (page) {
-      case 'dashboard':
-        setCurrentPage('dashboard');
-        break;
-      case 'industry-explorer':
-        setCurrentPage('industry-explorer');
-        break;
-      case 'companies':
-        setCurrentPage('company-detail');
-        break;
-      case 'news':
-        setCurrentPage('news');
-        break;
-      case 'market-trends':
-        setCurrentPage('market-trends');
-        break;
-      case 'saved':
-        setCurrentPage('saved');
-        break;
-      case 'profile':
-        setCurrentPage('profile');
-        break;
-      case 'settings':
-        setCurrentPage('settings');
-        break;
-      default:
-        setCurrentPage('dashboard');
-    }
+    // Cast string to Page type safely if needed, or just use string in switch
+    const target = page as Page; 
+    setCurrentPage(target);
   };
 
   const handleLogin = () => {
@@ -116,6 +108,9 @@ export default function App() {
 
   const handleBackToHome = () => {
     setCurrentPage('landing');
+    if (authService.isAuthenticated()) {
+        setCurrentPage('dashboard'); 
+    }
   };
 
   const handleViewCompany = (id?: string) => {
@@ -131,12 +126,24 @@ export default function App() {
   return (
     <div className="bg-[#F9FAFB] dark:bg-slate-900 min-h-screen transition-colors duration-200">
       {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
+      
       {currentPage === 'landing' && (
-        <LandingPage onGetStarted={handleGetStarted} onLoginClick={handleLoginClick} />
+        <LandingPage 
+            onGetStarted={handleGetStarted} 
+            onLoginClick={handleLoginClick} 
+            onNavigate={handleNavigation}
+        />
       )}
       {currentPage === 'login' && (
         <LoginSignup onLogin={handleLogin} onBackToHome={handleBackToHome} />
       )}
+      
+      {/* Public Static Pages */}
+      {currentPage === 'about' && <About onBack={handleBackToHome} />}
+      {currentPage === 'contact' && <Contact onBack={handleBackToHome} />}
+      {currentPage === 'terms' && <Terms onBack={handleBackToHome} />}
+
+      {/* Protected Routes */}
       {currentPage === 'dashboard' && (
         <Dashboard onNavigate={handleNavigation} onViewCompany={handleViewCompany} onLogout={handleLogout} />
       )}
