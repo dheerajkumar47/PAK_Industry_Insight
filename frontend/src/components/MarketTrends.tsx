@@ -13,8 +13,9 @@ export function MarketTrends({ onNavigate, onLogout }: MarketTrendsProps) {
   const [activeItem] = React.useState('market-trends');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = React.useState(false);
 
+
   return (
-    <div className="min-h-screen bg-[#F9FAFB] pb-20 lg:pb-0">
+    <div className="min-h-screen bg-[#F9FAFB] dark:bg-slate-900 pb-20 lg:pb-0 transition-colors duration-200">
       <Navbar 
         showSearch={true} 
         showProfile={true}
@@ -35,36 +36,36 @@ export function MarketTrends({ onNavigate, onLogout }: MarketTrendsProps) {
         <main className="flex-1 p-4 sm:p-6 lg:p-8">
           <div className="max-w-[1600px] mx-auto">
             <div className="mb-8">
-              <h1 className="text-3xl text-[#0F172A] mb-2">Market Trends</h1>
-              <p className="text-[#1E293B]">Deep dive into market analysis and future projections</p>
+              <h1 className="text-3xl text-[#0F172A] dark:text-white mb-2">Market Trends</h1>
+              <p className="text-[#1E293B] dark:text-gray-400">Deep dive into market analysis and future projections</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-              <Card>
+              <Card className="bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700">
                 <div className="flex items-center gap-2 mb-6">
                   <BarChart2 className="w-5 h-5 text-[#10B981]" />
-                  <h2 className="text-xl text-[#0F172A]">Sector Performance</h2>
+                  <h2 className="text-xl text-[#0F172A] dark:text-white">Sector Performance</h2>
                 </div>
-                <div className="h-64 flex items-center justify-center bg-gray-50 rounded-lg border border-dashed border-gray-200">
-                  <span className="text-gray-400">Chart Visualization Placeholder</span>
+                <div className="h-64 flex items-center justify-center bg-gray-50 dark:bg-slate-700/50 rounded-lg border border-dashed border-gray-200 dark:border-slate-600">
+                  <span className="text-gray-400 dark:text-gray-500">Chart Visualization Placeholder</span>
                 </div>
               </Card>
 
-              <Card>
+              <Card className="bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700">
                 <div className="flex items-center gap-2 mb-6">
                   <PieChart className="w-5 h-5 text-[#10B981]" />
-                  <h2 className="text-xl text-[#0F172A]">Market Share Distribution</h2>
+                  <h2 className="text-xl text-[#0F172A] dark:text-white">Market Share Distribution</h2>
                 </div>
-                <div className="h-64 flex items-center justify-center bg-gray-50 rounded-lg border border-dashed border-gray-200">
-                  <span className="text-gray-400">Chart Visualization Placeholder</span>
+                <div className="h-64 flex items-center justify-center bg-gray-50 dark:bg-slate-700/50 rounded-lg border border-dashed border-gray-200 dark:border-slate-600">
+                  <span className="text-gray-400 dark:text-gray-500">Chart Visualization Placeholder</span>
                 </div>
               </Card>
             </div>
 
-            <Card>
+            <Card className="bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700">
               <div className="flex items-center gap-2 mb-6">
                 <TrendingUp className="w-5 h-5 text-[#10B981]" />
-                <h2 className="text-xl text-[#0F172A]">Emerging Trends</h2>
+                <h2 className="text-xl text-[#0F172A] dark:text-white">Emerging Trends</h2>
               </div>
               <div className="space-y-4">
                 {[
@@ -72,10 +73,10 @@ export function MarketTrends({ onNavigate, onLogout }: MarketTrendsProps) {
                   { title: 'Sustainable Textile Manufacturing', growth: '+28%', impact: 'Medium' },
                   { title: 'E-commerce Expansion in Rural Areas', growth: '+62%', impact: 'High' }
                 ].map((trend, index) => (
-                  <div key={index} className="flex items-center justify-between p-4 bg-[#F9FAFB] rounded-lg hover:bg-[#E5E7EB] transition-colors cursor-pointer">
+                  <div key={index} className="flex items-center justify-between p-4 bg-[#F9FAFB] dark:bg-slate-700/50 rounded-lg hover:bg-[#E5E7EB] dark:hover:bg-slate-700 transition-colors cursor-pointer">
                     <div>
-                      <h3 className="text-[#0F172A] font-medium">{trend.title}</h3>
-                      <span className="text-sm text-gray-500">Impact: {trend.impact}</span>
+                      <h3 className="text-[#0F172A] dark:text-white font-medium">{trend.title}</h3>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">Impact: {trend.impact}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-[#10B981] font-bold">{trend.growth}</span>

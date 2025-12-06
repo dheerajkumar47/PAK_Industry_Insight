@@ -14,9 +14,11 @@ from ..schemas.user_schema import (
     UserLogin,
     GoogleLogin,
     SimplePasswordReset,
+    UserUpdate
 )
 from ..utils.auth import get_password_hash, verify_password, create_access_token
 from ..config import settings
+from bson import ObjectId
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -123,6 +125,7 @@ async def google_login(payload: GoogleLogin):
 
     email = idinfo.get("email")
     full_name = idinfo.get("name")
+    picture = idinfo.get("picture")
 
     if not email:
         raise HTTPException(status_code=400, detail="Google account has no email")
@@ -134,10 +137,24 @@ async def google_login(payload: GoogleLogin):
         user_in_db = UserInDB(
             email=email,
             full_name=full_name,
+            picture=picture,
             hashed_password="",  # marker for Google-only accounts
         )
         new_user = db.users.insert_one(user_in_db.dict())
         user = db.users.find_one({"_id": new_user.inserted_id})
+    else:
+        # Update existing user's picture and name if they log in with Google again
+        update_fields = {}
+        if picture and user.get("picture") != picture:
+            update_fields["picture"] = picture
+        
+        if full_name and user.get("full_name") != full_name:
+            update_fields["full_name"] = full_name
+            
+        if update_fields:
+            db.users.update_one({"_id": user["_id"]}, {"$set": update_fields})
+            # Update user dict in memory just for consistency, though currently unused for token
+            user.update(update_fields)
 
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
@@ -173,3 +190,21 @@ async def reset_password(payload: SimplePasswordReset):
     db.users.update_one({"_id": user["_id"]}, {"$set": {"hashed_password": new_hashed}})
 
     return {"message": "Password has been reset successfully"}
+
+@router.put("/me", response_model=UserResponse)
+async def update_user(user_update: UserUpdate, current_user: dict = Depends(get_current_user)):
+    user_id = current_user["_id"]
+    
+    update_data = {k: v for k, v in user_update.dict().items() if v is not None}
+    
+    if not update_data:
+        current_user["id"] = str(current_user["_id"])
+        return current_user
+
+    try:
+        db.users.update_one({"_id": user_id}, {"$set": update_data})
+        updated_user = db.users.find_one({"_id": user_id})
+        updated_user["id"] = str(updated_user["_id"])
+        return updated_user
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update user: {str(e)}")

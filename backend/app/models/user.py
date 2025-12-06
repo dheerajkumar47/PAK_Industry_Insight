@@ -7,3 +7,5 @@ class UserModel:
         self.full_name = full_name
         self.created_at = datetime.utcnow()
         self.disabled = False
+        self.email_notifs = True
+        self.push_notifs = False

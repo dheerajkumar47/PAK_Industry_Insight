@@ -74,16 +74,16 @@ export function Navbar({
   };
 
   return (
-    <nav className="bg-white border-b border-[#E5E7EB] px-4 sm:px-6 py-4 relative z-50">
+    <nav className="bg-white dark:bg-slate-900 border-b border-[#E5E7EB] dark:border-slate-800 px-4 sm:px-6 py-4 relative z-50 transition-colors duration-200">
       <div className="max-w-[1600px] mx-auto">
         <div className="flex items-center justify-between">
           {/* Mobile Menu Button */}
           {showProfile && (
             <button 
               onClick={onMenuClick}
-              className="lg:hidden p-2 hover:bg-[#E5E7EB] rounded-lg transition-colors"
+              className="lg:hidden p-2 hover:bg-[#E5E7EB] dark:hover:bg-slate-800 rounded-lg transition-colors"
             >
-              <Menu className="w-6 h-6 text-[#0F172A]" />
+              <Menu className="w-6 h-6 text-[#0F172A] dark:text-white" />
             </button>
           )}
           
@@ -92,10 +92,10 @@ export function Navbar({
             <div className="w-8 h-8 bg-[#10B981] rounded-lg flex items-center justify-center">
               <span className="text-white font-bold">P</span>
             </div>
-            <span className="text-[#0F172A] font-semibold text-base sm:text-xl hidden sm:inline">
+            <span className="text-[#0F172A] dark:text-white font-semibold text-base sm:text-xl hidden sm:inline">
               PAK Industry Insight
             </span>
-            <span className="text-[#0F172A] font-semibold text-base sm:hidden">
+            <span className="text-[#0F172A] dark:text-white font-semibold text-base sm:hidden">
               PAK Insight
             </span>
           </div>
@@ -110,25 +110,25 @@ export function Navbar({
                   value={searchQuery}
                   onChange={(e) => handleSearch(e.target.value)}
                   placeholder="Search companies..."
-                  className="w-full pl-12 pr-4 py-3 border border-[#E5E7EB] rounded-lg focus:outline-none focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20"
+                  className="w-full pl-12 pr-4 py-3 border border-[#E5E7EB] dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20 placeholder-gray-400 dark:placeholder-gray-500 transition-colors"
                 />
               </div>
 
               {/* Search Results Dropdown */}
               {searchResults.length > 0 && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-[#E5E7EB] rounded-lg shadow-lg max-h-96 overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 border border-[#E5E7EB] dark:border-slate-700 rounded-lg shadow-lg max-h-96 overflow-y-auto">
                   {searchResults.map((company) => (
                     <button
                       key={company.id}
                       onClick={() => handleResultClick(company.id)}
-                      className="w-full text-left p-3 hover:bg-gray-50 flex items-center gap-3 border-b border-gray-100 last:border-0"
+                      className="w-full text-left p-3 hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center gap-3 border-b border-gray-100 dark:border-slate-700 last:border-0"
                     >
                       <div className="w-8 h-8 bg-[#0F172A] rounded flex items-center justify-center text-white text-xs">
                         {company.name.charAt(0)}
                       </div>
                       <div>
-                        <div className="font-medium text-[#0F172A]">{company.name}</div>
-                        <div className="text-xs text-gray-500 flex items-center gap-1">
+                        <div className="font-medium text-[#0F172A] dark:text-white">{company.name}</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
                           <Building2 className="w-3 h-3" />
                           {company.industry}
                         </div>
@@ -146,12 +146,12 @@ export function Navbar({
             {showSearch && (
               <button 
                 onClick={() => setShowMobileSearch(!showMobileSearch)}
-                className="md:hidden p-2 hover:bg-[#E5E7EB] rounded-lg transition-colors"
+                className="md:hidden p-2 hover:bg-[#E5E7EB] dark:hover:bg-slate-800 rounded-lg transition-colors"
               >
                 {showMobileSearch ? (
-                  <X className="w-5 h-5 text-[#0F172A]" />
+                  <X className="w-5 h-5 text-[#0F172A] dark:text-white" />
                 ) : (
-                  <Search className="w-5 h-5 text-[#0F172A]" />
+                  <Search className="w-5 h-5 text-[#0F172A] dark:text-white" />
                 )}
               </button>
             )}
@@ -159,23 +159,23 @@ export function Navbar({
             {showProfile ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="p-2 hover:bg-[#E5E7EB] rounded-lg transition-colors outline-none">
-                    <User className="w-6 h-6 text-[#0F172A]" />
+                  <button className="p-2 hover:bg-[#E5E7EB] dark:hover:bg-slate-800 rounded-lg transition-colors outline-none">
+                    <User className="w-6 h-6 text-[#0F172A] dark:text-white" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="cursor-pointer" onClick={onProfileClick}>
+                <DropdownMenuContent align="end" className="w-56 bg-white dark:bg-slate-800 border-[#E5E7EB] dark:border-slate-700">
+                  <DropdownMenuLabel className="dark:text-white">My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator className="dark:bg-slate-700" />
+                  <DropdownMenuItem className="cursor-pointer dark:text-gray-200 dark:focus:bg-slate-700" onClick={onProfileClick}>
                     <User className="mr-2 h-4 w-4" />
                     <span>Profile</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={onSettingsClick}>
+                  <DropdownMenuItem className="cursor-pointer dark:text-gray-200 dark:focus:bg-slate-700" onClick={onSettingsClick}>
                     <Settings className="mr-2 h-4 w-4" />
                     <span>Settings</span>
                   </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600" onClick={onLogout}>
+                  <DropdownMenuSeparator className="dark:bg-slate-700" />
+                  <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600 dark:focus:bg-slate-700" onClick={onLogout}>
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>
                   </DropdownMenuItem>
@@ -202,23 +202,23 @@ export function Navbar({
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
                 placeholder="Search companies..."
-                className="w-full pl-12 pr-4 py-3 border border-[#E5E7EB] rounded-lg focus:outline-none focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20"
+                className="w-full pl-12 pr-4 py-3 border border-[#E5E7EB] dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20 placeholder-gray-400 dark:placeholder-gray-500"
               />
               {/* Mobile Search Results */}
               {searchResults.length > 0 && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-[#E5E7EB] rounded-lg shadow-lg max-h-60 overflow-y-auto z-50">
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 border border-[#E5E7EB] dark:border-slate-700 rounded-lg shadow-lg max-h-60 overflow-y-auto z-50">
                   {searchResults.map((company) => (
                     <button
                       key={company.id}
                       onClick={() => handleResultClick(company.id)}
-                      className="w-full text-left p-3 hover:bg-gray-50 flex items-center gap-3 border-b border-gray-100 last:border-0"
+                      className="w-full text-left p-3 hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center gap-3 border-b border-gray-100 dark:border-slate-700 last:border-0"
                     >
                       <div className="w-8 h-8 bg-[#0F172A] rounded flex items-center justify-center text-white text-xs">
                         {company.name.charAt(0)}
                       </div>
                       <div>
-                        <div className="font-medium text-[#0F172A]">{company.name}</div>
-                        <div className="text-xs text-gray-500 flex items-center gap-1">
+                        <div className="font-medium text-[#0F172A] dark:text-white">{company.name}</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
                           <Building2 className="w-3 h-3" />
                           {company.industry}
                         </div>

@@ -6,6 +6,14 @@ import re
 class UserBase(BaseModel):
     email: EmailStr
     full_name: Optional[str] = None
+    picture: Optional[str] = None
+    email_notifs: bool = True
+    push_notifs: bool = False
+
+class UserUpdate(BaseModel):
+    full_name: Optional[str] = None
+    email_notifs: Optional[bool] = None
+    push_notifs: Optional[bool] = None
 
 class UserCreate(UserBase):
     password: str

@@ -36,7 +36,7 @@ export function Sidebar({ activeItem, onNavigate, isMobileOpen = false, onMobile
       )}
       
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:block w-64 bg-white border-r border-[#E5E7EB] h-screen sticky top-0">
+      <aside className="hidden lg:block w-64 bg-white dark:bg-slate-900 border-r border-[#E5E7EB] dark:border-slate-800 h-screen sticky top-0 transition-colors duration-200">
         <div className="p-6">
           {menuItems.map((item) => {
             const Icon = item.icon;
@@ -49,7 +49,7 @@ export function Sidebar({ activeItem, onNavigate, isMobileOpen = false, onMobile
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-all ${
                   isActive 
                     ? 'bg-[#10B981] text-white' 
-                    : 'text-[#0F172A] hover:bg-[#E5E7EB]'
+                    : 'text-[#0F172A] dark:text-gray-300 hover:bg-[#E5E7EB] dark:hover:bg-slate-800'
                 }`}
               >
                 <Icon className="w-5 h-5" />
@@ -62,7 +62,7 @@ export function Sidebar({ activeItem, onNavigate, isMobileOpen = false, onMobile
       
       {/* Mobile Sidebar */}
       <aside 
-        className={`lg:hidden fixed top-0 left-0 w-64 bg-white h-screen z-50 transition-transform duration-300 ${
+        className={`lg:hidden fixed top-0 left-0 w-64 bg-white dark:bg-slate-900 h-screen z-50 transition-transform duration-300 ${
           isMobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -72,13 +72,13 @@ export function Sidebar({ activeItem, onNavigate, isMobileOpen = false, onMobile
               <div className="w-8 h-8 bg-[#10B981] rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold">P</span>
               </div>
-              <span className="text-[#0F172A] font-semibold">Menu</span>
+              <span className="text-[#0F172A] dark:text-white font-semibold">Menu</span>
             </div>
             <button 
               onClick={onMobileClose}
-              className="p-2 hover:bg-[#E5E7EB] rounded-lg transition-colors"
+              className="p-2 hover:bg-[#E5E7EB] dark:hover:bg-slate-800 rounded-lg transition-colors"
             >
-              <X className="w-5 h-5 text-[#0F172A]" />
+              <X className="w-5 h-5 text-[#0F172A] dark:text-gray-300" />
             </button>
           </div>
           
@@ -93,7 +93,7 @@ export function Sidebar({ activeItem, onNavigate, isMobileOpen = false, onMobile
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-all ${
                   isActive 
                     ? 'bg-[#10B981] text-white' 
-                    : 'text-[#0F172A] hover:bg-[#E5E7EB]'
+                    : 'text-[#0F172A] dark:text-gray-300 hover:bg-[#E5E7EB] dark:hover:bg-slate-800'
                 }`}
               >
                 <Icon className="w-5 h-5" />
@@ -105,7 +105,7 @@ export function Sidebar({ activeItem, onNavigate, isMobileOpen = false, onMobile
       </aside>
       
       {/* Mobile Bottom Navigation */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[#E5E7EB] z-30">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-[#E5E7EB] dark:border-slate-800 z-30">
         <div className="flex items-center justify-around px-2 py-3">
           {menuItems.slice(0, 5).map((item) => {
             const Icon = item.icon;
@@ -118,7 +118,7 @@ export function Sidebar({ activeItem, onNavigate, isMobileOpen = false, onMobile
                 className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-all ${
                   isActive 
                     ? 'text-[#10B981]' 
-                    : 'text-gray-500'
+                    : 'text-gray-500 dark:text-gray-400'
                 }`}
               >
                 <Icon className="w-5 h-5" />

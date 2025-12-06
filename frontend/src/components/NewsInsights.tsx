@@ -155,7 +155,7 @@ export function NewsInsights({ onNavigate, onLogout }: NewsInsightsProps) {
     : visibleArticles.filter(article => article.source.toLowerCase().includes(selectedSource.toLowerCase()));
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] pb-20 lg:pb-0">
+    <div className="min-h-screen bg-[#F9FAFB] dark:bg-slate-900 pb-20 lg:pb-0 transition-colors duration-200">
       <Navbar
         showSearch={true}
         showProfile={true}
@@ -177,14 +177,14 @@ export function NewsInsights({ onNavigate, onLogout }: NewsInsightsProps) {
           <div className="max-w-[1600px] mx-auto">
             <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <h1 className="text-2xl sm:text-3xl text-[#0F172A] mb-2">News & Insights</h1>
-                <p className="text-sm sm:text-base text-[#1E293B]">Latest updates from Pakistan's business and tech sectors</p>
+                <h1 className="text-2xl sm:text-3xl text-[#0F172A] dark:text-white mb-2">News & Insights</h1>
+                <p className="text-sm sm:text-base text-[#1E293B] dark:text-gray-400">Latest updates from Pakistan's business and tech sectors</p>
               </div>
 
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setShowFilters(!showFilters)}
-                  className="lg:hidden px-4 py-2 bg-white text-[#0F172A] border border-[#E5E7EB] rounded-lg flex items-center gap-2"
+                  className="lg:hidden px-4 py-2 bg-white dark:bg-slate-800 text-[#0F172A] dark:text-white border border-[#E5E7EB] dark:border-slate-700 rounded-lg flex items-center gap-2"
                 >
                   <Filter className="w-4 h-4" />
                   <span className="text-sm">Filters</span>
@@ -203,17 +203,17 @@ export function NewsInsights({ onNavigate, onLogout }: NewsInsightsProps) {
             {/* Mini Dashboard */}
             {stats && (
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-                <Card className="bg-blue-50 border-blue-100">
-                  <div className="text-blue-600 text-sm font-medium mb-1">Total Sources</div>
-                  <div className="text-2xl font-bold text-blue-900">{stats.total_sources}</div>
+                <Card className="bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-900/30">
+                  <div className="text-blue-600 dark:text-blue-400 text-sm font-medium mb-1">Total Sources</div>
+                  <div className="text-2xl font-bold text-blue-900 dark:text-blue-200">{stats.total_sources}</div>
                 </Card>
-                <Card className="bg-green-50 border-green-100">
-                  <div className="text-green-600 text-sm font-medium mb-1">Total Articles</div>
-                  <div className="text-2xl font-bold text-green-900">{stats.total_articles}</div>
+                <Card className="bg-green-50 dark:bg-green-900/20 border-green-100 dark:border-green-900/30">
+                  <div className="text-green-600 dark:text-green-400 text-sm font-medium mb-1">Total Articles</div>
+                  <div className="text-2xl font-bold text-green-900 dark:text-green-200">{stats.total_articles}</div>
                 </Card>
-                <Card className="bg-purple-50 border-purple-100">
-                  <div className="text-purple-600 text-sm font-medium mb-1">Top Source</div>
-                  <div className="text-2xl font-bold text-purple-900">
+                <Card className="bg-purple-50 dark:bg-purple-900/20 border-purple-100 dark:border-purple-900/30">
+                  <div className="text-purple-600 dark:text-purple-400 text-sm font-medium mb-1">Top Source</div>
+                  <div className="text-2xl font-bold text-purple-900 dark:text-purple-200">
                     {Object.entries(stats.source_counts).sort(([, a], [, b]) => (b as number) - (a as number))[0]?.[0] || 'N/A'}
                   </div>
                 </Card>
@@ -223,25 +223,25 @@ export function NewsInsights({ onNavigate, onLogout }: NewsInsightsProps) {
             <div className="flex flex-col lg:flex-row gap-8">
               {/* Advanced Filters Sidebar (Hidden on mobile by default) */}
               <div className={`${showFilters ? 'block' : 'hidden'} lg:block w-full lg:w-72`}>
-                <Card>
+                <Card className="bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700">
                   <div className="flex items-center gap-2 mb-4">
-                    <Filter className="w-5 h-5 text-[#0F172A]" />
-                    <h3 className="text-[#0F172A]">Filters</h3>
+                    <Filter className="w-5 h-5 text-[#0F172A] dark:text-white" />
+                    <h3 className="text-[#0F172A] dark:text-white">Filters</h3>
                   </div>
 
                   <div className="space-y-4">
                     <div>
-                      <label className="text-sm text-gray-600 mb-2 block">Sort Order</label>
+                      <label className="text-sm text-gray-600 dark:text-gray-400 mb-2 block">Sort Order</label>
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleSortChange('random')}
-                          className={`flex-1 py-2 text-sm rounded-lg border ${sortMode === 'random' ? 'bg-blue-50 border-blue-200 text-blue-700' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}
+                          className={`flex-1 py-2 text-sm rounded-lg border ${sortMode === 'random' ? 'bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-900/50 text-blue-700 dark:text-blue-300' : 'border-gray-200 dark:border-slate-600 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700'}`}
                         >
                           Random
                         </button>
                         <button
                           onClick={() => handleSortChange('latest')}
-                          className={`flex-1 py-2 text-sm rounded-lg border ${sortMode === 'latest' ? 'bg-blue-50 border-blue-200 text-blue-700' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}
+                          className={`flex-1 py-2 text-sm rounded-lg border ${sortMode === 'latest' ? 'bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-900/50 text-blue-700 dark:text-blue-300' : 'border-gray-200 dark:border-slate-600 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700'}`}
                         >
                           Latest
                         </button>
@@ -249,11 +249,11 @@ export function NewsInsights({ onNavigate, onLogout }: NewsInsightsProps) {
                     </div>
 
                     <div>
-                      <label className="text-sm text-gray-600 mb-2 block">Source</label>
+                      <label className="text-sm text-gray-600 dark:text-gray-400 mb-2 block">Source</label>
                       <select
                         value={selectedSource}
                         onChange={(e) => setSelectedSource(e.target.value)}
-                        className="w-full p-2 border border-[#E5E7EB] rounded-lg focus:outline-none focus:border-[#10B981]"
+                        className="w-full p-2 border border-[#E5E7EB] dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:border-[#10B981]"
                       >
                         <option>All Sources</option>
                         {stats && Object.keys(stats.source_counts).map(source => (
@@ -270,36 +270,36 @@ export function NewsInsights({ onNavigate, onLogout }: NewsInsightsProps) {
                 {loading && page === 1 ? (
                   <div className="text-center py-12">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#10B981] mx-auto mb-4"></div>
-                    <p className="text-gray-500">Loading news...</p>
+                    <p className="text-gray-500 dark:text-gray-400">Loading news...</p>
                   </div>
                 ) : (
                   <>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                       {filteredArticles.length === 0 ? (
-                        <div className="col-span-full text-center py-10 text-gray-500">
+                        <div className="col-span-full text-center py-10 text-gray-500 dark:text-gray-400">
                           No news articles found. Click "Refresh News" to fetch the latest updates.
                         </div>
                       ) : (
                         filteredArticles.map((article, index) => (
-                          <Card key={index} hover className="flex flex-col h-full">
+                          <Card key={index} hover className="flex flex-col h-full bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700">
                             <div className="flex flex-col h-full space-y-4">
                               <div className="flex items-start justify-between">
-                                <span className="px-3 py-1 bg-blue-50 text-blue-600 text-xs font-medium rounded-full">
+                                <span className="px-3 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-xs font-medium rounded-full">
                                   {article.source}
                                 </span>
-                                <span className="text-xs text-gray-500 flex items-center gap-1">
+                                <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
                                   <Calendar className="w-3 h-3" />
                                   {new Date(article.published).toLocaleDateString()}
                                 </span>
                               </div>
 
-                              <h3 className="text-lg font-semibold text-[#0F172A] line-clamp-2">
+                              <h3 className="text-lg font-semibold text-[#0F172A] dark:text-white line-clamp-2">
                                 {article.title}
                               </h3>
 
-                              <div className="text-sm text-gray-600 line-clamp-3 flex-1" dangerouslySetInnerHTML={{ __html: article.summary }} />
+                              <div className="text-sm text-gray-600 dark:text-gray-300 line-clamp-3 flex-1" dangerouslySetInnerHTML={{ __html: article.summary }} />
 
-                              <div className="pt-4 mt-auto border-t border-gray-100">
+                              <div className="pt-4 mt-auto border-t border-gray-100 dark:border-slate-700">
                                 <a
                                   href={article.link}
                                   target="_blank"
@@ -321,7 +321,7 @@ export function NewsInsights({ onNavigate, onLogout }: NewsInsightsProps) {
                         <button
                           onClick={handleLoadMore}
                           disabled={loading}
-                          className="px-6 py-2 bg-white border border-[#E5E7EB] text-[#0F172A] rounded-lg hover:border-[#10B981] hover:text-[#10B981] transition-colors disabled:opacity-50"
+                          className="px-6 py-2 bg-white dark:bg-slate-800 border border-[#E5E7EB] dark:border-slate-700 text-[#0F172A] dark:text-white rounded-lg hover:border-[#10B981] hover:text-[#10B981] transition-colors disabled:opacity-50"
                         >
                           {loading ? 'Loading...' : 'Load More News'}
                         </button>

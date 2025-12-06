@@ -4,6 +4,9 @@ export interface User {
   id: string;
   email: string;
   full_name?: string;
+  picture?: string;
+  email_notifs?: boolean;
+  push_notifs?: boolean;
 }
 
 export interface AuthResponse {
@@ -27,7 +30,7 @@ export const authService = {
       password,
     });
     if (response.data.access_token) {
-      localStorage.setItem('token', response.data.access_token);
+      sessionStorage.setItem('token', response.data.access_token);
     }
     return response.data;
   },
@@ -37,7 +40,7 @@ export const authService = {
       credential,
     });
     if (response.data.access_token) {
-      localStorage.setItem('token', response.data.access_token);
+      sessionStorage.setItem('token', response.data.access_token);
     }
     return response.data;
   },
@@ -50,8 +53,13 @@ export const authService = {
     return response.data;
   },
 
+  async updateUser(data: Partial<User>) {
+    const response = await api.put<User>('/auth/me', data);
+    return response.data;
+  },
+
   logout() {
-    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
   },
 
   async getCurrentUser() {
@@ -60,6 +68,6 @@ export const authService = {
   },
 
   isAuthenticated() {
-    return !!localStorage.getItem('token');
+    return !!sessionStorage.getItem('token');
   }
 };

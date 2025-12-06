@@ -28,7 +28,6 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isGoogleReady, setIsGoogleReady] = useState(false);
-  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [showSignupSuggestion, setShowSignupSuggestion] = useState(false);
 
   useEffect(() => {
@@ -99,7 +98,6 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
       }
 
       // Render Google's button in a hidden container and click it programmatically
-      // This is the most reliable way to trigger Google sign-in from a custom button
       const tempDiv = document.createElement('div');
       tempDiv.style.position = 'fixed';
       tempDiv.style.left = '-9999px';
@@ -128,7 +126,6 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
               }
             }, 2000);
           } else if (attempts < 10) {
-            // Retry up to 10 times (1 second total)
             setTimeout(() => tryClick(attempts + 1), 100);
           } else {
             console.error('Google button not found after rendering');
@@ -160,44 +157,6 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
     setLoading(true);
 
     try {
-      if (isForgotPassword) {
-        if (!email) {
-          setError("Please enter your email address.");
-          setLoading(false);
-          return;
-        }
-        if (!password || !confirmPassword) {
-          setError("Please enter and confirm your new password.");
-          setLoading(false);
-          return;
-        }
-        if (password !== confirmPassword) {
-          setError("Passwords do not match");
-          setLoading(false);
-          return;
-        }
-
-        try {
-          await authService.resetPassword(email, password);
-          alert("Password reset successfully. You can now log in with your new password.");
-          setIsForgotPassword(false);
-          setPassword('');
-          setConfirmPassword('');
-        } catch (err: any) {
-          if (err.response?.status === 404) {
-            setError("We don't recognize you.");
-            setShowSignupSuggestion(true);
-          } else if (err.response?.data?.detail) {
-            setError(err.response.data.detail);
-          } else {
-            setError("An error occurred. Please try again.");
-          }
-        } finally {
-          setLoading(false);
-        }
-        return;
-      }
-
       if (isLogin) {
         await authService.login(email, password);
         onLogin();
@@ -220,7 +179,6 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
         // Redirect to login view with success message
         setIsLogin(true);
         setError(""); // Clear any previous errors
-        // You might want to add a success state/message here, but for now we'll just switch to login
         alert("Account created successfully! Please login.");
         setPassword(""); // Clear password for security
         setConfirmPassword("");
@@ -264,7 +222,6 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
             <button
               onClick={() => {
                 setIsLogin(true);
-                setIsForgotPassword(false);
                 setError('');
                 setShowSignupSuggestion(false);
               }}
@@ -278,7 +235,6 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
             <button
               onClick={() => {
                 setIsLogin(false);
-                setIsForgotPassword(false);
                 setError('');
                 setShowSignupSuggestion(false);
               }}
@@ -298,7 +254,7 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
           )}
 
           <form className="space-y-4" onSubmit={handleSubmit}>
-            {!isLogin && !isForgotPassword && (
+            {!isLogin && (
               <div>
                 <label className="block text-sm text-gray-700 mb-2">Full Name</label>
                 <input
@@ -314,11 +270,11 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
 
             <div>
               <label className="block text-sm text-gray-700 mb-2">
-                {isForgotPassword ? 'Account Email' : 'Email Address'}
+                Email Address
               </label>
               <input
                 type="email"
-                placeholder={isForgotPassword ? 'Enter the email associated with your account' : 'Enter your email'}
+                placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -328,7 +284,7 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
 
             <div>
               <label className="block text-sm text-gray-700 mb-2">
-                {isForgotPassword ? 'New Password' : 'Password'}
+                Password
               </label>
               <div className="relative">
                 <input
@@ -349,53 +305,24 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
                   className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-400 hover:text-[#10B981]"
                 >
                   {showPassword ? (
-                    // Eye-off icon
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={1.5}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c1.52 0 2.97-.3 4.29-.843M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.5a10.522 10.522 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228L9 9m6 6l2.772 2.772M15 15l-3-3"
-                      />
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c1.52 0 2.97-.3 4.29-.843M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.5a10.522 10.522 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228L9 9m6 6l2.772 2.772M15 15l-3-3" />
                     </svg>
                   ) : (
-                    // Eye icon
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={1.5}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                   )}
                 </button>
               </div>
 
-              {/* Password strength indicator & rules - shown on signup and forgot password while password field is focused */}
-              {(!isLogin || isForgotPassword) && isPasswordFocused && (
+              {(!isLogin) && isPasswordFocused && (
                 <PasswordRequirements validationResult={passwordValidation} />
               )}
             </div>
 
-            {(!isLogin || isForgotPassword) && (
+            {!isLogin && (
               <div>
                 <label className="block text-sm text-gray-700 mb-2">Confirm Password</label>
                 <div className="relative">
@@ -415,41 +342,13 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
                     className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-400 hover:text-[#10B981]"
                   >
                     {showConfirmPassword ? (
-                      // Eye-off icon
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={1.5}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c1.52 0 2.97-.3 4.29-.843M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.5a10.522 10.522 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228L9 9m6 6l2.772 2.772M15 15l-3-3"
-                        />
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c1.52 0 2.97-.3 4.29-.843M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.5a10.522 10.522 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228L9 9m6 6l2.772 2.772M15 15l-3-3" />
                       </svg>
                     ) : (
-                      // Eye icon
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={1.5}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
                     )}
                   </button>
@@ -457,40 +356,13 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
               </div>
             )}
 
-            {isLogin && !isForgotPassword && (
+            {isLogin && (
               <div className="flex items-center justify-between text-sm">
                 <label className="flex items-center gap-2">
                   <input type="checkbox" className="rounded" />
                   <span className="text-gray-700">Remember me</span>
                 </label>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsForgotPassword(true);
-                    setError('');
-                  }}
-                  className="text-[#10B981] hover:underline"
-                >
-                  Forgot password?
-                </button>
-              </div>
-            )}
-
-            {isForgotPassword && (
-              <div className="text-xs text-gray-500 space-y-1">
-                <p>Enter your account email and a new password to reset your login.</p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsForgotPassword(false);
-                    setError('');
-                    setPassword('');
-                    setConfirmPassword('');
-                  }}
-                  className="text-[#10B981] hover:underline"
-                >
-                  Back to login
-                </button>
+                {/* Forgot Password Removed as requested */}
               </div>
             )}
 
@@ -503,11 +375,9 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
             >
               {loading
                 ? 'Processing...'
-                : isForgotPassword
-                  ? 'Reset Password'
-                  : isLogin
-                    ? 'Login'
-                    : 'Create Account'}
+                : isLogin
+                  ? 'Login'
+                  : 'Create Account'}
             </Button>
 
             {showSignupSuggestion && (
@@ -517,7 +387,6 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
                   type="button"
                   onClick={() => {
                     setIsLogin(false);
-                    setIsForgotPassword(false);
                     setShowSignupSuggestion(false);
                     setError('');
                   }}

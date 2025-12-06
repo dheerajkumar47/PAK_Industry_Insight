@@ -18,8 +18,14 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('landing');
 
   useEffect(() => {
+    // Check if user is authenticated (using sessionStorage from authService)
     if (authService.isAuthenticated()) {
       setCurrentPage('dashboard');
+    } else {
+	    // If not authenticated, ensure we start at landing or login
+	    if (currentPage !== 'landing' && currentPage !== 'login') {
+		    setCurrentPage('landing');
+	    }
     }
   }, []);
 
@@ -81,7 +87,7 @@ export default function App() {
   };
 
   return (
-    <div>
+    <div className="bg-[#F9FAFB] dark:bg-slate-900 min-h-screen transition-colors duration-200">
       {currentPage === 'landing' && (
         <LandingPage onGetStarted={handleGetStarted} onLoginClick={handleLoginClick} />
       )}
