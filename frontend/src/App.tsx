@@ -13,7 +13,49 @@ import { authService } from './services/auth';
 
 type Page = 'landing' | 'login' | 'dashboard' | 'industry-explorer' | 'companies' | 'company-detail' | 'news' | 'market-trends' | 'saved' | 'profile' | 'settings';
 
+
+function SplashScreen({ onFinish }: { onFinish: () => void }) {
+  const [opacity, setOpacity] = useState(1);
+  const videoRef = React.useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    // Fallback timeout in case video doesn't play or end
+    const timer = setTimeout(() => {
+      handleFinish();
+    }, 4000); 
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleFinish = () => {
+    setOpacity(0);
+    setTimeout(onFinish, 500);
+  };
+
+  return (
+    <div 
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-white dark:bg-slate-900 transition-opacity duration-500"
+      style={{ opacity }}
+    >
+      <div className="flex flex-col items-center">
+        <video 
+          ref={videoRef}
+          src="/intro.mp4" 
+          autoPlay 
+          muted 
+          playsInline
+          className="w-64 h-64 object-contain"
+          onEnded={handleFinish}
+          onError={(e) => console.error("Splash video failed to load:", e)}
+        />
+        {/* <h1 className="text-2xl font-bold text-[#0F172A] dark:text-white tracking-wider mt-4">PAK INDUSTRY INSIGHT</h1> */}
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
+  const [showSplash, setShowSplash] = useState(true);
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<Page>('landing');
 
@@ -88,6 +130,7 @@ export default function App() {
 
   return (
     <div className="bg-[#F9FAFB] dark:bg-slate-900 min-h-screen transition-colors duration-200">
+      {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
       {currentPage === 'landing' && (
         <LandingPage onGetStarted={handleGetStarted} onLoginClick={handleLoginClick} />
       )}

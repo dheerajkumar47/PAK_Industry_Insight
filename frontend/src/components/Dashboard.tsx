@@ -12,6 +12,14 @@ interface DashboardProps {
 
 export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProps) {
   const [activeItem, setActiveItem] = React.useState('dashboard');
+  const [showIntroVideo, setShowIntroVideo] = React.useState(true);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowIntroVideo(false);
+    }, 8000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const industries = [
     { name: 'Textiles & Apparel', growth: '+12.5%', trend: 'up', value: '$15.2B' },
@@ -233,6 +241,30 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
           </div>
         </main>
       </div>
+      
+      {/* Intro Video Widget */}
+      {showIntroVideo && (
+        <div className="fixed bottom-6 right-6 z-40 w-80 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl overflow-hidden border-4 border-[#10B981] animate-in slide-in-from-right duration-500">
+           <div className="relative">
+             <video 
+               src="/intro.mp4" 
+               autoPlay 
+               muted 
+               loop 
+               playsInline
+               className="w-full h-48 object-cover"
+               onError={(e) => console.error("Dashboard video failed to load:", e)}
+             />
+             <div className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 rounded-full p-1 cursor-pointer transition-colors" onClick={() => setShowIntroVideo(false)}>
+               <Sparkles className="w-4 h-4 text-white" />
+             </div>
+             <div className="p-3">
+               <h3 className="text-[#0F172A] dark:text-white font-bold text-sm">Welcome to PAK Insight</h3>
+               <p className="text-gray-500 dark:text-gray-400 text-xs">Explore real-time industry trends.</p>
+             </div>
+           </div>
+        </div>
+      )}
     </div>
   );
 }

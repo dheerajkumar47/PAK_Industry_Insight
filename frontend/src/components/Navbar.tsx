@@ -88,14 +88,12 @@ export function Navbar({
           )}
           
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-[#10B981] rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold">P</span>
-            </div>
-            <span className="text-[#0F172A] dark:text-white font-semibold text-base sm:text-xl hidden sm:inline">
+          <div className="flex items-center gap-3">
+            <img src="/logo.png" alt="Logo" className="w-10 h-10 rounded-lg shadow-sm" />
+            <span className="text-[#0F172A] dark:text-white font-bold text-lg sm:text-xl hidden sm:inline tracking-tight">
               PAK Industry Insight
             </span>
-            <span className="text-[#0F172A] dark:text-white font-semibold text-base sm:hidden">
+            <span className="text-[#0F172A] dark:text-white font-bold text-lg sm:hidden tracking-tight">
               PAK Insight
             </span>
           </div>
