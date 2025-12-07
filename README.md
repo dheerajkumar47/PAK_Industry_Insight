@@ -130,4 +130,4 @@ This will fetch live data for companies like **SYS.KA, ENGRO.KA, HBL.KA** and po
 Contributions are welcome! Please fork the repository and submit a Pull Request.
 
 ---
-*Built with ❤️ by Dheeraj Kumar and the PAK Insight Team.*
+*Built with ❤️ by Dheeraj Kumar and Maaz Siddique.*
