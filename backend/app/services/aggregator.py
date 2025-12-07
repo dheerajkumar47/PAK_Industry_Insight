@@ -1,7 +1,8 @@
-import feedparser
 from ..database import db
 from datetime import datetime
 import time
+import feedparser
+from .ai_service import ai_service
 
 RSS_FEEDS = [
     "https://techjuice.pk/feed/",
@@ -49,20 +50,31 @@ def fetch_news():
                 if hasattr(entry, 'published_parsed') and entry.published_parsed:
                     published_date = datetime.fromtimestamp(time.mktime(entry.published_parsed))
                 
+                # Check for duplicates first to save AI tokens
+                if db.articles.find_one({"link": entry.link}):
+                    continue
+
+                # AI Analysis
+                ai_analysis = ai_service.analyze_article(entry.title, entry.summary)
+                
                 article = {
                     "title": entry.title,
                     "link": entry.link,
-                    "published": entry.published, # Keep original string for display if needed
-                    "published_date": published_date, # For sorting
+                    "published": entry.published, 
+                    "published_date": published_date,
                     "summary": entry.summary,
                     "source": source_name,
-                    "created_at": datetime.utcnow()
+                    "created_at": datetime.utcnow(),
+                    # Add AI fields
+                    "category": ai_analysis.get("category", "Uncategorized") if ai_analysis else "Uncategorized",
+                    "relevance_score": ai_analysis.get("relevance_score", 0) if ai_analysis else 0,
+                    "tags": ai_analysis.get("tags", []) if ai_analysis else []
                 }
                 
-                # Avoid duplicates
-                if not db.articles.find_one({"link": article["link"]}):
-                    db.articles.insert_one(article)
-                    articles.append(article)
+                db.articles.insert_one(article)
+                articles.append(article)
+                print(f"Saved & Analyzed: {entry.title}")
+                
         except Exception as e:
             print(f"Error fetching feed {feed_url}: {e}")
             

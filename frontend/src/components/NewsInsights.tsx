@@ -29,6 +29,7 @@ export function NewsInsights({ onNavigate, onLogout }: NewsInsightsProps) {
   const [hasMore, setHasMore] = useState(true);
   const [selectedSource, setSelectedSource] = useState('All Sources');
   const [sortMode, setSortMode] = useState('random'); // 'random' or 'latest'
+  const [smartFilter, setSmartFilter] = useState(false); // NEW: Smart Filter State
 
   const LIMIT = 10;
   const RANDOM_FETCH_LIMIT = 100; // Fetch 100 items for client-side random shuffle
@@ -52,62 +53,50 @@ export function NewsInsights({ onNavigate, onLogout }: NewsInsightsProps) {
     return newArray;
   };
 
-  const loadNews = async (isRefresh: boolean = false, mode: string = sortMode) => {
+  const loadNews = async (isRefresh: boolean = false, mode: string = sortMode, isSmart: boolean = smartFilter) => {
     if (isRefresh) setLoading(true);
 
     try {
       if (mode === 'random') {
-        // --- RANDOM MODE: Client-side Pagination ---
+        // --- RANDOM MODE ---
         if (isRefresh) {
-          // 1. Fetch a large batch of latest news
-          const data = await newsService.getAll(0, RANDOM_FETCH_LIMIT, 'latest');
+          const data = await newsService.getAll(0, RANDOM_FETCH_LIMIT, 'latest', isSmart);
 
           if (Array.isArray(data)) {
-            // 2. Shuffle locally
             const shuffled = shuffleArray(data);
             setArticles(shuffled);
-
-            // 3. Show first page
             setVisibleArticles(shuffled.slice(0, LIMIT));
-            setPage(1); // Next page index
+            setPage(1);
             setHasMore(shuffled.length > LIMIT);
           }
         } else {
-          // Load next slice from local 'articles'
+          // Load next slice from local
           const nextSliceEnd = (page + 1) * LIMIT;
           const nextSlice = articles.slice(0, nextSliceEnd);
-
           setVisibleArticles(nextSlice);
           setPage(prev => prev + 1);
-
-          if (nextSlice.length >= articles.length) {
-            setHasMore(false);
-          }
+          if (nextSlice.length >= articles.length) setHasMore(false);
         }
       } else {
-        // --- LATEST MODE: Server-side Pagination ---
+        // --- LATEST MODE ---
         const serverPage = isRefresh ? 0 : page;
         const skip = serverPage * LIMIT;
-        const data = await newsService.getAll(skip, LIMIT, 'latest');
+        const data = await newsService.getAll(skip, LIMIT, 'latest', isSmart);
 
         if (Array.isArray(data)) {
           if (isRefresh) {
-            setArticles(data); // Not strictly needed for Latest, but keeps state consistent
+            setArticles(data);
             setVisibleArticles(data);
             setPage(1);
           } else {
             setVisibleArticles(prev => {
-              // Filter duplicates just in case
               const existingIds = new Set(prev.map(p => p.link));
               const newUnique = data.filter(d => !existingIds.has(d.link));
               return [...prev, ...newUnique];
             });
             setPage(prev => prev + 1);
           }
-
-          if (data.length < LIMIT) {
-            setHasMore(false);
-          }
+          if (data.length < LIMIT) setHasMore(false);
         }
       }
     } catch (error) {
@@ -120,14 +109,14 @@ export function NewsInsights({ onNavigate, onLogout }: NewsInsightsProps) {
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    setSortMode('random'); // Reset to random
-    setSelectedSource('All Sources'); // Reset filter
+    setSortMode('random');
+    setSelectedSource('All Sources');
     setHasMore(true);
 
     try {
-      await newsService.fetchLatest(); // Trigger backend fetch
+      await newsService.fetchLatest();
       await fetchStats();
-      await loadNews(true, 'random');
+      await loadNews(true, 'random', smartFilter);
     } catch (error) {
       console.error("Failed to refresh:", error);
       setRefreshing(false);
@@ -135,21 +124,28 @@ export function NewsInsights({ onNavigate, onLogout }: NewsInsightsProps) {
   };
 
   const handleLoadMore = () => {
-    loadNews(false, sortMode);
+    loadNews(false, sortMode, smartFilter);
   };
 
   const handleSortChange = (mode: string) => {
     setSortMode(mode);
     setHasMore(true);
-    loadNews(true, mode);
+    loadNews(true, mode, smartFilter);
+  };
+
+  const toggleSmartFilter = () => {
+    const newState = !smartFilter;
+    setSmartFilter(newState);
+    setHasMore(true);
+    loadNews(true, sortMode, newState);
   };
 
   useEffect(() => {
     fetchStats();
-    loadNews(true, 'random'); // Initial load
+    loadNews(true, 'random', false); // Initial load
   }, []);
 
-  // Filter visible articles by source
+  // Filter visible articles by source ONLY (Smart filter is now server-side)
   const filteredArticles = selectedSource === 'All Sources'
     ? visibleArticles
     : visibleArticles.filter(article => article.source.toLowerCase().includes(selectedSource.toLowerCase()));
@@ -182,6 +178,15 @@ export function NewsInsights({ onNavigate, onLogout }: NewsInsightsProps) {
               </div>
 
               <div className="flex items-center gap-2">
+                {/* Smart Filter Toggle */}
+                <button
+                  onClick={toggleSmartFilter}
+                  className={`px-4 py-2 rounded-lg flex items-center gap-2 border transition-colors ${smartFilter ? 'bg-purple-100 border-purple-200 text-purple-700 dark:bg-purple-900/30 dark:border-purple-800 dark:text-purple-300' : 'bg-white dark:bg-slate-800 border-[#E5E7EB] dark:border-slate-700 text-[#0F172A] dark:text-white'}`}
+                >
+                  <TrendingUp className="w-4 h-4" />
+                  <span className="text-sm font-medium">Smart Filter {smartFilter ? '(On)' : '(Off)'}</span>
+                </button>
+
                 <button
                   onClick={() => setShowFilters(!showFilters)}
                   className="lg:hidden px-4 py-2 bg-white dark:bg-slate-800 text-[#0F172A] dark:text-white border border-[#E5E7EB] dark:border-slate-700 rounded-lg flex items-center gap-2"
@@ -230,6 +235,19 @@ export function NewsInsights({ onNavigate, onLogout }: NewsInsightsProps) {
                   </div>
 
                   <div className="space-y-4">
+                    {/* Smart Filter Info */}
+                    <div className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-100 dark:border-purple-900/30">
+                      <div className="flex items-center gap-2 mb-1">
+                        <TrendingUp className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                        <span className="text-sm font-medium text-purple-900 dark:text-purple-200">AI Smart Filter</span>
+                      </div>
+                      <p className="text-xs text-purple-700 dark:text-purple-300">
+                        {smartFilter
+                          ? "Showing only high-relevance industry news."
+                          : "Turn on to hide general news and focus on insights."}
+                      </p>
+                    </div>
+
                     <div>
                       <label className="text-sm text-gray-600 dark:text-gray-400 mb-2 block">Sort Order</label>
                       <div className="flex gap-2">
@@ -277,16 +295,26 @@ export function NewsInsights({ onNavigate, onLogout }: NewsInsightsProps) {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                       {filteredArticles.length === 0 ? (
                         <div className="col-span-full text-center py-10 text-gray-500 dark:text-gray-400">
-                          No news articles found. Click "Refresh News" to fetch the latest updates.
+                          {smartFilter
+                            ? "No high-relevance news found. Try turning off Smart Filter."
+                            : "No news articles found. Click \"Refresh News\" to fetch the latest updates."}
                         </div>
                       ) : (
                         filteredArticles.map((article, index) => (
                           <Card key={index} hover className="flex flex-col h-full bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700">
                             <div className="flex flex-col h-full space-y-4">
                               <div className="flex items-start justify-between">
-                                <span className="px-3 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-xs font-medium rounded-full">
-                                  {article.source}
-                                </span>
+                                <div className="flex flex-col gap-1">
+                                  <span className="px-3 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-xs font-medium rounded-full w-fit">
+                                    {article.source}
+                                  </span>
+                                  {/* AI Category Badge */}
+                                  {article.category && article.category !== 'Uncategorized' && (
+                                    <span className="px-2 py-0.5 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 text-[10px] font-medium rounded-full w-fit border border-purple-100 dark:border-purple-900/30">
+                                      {article.category}
+                                    </span>
+                                  )}
+                                </div>
                                 <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
                                   <Calendar className="w-3 h-3" />
                                   {new Date(article.published).toLocaleDateString()}
@@ -298,6 +326,17 @@ export function NewsInsights({ onNavigate, onLogout }: NewsInsightsProps) {
                               </h3>
 
                               <div className="text-sm text-gray-600 dark:text-gray-300 line-clamp-3 flex-1" dangerouslySetInnerHTML={{ __html: article.summary }} />
+
+                              {/* AI Tags */}
+                              {article.tags && article.tags.length > 0 && (
+                                <div className="flex flex-wrap gap-1 mt-2">
+                                  {article.tags.slice(0, 3).map((tag: string, i: number) => (
+                                    <span key={i} className="px-2 py-0.5 bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 text-[10px] rounded-md">
+                                      #{tag}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
 
                               <div className="pt-4 mt-auto border-t border-gray-100 dark:border-slate-700">
                                 <a
