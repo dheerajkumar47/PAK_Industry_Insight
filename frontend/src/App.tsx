@@ -150,6 +150,14 @@ export default function App() {
       {currentPage === 'industry-explorer' && (
         <IndustryExplorer onNavigate={handleNavigation} onViewCompany={handleViewCompany} onLogout={handleLogout} />
       )}
+      {currentPage === 'companies' && (
+        <IndustryExplorer 
+            onNavigate={handleNavigation} 
+            onViewCompany={handleViewCompany} 
+            onLogout={handleLogout} 
+            initialViewMode="companies"
+        />
+      )}
       {currentPage === 'company-detail' && (
         <CompanyDetail 
           companyId={selectedCompanyId} 

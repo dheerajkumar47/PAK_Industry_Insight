@@ -14,11 +14,13 @@ interface IndustryExplorerProps {
   onNavigate: (page: string) => void;
   onViewCompany?: (id: string) => void;
   onLogout?: () => void;
+  initialViewMode?: 'sectors' | 'companies';
 }
 
-export function IndustryExplorer({ onNavigate, onViewCompany, onLogout }: IndustryExplorerProps) {
-  const [activeItem, setActiveItem] = React.useState('industry-explorer');
-  const [viewMode, setViewMode] = useState<'sectors' | 'companies'>('sectors');
+export function IndustryExplorer({ onNavigate, onViewCompany, onLogout, initialViewMode = 'sectors' }: IndustryExplorerProps) {
+  // Set active item based on the mode we entered in
+  const [activeItem, setActiveItem] = React.useState(initialViewMode === 'companies' ? 'companies' : 'industry-explorer');
+  const [viewMode, setViewMode] = useState<'sectors' | 'companies'>(initialViewMode);
   const [selectedSector, setSelectedSector] = useState<string | null>(null);
   const [companies, setCompanies] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -55,12 +57,25 @@ export function IndustryExplorer({ onNavigate, onViewCompany, onLogout }: Indust
   const handleSectorClick = (sectorId: string) => {
     setSelectedSector(sectorId);
     setViewMode('companies');
+    // Keep sidebar on industry explorer as we are just drilling down
   };
 
   const handleBackToSectors = () => {
     setSelectedSector(null);
     setViewMode('sectors');
     setCompanies([]);
+  };
+
+  const getHeaderTitle = () => {
+      if (viewMode === 'sectors') return 'Industry Sectors';
+      if (selectedSector) return `${selectedSector} Companies`;
+      return 'All Companies';
+  };
+
+  const getHeaderSubtitle = () => {
+      if (viewMode === 'sectors') return 'Explore Pakistan\'s key economic sectors';
+      if (selectedSector) return `Browse top companies in the ${selectedSector} sector`;
+      return 'Browse all registered companies in the database';
   };
 
   return (
@@ -89,16 +104,14 @@ export function IndustryExplorer({ onNavigate, onViewCompany, onLogout }: Indust
             <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h1 className="text-2xl sm:text-3xl font-bold text-[#0F172A] dark:text-white mb-2">
-                    {viewMode === 'sectors' ? 'Industry Sectors' : `${selectedSector} Companies`}
+                    {getHeaderTitle()}
                 </h1>
                 <p className="text-sm sm:text-base text-[#64748B] dark:text-gray-400">
-                    {viewMode === 'sectors' 
-                        ? 'Explore Pakistan\'s key economic sectors' 
-                        : `Browse top companies in the ${selectedSector} sector`}
+                    {getHeaderSubtitle()}
                 </p>
               </div>
               
-              {viewMode === 'companies' && (
+              {viewMode === 'companies' && initialViewMode !== 'companies' && (
                   <button 
                     onClick={handleBackToSectors}
                     className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#0F172A] dark:text-white bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
