@@ -24,13 +24,19 @@ export const authService = {
     return response.data;
   },
 
-  async login(email: string, password: string) {
+  async login(email: string, password: string, rememberMe: boolean = false) {
     const response = await api.post<AuthResponse>('/auth/login', {
       email,
       password,
     });
     if (response.data.access_token) {
-      sessionStorage.setItem('token', response.data.access_token);
+      if (rememberMe) {
+        localStorage.setItem('token', response.data.access_token);
+        sessionStorage.removeItem('token'); // Clear session if switching
+      } else {
+        sessionStorage.setItem('token', response.data.access_token);
+        localStorage.removeItem('token'); // Clear local if switching
+      }
     }
     return response.data;
   },
@@ -68,6 +74,7 @@ export const authService = {
 
   logout() {
     sessionStorage.removeItem('token');
+    localStorage.removeItem('token');
   },
 
   async getCurrentUser() {
@@ -76,6 +83,6 @@ export const authService = {
   },
 
   isAuthenticated() {
-    return !!sessionStorage.getItem('token');
+    return !!(sessionStorage.getItem('token') || localStorage.getItem('token'));
   }
 };

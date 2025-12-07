@@ -11,9 +11,10 @@ interface CompanyDetailProps {
   onLogout?: () => void;
   onViewCompany?: (id: string) => void;
   companyId?: string | null;
+  backTo?: string;
 }
 
-export function CompanyDetail({ onNavigate, onLogout, onViewCompany, companyId }: CompanyDetailProps) {
+export function CompanyDetail({ onNavigate, onLogout, onViewCompany, companyId, backTo }: CompanyDetailProps) {
   const [activeItem] = React.useState('companies');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = React.useState(false);
   const [company, setCompany] = useState<any>(null);
@@ -153,11 +154,11 @@ export function CompanyDetail({ onNavigate, onLogout, onViewCompany, companyId }
         <main className="flex-1 p-4 sm:p-6 lg:p-8">
           <div className="max-w-[1200px] mx-auto">
              <button 
-                onClick={() => onNavigate('industry-explorer')}
+                onClick={() => onNavigate(backTo || 'companies')}
                 className="flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-[#10B981] dark:hover:text-[#10B981] mb-6 transition-colors"
              >
                  <ArrowLeft className="w-4 h-4" />
-                 Back to Industry Explorer
+                 {backTo === 'industry-explorer' ? 'Back to Industry Explorer' : 'Back to Companies'}
              </button>
 
              {/* Company Header Card */}
@@ -199,21 +200,23 @@ export function CompanyDetail({ onNavigate, onLogout, onViewCompany, companyId }
                  <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm">
                      <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Revenue</div>
                      <div className="text-xl sm:text-2xl font-bold text-[#0F172A] dark:text-white flex items-center gap-2">
-                         {company.revenue}
+                         {company.revenue ? (typeof company.revenue === 'number' ? `$${(company.revenue / 1000000000).toFixed(1)}B` : company.revenue) : "N/A"}
                          <span className="text-xs text-[#10B981] bg-[#10B981]/10 px-2 py-0.5 rounded-full">+12%</span>
                      </div>
                  </div>
                  <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm">
                      <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Employees</div>
-                     <div className="text-xl sm:text-2xl font-bold text-[#0F172A] dark:text-white">{company.employees}</div>
+                     <div className="text-xl sm:text-2xl font-bold text-[#0F172A] dark:text-white">{company.employees_count || company.employees || "N/A"}</div>
                  </div>
                  <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm">
                      <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Market Cap</div>
-                     <div className="text-xl sm:text-2xl font-bold text-[#0F172A] dark:text-white">{company.marketCap}</div>
+                     <div className="text-xl sm:text-2xl font-bold text-[#0F172A] dark:text-white">
+                        {company.market_cap ? `$${(company.market_cap / 1000000000).toFixed(1)}B` : company.marketCap || "N/A"}
+                     </div>
                  </div>
                  <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm">
                      <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Founded</div>
-                     <div className="text-xl sm:text-2xl font-bold text-[#0F172A] dark:text-white">{company.founded}</div>
+                     <div className="text-xl sm:text-2xl font-bold text-[#0F172A] dark:text-white">{company.founded_year || company.founded || "N/A"}</div>
                  </div>
              </div>
 
@@ -247,15 +250,21 @@ export function CompanyDetail({ onNavigate, onLogout, onViewCompany, companyId }
                          <h3 className="text-lg font-bold text-[#0F172A] dark:text-white mb-6">Recent News</h3>
                          <div className="space-y-4">
                              {newsItems.map((item, index) => (
-                                 <div key={index} className="flex gap-4 pb-4 border-b border-gray-100 dark:border-slate-700 last:border-0 hover:bg-gray-50 dark:hover:bg-slate-700/50 p-2 rounded-lg transition-colors cursor-pointer">
-                                     <div className="w-24 h-16 bg-gray-200 dark:bg-slate-700 rounded-lg flex-shrink-0 flex items-center justify-center">
-                                       <Newspaper className="w-8 h-8 text-gray-400" />
+                                 <a 
+                                    key={index} 
+                                    href={`https://www.google.com/search?q=${encodeURIComponent(item.title + " " + company.name)}&tbm=nws`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="flex gap-4 pb-4 border-b border-gray-100 dark:border-slate-700 last:border-0 hover:bg-gray-50 dark:hover:bg-slate-700/50 p-2 rounded-lg transition-colors cursor-pointer group"
+                                  >
+                                     <div className="w-24 h-16 bg-gray-200 dark:bg-slate-700 rounded-lg flex-shrink-0 flex items-center justify-center group-hover:bg-gray-300 dark:group-hover:bg-slate-600 transition-colors">
+                                       <Newspaper className="w-8 h-8 text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300" />
                                      </div>
                                      <div>
-                                         <h4 className="font-semibold text-[#0F172A] dark:text-white mb-1">{item.title}</h4>
+                                         <h4 className="font-semibold text-[#0F172A] dark:text-white mb-1 group-hover:text-[#10B981] transition-colors">{item.title}</h4>
                                          <p className="text-sm text-gray-500 dark:text-gray-400">{item.date} • {item.source}</p>
                                      </div>
-                                 </div>
+                                 </a>
                              ))}
                          </div>
                      </Card>
@@ -272,7 +281,7 @@ export function CompanyDetail({ onNavigate, onLogout, onViewCompany, companyId }
                              </div>
                              <div className="flex items-center justify-between py-2 border-b border-[#E5E7EB] dark:border-slate-700">
                                <span className="text-gray-600 dark:text-gray-400">Symbol</span>
-                               <span className="text-[#10B981] font-bold bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded">{company.stockSymbol || "N/A"}</span>
+                               <span className="text-[#10B981] font-bold bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded">{company.ticker || company.stockSymbol || "N/A"}</span>
                              </div>
                              <div className="flex items-center justify-between py-2 border-b border-[#E5E7EB] dark:border-slate-700">
                                <span className="text-gray-600 dark:text-gray-400">Net Profit</span>
@@ -287,7 +296,9 @@ export function CompanyDetail({ onNavigate, onLogout, onViewCompany, companyId }
                              {sources.map((source, index) => (
                                <a
                                  key={index}
-                                 href="#"
+                                 href={source.url.startsWith('http') ? source.url : `https://${source.url}`}
+                                 target="_blank"
+                                 rel="noreferrer"
                                  className="flex items-center justify-between p-3 bg-[#F9FAFB] dark:bg-slate-700/50 rounded-lg hover:bg-[#E5E7EB] dark:hover:bg-slate-700 transition-colors group"
                                >
                                  <div className="flex items-center gap-3">

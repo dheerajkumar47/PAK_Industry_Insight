@@ -6,9 +6,19 @@ from .config import settings
 
 app = FastAPI(title="PAK Industry Insight API")
 
+from apscheduler.schedulers.background import BackgroundScheduler
+from .services.data_engine import DataEngine
+
+scheduler = BackgroundScheduler()
+
 @app.on_event("startup")
 async def startup_event():
     print(f"Startup Config: GOOGLE_CLIENT_ID={settings.GOOGLE_CLIENT_ID[:10]}... (masked)")
+    
+    # Schedule daily data refresh at midnight
+    scheduler.add_job(DataEngine.update_all_tracked_companies, 'cron', hour=0)
+    scheduler.start()
+    print("INFO: Daily Data Scheduler Started")
 
 # CORS Middleware
 app.add_middleware(

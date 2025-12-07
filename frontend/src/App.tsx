@@ -88,9 +88,12 @@ export default function App() {
       }
   }, []);
 
+  const [previousPage, setPreviousPage] = useState<Page>('companies'); // Track previous page for Back button
+
   const handleNavigation = (page: string) => {
     // Cast string to Page type safely if needed, or just use string in switch
     const target = page as Page; 
+    setPreviousPage(currentPage); // Store current page as previous
     setCurrentPage(target);
   };
 
@@ -115,6 +118,7 @@ export default function App() {
 
   const handleViewCompany = (id?: string) => {
     if (id) setSelectedCompanyId(id);
+    setPreviousPage(currentPage); // Capture where we came from (e.g. industry-explorer)
     setCurrentPage('company-detail');
   };
 
@@ -163,7 +167,8 @@ export default function App() {
           companyId={selectedCompanyId} 
           onNavigate={handleNavigation} 
           onViewCompany={handleViewCompany}
-          onLogout={handleLogout} 
+          onLogout={handleLogout}
+          backTo={previousPage}
         />
       )}
       {currentPage === 'news' && (

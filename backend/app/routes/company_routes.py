@@ -9,6 +9,16 @@ def add_company(company: CompanySchema):
     db.companies.insert_one(company.dict())
     return {"message": "Company added successfully"}
 
+from ..utils.seed_tickers import seed_initial_tickers
+
+@router.post("/admin/seed")
+def trigger_seed():
+    """
+    Triggers the manual seeding of top 15 companies.
+    """
+    seed_initial_tickers()
+    return {"message": "Seeding process initiated"}
+
 from bson import ObjectId
 from fastapi import HTTPException
 

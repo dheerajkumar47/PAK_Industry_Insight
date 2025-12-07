@@ -27,13 +27,14 @@ export function IndustryExplorer({ onNavigate, onViewCompany, onLogout, initialV
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = React.useState(false);
 
   // Hardcoded sectors for the "Sector View"
+  // Sectors adapted to match real yfinance Industry names
   const sectors = [
     { id: 'Technology', name: 'Technology', count: 156, growth: '+24%', icon: Server },
-    { id: 'Textiles', name: 'Textiles', count: 89, growth: '+12%', icon: Layers },
-    { id: 'Agriculture', name: 'Agriculture', count: 245, growth: '+8%', icon: Leaf },
-    { id: 'Energy', name: 'Energy', count: 42, growth: '+5%', icon: Zap },
-    { id: 'Finance', name: 'Finance', count: 67, growth: '+15%', icon: DollarSign },
-    { id: 'Construction', name: 'Construction', count: 120, growth: '-2%', icon: Building2 },
+    { id: 'Financial Services', name: 'Financial Services', count: 67, growth: '+15%', icon: DollarSign }, // Matches HBL, MCB
+    { id: 'Basic Materials', name: 'Basic Materials', count: 89, growth: '+12%', icon: Layers }, // Matches Lucky Cement, Engro
+    { id: 'Energy', name: 'Energy', count: 42, growth: '+5%', icon: Zap }, // Matches OGDC, Hubco
+    { id: 'Consumer Cyclical', name: 'Automobile', count: 120, growth: '-2%', icon: Building2 }, // Matches Indus Motor
+    { id: 'Industrials', name: 'Industrials', count: 45, growth: '+8%', icon: Leaf }, // Matches Millat Tractors
   ];
 
   useEffect(() => {
@@ -197,11 +198,13 @@ export function IndustryExplorer({ onNavigate, onViewCompany, onLogout, initialV
                                     <div className="pt-4 border-t border-gray-100 dark:border-slate-700 flex items-center justify-between text-sm">
                                         <div className="text-[#64748B] dark:text-gray-400">
                                             REVENUE
-                                            <div className="font-semibold text-[#0F172A] dark:text-white">{company.revenue || "N/A"}</div>
+                                            <div className="font-semibold text-[#0F172A] dark:text-white">
+                                                {company.revenue ? (typeof company.revenue === 'number' ? `$${(company.revenue / 1000000000).toFixed(1)}B` : company.revenue) : "N/A"}
+                                            </div>
                                         </div>
                                         <div className="text-right text-[#64748B] dark:text-gray-400">
                                             EMPLOYEES
-                                            <div className="font-semibold text-[#0F172A] dark:text-white">{company.employees || "N/A"}</div>
+                                            <div className="font-semibold text-[#0F172A] dark:text-white">{company.employees_count || company.employees || "N/A"}</div>
                                         </div>
                                     </div>
                                 </div>

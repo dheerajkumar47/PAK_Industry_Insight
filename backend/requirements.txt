@@ -13,3 +13,5 @@ google-auth
 requests
 pydantic-settings
 feedparser
+yfinance
+apscheduler

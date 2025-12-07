@@ -30,6 +30,7 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isGoogleReady, setIsGoogleReady] = useState(false);
   const [showSignupSuggestion, setShowSignupSuggestion] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   // ... (keep useEffect for Google Init) ...
   useEffect(() => {
@@ -180,7 +181,7 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
          setPassword("");
          setConfirmPassword("");
       } else if (isLogin) {
-        await authService.login(email, password);
+        await authService.login(email, password, rememberMe);
         onLogin();
       } else {
         // Frontend password validation for signup
@@ -387,11 +388,18 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
               </div>
             )}
 
+
+// ... inside render ...
             {isLogin && !isReset && (
               <div className="flex items-center justify-between text-sm">
-                <label className="flex items-center gap-2">
-                  <input type="checkbox" className="rounded" />
-                  <span className="text-gray-700">Remember me</span>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    className="rounded text-[#10B981] focus:ring-[#10B981]" 
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                  />
+                  <span className="text-gray-700 select-none">Remember me</span>
                 </label>
                 <button
                     type="button"
