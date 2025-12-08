@@ -1,24 +1,18 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, BackgroundTasks
 from ..database import db
 from ..services.aggregator import fetch_news
 
 router = APIRouter(prefix="/news", tags=["News"])
 
 @router.get("/fetch")
-def trigger_fetch():
-    return fetch_news()
+def trigger_fetch(background_tasks: BackgroundTasks):
+    background_tasks.add_task(fetch_news)
+    return {"message": "News fetch started in background. Updates will appear shortly."}
 
 @router.get("/")
-def list_news(skip: int = 0, limit: int = 10, sort: str = "latest", smart_filter: bool = False):
+def list_news(skip: int = 0, limit: int = 10, sort: str = "latest"):
     query = {}
     
-    # Smart Filter Logic
-    if smart_filter:
-        query["$or"] = [
-            {"relevance_score": {"$gte": 7}},
-            {"category": {"$nin": ["Uncategorized", "Other", None]}}
-        ]
-
     if sort == "random":
         pipeline = [{"$match": query}, {"$sample": {"size": limit}}]
         articles = list(db.articles.aggregate(pipeline))
