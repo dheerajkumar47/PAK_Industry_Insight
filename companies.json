@@ -1,0 +1,1266 @@
+[
+  {
+    "name": "Oil and Gas Development Company Limited",
+    "sector": "Energy",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "OGDC.KA",
+    "market_cap": 567163420672,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/OGDC.KA"
+    ]
+  },
+  {
+    "name": "Kot Addu Power Company Limited",
+    "sector": "Energy",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "KAPCO.KA",
+    "market_cap": 28555413504,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/KAPCO.KA"
+    ]
+  },
+  {
+    "name": "Pakistan State Oil Company Limited",
+    "sector": "Energy",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "PSO.KA",
+    "market_cap": 73953378304,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/PSO.KA"
+    ]
+  },
+  {
+    "name": "Mari Petroleum Company Limited",
+    "sector": "Energy",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "MARI.KA",
+    "market_cap": 3229734404096,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/MARI.KA"
+    ]
+  },
+  {
+    "name": "Attock Petroleum Limited",
+    "sector": "Energy",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "APL.KA",
+    "market_cap": 50964525056,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/APL.KA"
+    ]
+  },
+  {
+    "name": "Shell Pakistan Limited",
+    "sector": "Energy",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "SHEL.KA",
+    "market_cap": 31478796288,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/SHEL.KA"
+    ]
+  },
+  {
+    "name": "Pakistan Oilfields Limited",
+    "sector": "Energy",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "POL.KA",
+    "market_cap": 155373764608,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/POL.KA"
+    ]
+  },
+  {
+    "name": "Habib Bank Limited",
+    "sector": "Banking & Financial Services",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "HBL.KA",
+    "market_cap": 207280914432,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/HBL.KA"
+    ]
+  },
+  {
+    "name": "Pakistan Petroleum Limited",
+    "sector": "Energy",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "PPL.KA",
+    "market_cap": 314598916096,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/PPL.KA"
+    ]
+  },
+  {
+    "name": "The Hub Power Company Limited",
+    "sector": "Energy",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "HUBC.KA",
+    "market_cap": 198853771264,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/HUBC.KA"
+    ]
+  },
+  {
+    "name": "United Bank Limited",
+    "sector": "Banking & Financial Services",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "UBL.KA",
+    "market_cap": 650077667328,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/UBL.KA"
+    ]
+  },
+  {
+    "name": "Hascol Petroleum Limited",
+    "sector": "Energy",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "HASCOL.KA",
+    "market_cap": 6074653696,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/HASCOL.KA"
+    ]
+  },
+  {
+    "name": "K-Electric Limited",
+    "sector": "Energy",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "KEL.KA",
+    "market_cap": 123992219648,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/KEL.KA"
+    ]
+  },
+  {
+    "name": "MCB Bank Limited",
+    "sector": "Banking & Financial Services",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "MCB.KA",
+    "market_cap": 268866404352,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/MCB.KA"
+    ]
+  },
+  {
+    "name": "Meezan Bank Limited",
+    "sector": "Banking & Financial Services",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "MEBL.KA",
+    "market_cap": 426897047552,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/MEBL.KA"
+    ]
+  },
+  {
+    "name": "Allied Bank Limited",
+    "sector": "Banking & Financial Services",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "ABL.KA",
+    "market_cap": 133103378432,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/ABL.KA"
+    ]
+  },
+  {
+    "name": "Bank Al Habib Limited",
+    "sector": "Banking & Financial Services",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "BAHL.KA",
+    "market_cap": 124101763072,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/BAHL.KA"
+    ]
+  },
+  {
+    "name": "Soneri Bank Limited",
+    "sector": "Banking & Financial Services",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "SNBL.KA",
+    "market_cap": 14629691392,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/SNBL.KA"
+    ]
+  },
+  {
+    "name": "Askari Bank Limited",
+    "sector": "Banking & Financial Services",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "AKBL.KA",
+    "market_cap": 39739785216,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/AKBL.KA"
+    ]
+  },
+  {
+    "name": "Sui Northern Gas Pipelines Limited",
+    "sector": "Energy",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "SNGP.KA",
+    "market_cap": 45644570624,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/SNGP.KA"
+    ]
+  },
+  {
+    "name": "Faysal Bank Limited",
+    "sector": "Banking & Financial Services",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "FABL.KA",
+    "market_cap": 71498686464,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/FABL.KA"
+    ]
+  },
+  {
+    "name": "Bank Alfalah Limited",
+    "sector": "Banking & Financial Services",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "BAFL.KA",
+    "market_cap": 102531506176,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/BAFL.KA"
+    ]
+  },
+  {
+    "name": "Lucky Cement Limited",
+    "sector": "Cement",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "LUCK.KA",
+    "market_cap": 1329707220992,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/LUCK.KA"
+    ]
+  },
+  {
+    "name": "Sui Southern Gas Company Limited",
+    "sector": "Energy",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "SSGC.KA",
+    "market_cap": 8069193216,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/SSGC.KA"
+    ]
+  },
+  {
+    "name": "Maple Leaf Cement Factory Limited",
+    "sector": "Cement",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "MLCF.KA",
+    "market_cap": 38529351680,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/MLCF.KA"
+    ]
+  },
+  {
+    "name": "D.G. Khan Cement Company Limited",
+    "sector": "Cement",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "DGKC.KA",
+    "market_cap": 38554480640,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/DGKC.KA"
+    ]
+  },
+  {
+    "name": "Pioneer Cement Limited",
+    "sector": "Cement",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "PIOC.KA",
+    "market_cap": 39889600512,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/PIOC.KA"
+    ]
+  },
+  {
+    "name": "Fauji Cement Company Limited",
+    "sector": "Cement",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "FCCL.KA",
+    "market_cap": 53987164160,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/FCCL.KA"
+    ]
+  },
+  {
+    "name": "Cherat Cement Company Limited",
+    "sector": "Cement",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "CHCC.KA",
+    "market_cap": 32433670144,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/CHCC.KA"
+    ]
+  },
+  {
+    "name": "Kohat Cement Company Limited",
+    "sector": "Cement",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "KOHC.KA",
+    "market_cap": 244268924928,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/KOHC.KA"
+    ]
+  },
+  {
+    "name": "Attock Cement Pakistan Limited",
+    "sector": "Cement",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "ACPL.KA",
+    "market_cap": 13311175680,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/ACPL.KA"
+    ]
+  },
+  {
+    "name": "Fauji Fertilizer Company Limited",
+    "sector": "Chemicals & Fertilizers",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "FFC.KA",
+    "market_cap": 232749432832,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/FFC.KA"
+    ]
+  },
+  {
+    "name": "Engro Fertilizers Limited",
+    "sector": "Chemicals & Fertilizers",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "EFERT.KA",
+    "market_cap": 226707111936,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/EFERT.KA"
+    ]
+  },
+  {
+    "name": "Fauji Fertilizer Bin Qasim Limited",
+    "sector": "Chemicals & Fertilizers",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "FFBL.KA",
+    "market_cap": 54490750976,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/FFBL.KA"
+    ]
+  },
+  {
+    "name": "Fatima Fertilizer Company Limited",
+    "sector": "Chemicals & Fertilizers",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "FATIMA.KA",
+    "market_cap": 111216001024,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/FATIMA.KA"
+    ]
+  },
+  {
+    "name": "Lotte Chemical Pakistan Limited",
+    "sector": "Chemicals & Fertilizers",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "LOTCHEM.KA",
+    "market_cap": 26559197184,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/LOTCHEM.KA"
+    ]
+  },
+  {
+    "name": "Avanceon Limited",
+    "sector": "Technology",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "AVN.KA",
+    "market_cap": 28630872064,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/AVN.KA"
+    ]
+  },
+  {
+    "name": "TRG Pakistan Limited",
+    "sector": "Technology",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "TRG.KA",
+    "market_cap": 29729243136,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/TRG.KA"
+    ]
+  },
+  {
+    "name": "Systems Limited",
+    "sector": "Technology",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "SYS.KA",
+    "market_cap": 661255421952,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/SYS.KA"
+    ]
+  },
+  {
+    "name": "Engro Corporation Limited",
+    "sector": "Chemicals & Fertilizers",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "ENGRO.KA",
+    "market_cap": 178283249664,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/ENGRO.KA"
+    ]
+  },
+  {
+    "name": "Pakistan Telecommunication Company Limited",
+    "sector": "Telecom",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "PTC.KA",
+    "market_cap": 64260005888,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/PTC.KA"
+    ]
+  },
+  {
+    "name": "WorldCall Telecom Limited",
+    "sector": "Telecom",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "WTL.KA",
+    "market_cap": 5829278208,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/WTL.KA"
+    ]
+  },
+  {
+    "name": "Telecard Limited",
+    "sector": "Telecom",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "TGL.KA",
+    "market_cap": 19955898368,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/TGL.KA"
+    ]
+  },
+  {
+    "name": "Indus Motor Company Limited",
+    "sector": "Automotive",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "INDU.KA",
+    "market_cap": 133097308160,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/INDU.KA"
+    ]
+  },
+  {
+    "name": "Ghandhara Industries Limited",
+    "sector": "Automotive",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "GHNI.KA",
+    "market_cap": 14962522112,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/GHNI.KA"
+    ]
+  },
+  {
+    "name": "Honda Atlas Cars (Pakistan) Limited",
+    "sector": "Automotive",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "HCAR.KA",
+    "market_cap": 40992165888,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/HCAR.KA"
+    ]
+  },
+  {
+    "name": "Millat Tractors Limited",
+    "sector": "Automotive",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "MTL.KA",
+    "market_cap": 124519899136,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/MTL.KA"
+    ]
+  },
+  {
+    "name": "Nishat Mills Limited",
+    "sector": "Textile & Apparel",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "NML.KA",
+    "market_cap": 23370842112,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/NML.KA"
+    ]
+  },
+  {
+    "name": "Nishat (Chunian) Limited",
+    "sector": "Textile & Apparel",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "NCL.KA",
+    "market_cap": 6483213824,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/NCL.KA"
+    ]
+  },
+  {
+    "name": "AGP Limited",
+    "sector": "Automotive",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "AGTL.KA",
+    "market_cap": 19990693888,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/AGTL.KA"
+    ]
+  },
+  {
+    "name": "Kohinoor Textile Mills Limited",
+    "sector": "Textile & Apparel",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "KTML.KA",
+    "market_cap": 105323020288,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/KTML.KA"
+    ]
+  },
+  {
+    "name": "Faisal Spinning Mills Limited",
+    "sector": "Textile & Apparel",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "FASM.KA",
+    "market_cap": 2523200000,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/FASM.KA"
+    ]
+  },
+  {
+    "name": "Goodyear Pakistan (Private) Limited",
+    "sector": "Textile & Apparel",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "GTYR.KA",
+    "market_cap": 5367506432,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/GTYR.KA"
+    ]
+  },
+  {
+    "name": "Azgard Nine Limited",
+    "sector": "Textile & Apparel",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "AICL.KA",
+    "market_cap": 12992000000,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/AICL.KA"
+    ]
+  },
+  {
+    "name": "Gul Ahmed Textile Mills Limited",
+    "sector": "Textile & Apparel",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "GADT.KA",
+    "market_cap": 4833982464,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/GADT.KA"
+    ]
+  },
+  {
+    "name": "Nestle Pakistan Limited",
+    "sector": "Food & Agriculture",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "NESTLE.KA",
+    "market_cap": 317673832448,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/NESTLE.KA"
+    ]
+  },
+  {
+    "name": "Murree Brewery Company Limited",
+    "sector": "Food & Agriculture",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "MLCF.KA",
+    "market_cap": 38529351680,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/MLCF.KA"
+    ]
+  },
+  {
+    "name": "Unity Foods Limited",
+    "sector": "Food & Agriculture",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "UNITY.KA",
+    "market_cap": 38126018560,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/UNITY.KA"
+    ]
+  },
+  {
+    "name": "Natco Pakistan Limited",
+    "sector": "Food & Agriculture",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "NATF.KA",
+    "market_cap": 43030773760,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/NATF.KA"
+    ]
+  },
+  {
+    "name": "Adamjee Insurance Company Limited",
+    "sector": "Insurance",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "SNGP.KA",
+    "market_cap": 45644570624,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/SNGP.KA"
+    ]
+  },
+  {
+    "name": "EFU General Insurance Limited",
+    "sector": "Insurance",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "EFUG.KA",
+    "market_cap": 17386000384,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/EFUG.KA"
+    ]
+  },
+  {
+    "name": "GlaxoSmithKline Pakistan Limited",
+    "sector": "Pharmaceuticals",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "GLAXO.KA",
+    "market_cap": 43636387840,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/GLAXO.KA"
+    ]
+  },
+  {
+    "name": "Highnoon Laboratories Limited",
+    "sector": "Pharmaceuticals",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "HINOON.KA",
+    "market_cap": 37397778432,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/HINOON.KA"
+    ]
+  },
+  {
+    "name": "The Searle Company Limited",
+    "sector": "Pharmaceuticals",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "SEARL.KA",
+    "market_cap": 32772265984,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/SEARL.KA"
+    ]
+  },
+  {
+    "name": "EFU Life Assurance Limited",
+    "sector": "Insurance",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "EFUL.KA",
+    "market_cap": 18082050048,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/EFUL.KA"
+    ]
+  },
+  {
+    "name": "Ferozsons Laboratories Limited",
+    "sector": "Pharmaceuticals",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "FTHM.KA",
+    "market_cap": "",
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/FTHM.KA"
+    ]
+  },
+  {
+    "name": "Jubilee Life Insurance Company Limited",
+    "sector": "Insurance",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "JSCL.KA",
+    "market_cap": 17149675520,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/JSCL.KA"
+    ]
+  },
+  {
+    "name": "International Steels Limited",
+    "sector": "Steel & Materials",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "ISL.KA",
+    "market_cap": 36448649216,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/ISL.KA"
+    ]
+  },
+  {
+    "name": "Agha Steel Industries Limited",
+    "sector": "Steel & Materials",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "ASTL.KA",
+    "market_cap": 7152034816,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/ASTL.KA"
+    ]
+  },
+  {
+    "name": "Faran Sugar Mills Limited",
+    "sector": "Sugar",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "FASM.KA",
+    "market_cap": 2523200000,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/FASM.KA"
+    ]
+  },
+  {
+    "name": "Amreli Steels Limited",
+    "sector": "Steel & Materials",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "ASL.KA",
+    "market_cap": 6621713408,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/ASL.KA"
+    ]
+  },
+  {
+    "name": "Century Paper & Board Mills Limited",
+    "sector": "Paper & Board",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "CPPL.KA",
+    "market_cap": 5695065600,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/CPPL.KA"
+    ]
+  },
+  {
+    "name": "Shakarganj Mills Limited",
+    "sector": "Sugar",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "SHFA.KA",
+    "market_cap": 9033967616,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/SHFA.KA"
+    ]
+  },
+  {
+    "name": "Unity Foods Limited",
+    "sector": "Vanaspati & Allied",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "UNITY.KA",
+    "market_cap": 38126018560,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/UNITY.KA"
+    ]
+  },
+  {
+    "name": "Pace (Pakistan) Limited",
+    "sector": "Paper & Board",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "PACE.KA",
+    "market_cap": 842207360,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/PACE.KA"
+    ]
+  },
+  {
+    "name": "Al-Ghazi Tractors Limited",
+    "sector": "Engineering",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "AICL.KA",
+    "market_cap": 12992000000,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/AICL.KA"
+    ]
+  },
+  {
+    "name": "Pakistan Tobacco Company Limited",
+    "sector": "Tobacco",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "PAKT.KA",
+    "market_cap": 245652160512,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/PAKT.KA"
+    ]
+  },
+  {
+    "name": "Pakistan Cables Limited",
+    "sector": "Cable & Electrical Goods",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "PAEL.KA",
+    "market_cap": 24255035392,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/PAEL.KA"
+    ]
+  },
+  {
+    "name": "Packages Limited",
+    "sector": "Cable & Electrical Goods",
+    "founded": "",
+    "hq": "Pakistan",
+    "website": "",
+    "is_listed": true,
+    "psx_symbol": "PKGS.KA",
+    "market_cap": 46134120448,
+    "revenue": "",
+    "employees": "",
+    "description": "",
+    "sources": [
+      "https://finance.yahoo.com/quote/PKGS.KA"
+    ]
+  }
+]

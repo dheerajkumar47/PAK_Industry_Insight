@@ -61,4 +61,11 @@ export const newsService = {
   }
 };
 
+export const marketService = {
+  getLiveData: async () => {
+    const response = await api.get('/market/live');
+    return response.data;
+  }
+};
+
 export default api;

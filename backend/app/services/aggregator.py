@@ -37,6 +37,7 @@ def clean_source_name(feed_title, feed_url):
 
 def fetch_news():
     articles = []
+    new_count = 0
     for feed_url in RSS_FEEDS:
         try:
             feed = feedparser.parse(feed_url)
@@ -65,9 +66,14 @@ def fetch_news():
                 
                 db.articles.insert_one(article)
                 articles.append(article)
-                print(f"Saved: {entry.title}")
+                new_count += 1
                 
         except Exception as e:
             print(f"Error fetching feed {feed_url}: {e}")
+    
+    if new_count > 0:
+        print(f"✓ Saved {new_count} new articles")
+    else:
+        print("✓ No new articles found")
             
     return {"message": f"Fetched {len(articles)} new articles"}

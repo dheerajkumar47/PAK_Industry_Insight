@@ -40,3 +40,14 @@ build/
 #report
 generate_report.py
 project_status_report.docx
+# Development and testing scripts
+backend/check_*.py
+backend/fetch_*.py
+backend/import_*.py
+backend/test_*.py
+backend/debug_*.py
+
+# Old/temporary data files
+companies_expanded.json
+sectors_expanded.json
+stock_debug.json

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routes import auth_routes, company_routes, industry_routes, news_routes
+from .routes import auth_routes, company_routes, industry_routes, news_routes, market_routes
 
 from .config import settings
 
@@ -37,3 +37,4 @@ app.include_router(auth_routes.router)
 app.include_router(company_routes.router)
 app.include_router(industry_routes.router)
 app.include_router(news_routes.router)
+app.include_router(market_routes.router)

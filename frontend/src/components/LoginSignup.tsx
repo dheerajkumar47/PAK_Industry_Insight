@@ -81,78 +81,78 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
 
 
   const handleGoogleClick = async (e: React.MouseEvent) => {
-      // ... (keep existing implementation) ...
-      e.preventDefault();
-      e.stopPropagation();
-  
-      if (!window.google) {
-        setError('Google sign-in library is not loaded. Please refresh the page.');
+    // ... (keep existing implementation) ...
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!window.google) {
+      setError('Google sign-in library is not loaded. Please refresh the page.');
+      return;
+    }
+
+    if (!isGoogleReady) {
+      setError('Google sign-in is initializing. Please wait a moment and try again.');
+      return;
+    }
+
+    try {
+      const clientId = (import.meta as any).env.VITE_GOOGLE_CLIENT_ID;
+      if (!clientId) {
+        setError('Google login is not configured.');
         return;
       }
-  
-      if (!isGoogleReady) {
-        setError('Google sign-in is initializing. Please wait a moment and try again.');
-        return;
-      }
-  
+
+      // Render Google's button in a hidden container and click it programmatically
+      const tempDiv = document.createElement('div');
+      tempDiv.style.position = 'fixed';
+      tempDiv.style.left = '-9999px';
+      tempDiv.style.top = '-9999px';
+      document.body.appendChild(tempDiv);
+
       try {
-        const clientId = (import.meta as any).env.VITE_GOOGLE_CLIENT_ID;
-        if (!clientId) {
-          setError('Google login is not configured.');
-          return;
-        }
-  
-        // Render Google's button in a hidden container and click it programmatically
-        const tempDiv = document.createElement('div');
-        tempDiv.style.position = 'fixed';
-        tempDiv.style.left = '-9999px';
-        tempDiv.style.top = '-9999px';
-        document.body.appendChild(tempDiv);
-  
-        try {
-          window.google.accounts.id.renderButton(tempDiv, {
-            theme: 'outline',
-            size: 'large',
-            type: 'standard',
-            text: 'signin_with',
-            shape: 'rectangular',
-          });
-  
-          // Wait for the button to be rendered, then click it
-          const tryClick = (attempts = 0) => {
-            const button = tempDiv.querySelector('div[role="button"]') as HTMLElement;
-            if (button) {
-              console.log('Google button found, clicking...');
-              button.click();
-              // Clean up after a short delay
-              setTimeout(() => {
-                if (tempDiv.parentNode) {
-                  document.body.removeChild(tempDiv);
-                }
-              }, 2000);
-            } else if (attempts < 10) {
-              setTimeout(() => tryClick(attempts + 1), 100);
-            } else {
-              console.error('Google button not found after rendering');
-              setError('Failed to initialize Google sign-in. Please try again.');
+        window.google.accounts.id.renderButton(tempDiv, {
+          theme: 'outline',
+          size: 'large',
+          type: 'standard',
+          text: 'signin_with',
+          shape: 'rectangular',
+        });
+
+        // Wait for the button to be rendered, then click it
+        const tryClick = (attempts = 0) => {
+          const button = tempDiv.querySelector('div[role="button"]') as HTMLElement;
+          if (button) {
+            console.log('Google button found, clicking...');
+            button.click();
+            // Clean up after a short delay
+            setTimeout(() => {
               if (tempDiv.parentNode) {
                 document.body.removeChild(tempDiv);
               }
+            }, 2000);
+          } else if (attempts < 10) {
+            setTimeout(() => tryClick(attempts + 1), 100);
+          } else {
+            console.error('Google button not found after rendering');
+            setError('Failed to initialize Google sign-in. Please try again.');
+            if (tempDiv.parentNode) {
+              document.body.removeChild(tempDiv);
             }
-          };
-  
-          tryClick();
-        } catch (renderErr) {
-          console.error('Error rendering Google button:', renderErr);
-          setError('Failed to initialize Google sign-in. Please try again.');
-          if (tempDiv.parentNode) {
-            document.body.removeChild(tempDiv);
           }
+        };
+
+        tryClick();
+      } catch (renderErr) {
+        console.error('Error rendering Google button:', renderErr);
+        setError('Failed to initialize Google sign-in. Please try again.');
+        if (tempDiv.parentNode) {
+          document.body.removeChild(tempDiv);
         }
-      } catch (err: any) {
-        console.error('Error calling Google sign-in:', err);
-        setError(err.message || 'Failed to open Google login. Please try again.');
       }
+    } catch (err: any) {
+      console.error('Error calling Google sign-in:', err);
+      setError(err.message || 'Failed to open Google login. Please try again.');
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -163,23 +163,23 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
 
     try {
       if (isReset) {
-         // Handle Password Reset
-         if (password !== confirmPassword) {
-            setError("Passwords do not match");
-            setLoading(false);
-            return;
-         }
-         if (!passwordValidation.isValid) {
-            setError("New password must meet complexity requirements.");
-            setLoading(false);
-            return;
-         }
-         await authService.resetPassword(email, password);
-         alert("Password reset successfully! Please login with your new password.");
-         setIsReset(false);
-         setIsLogin(true);
-         setPassword("");
-         setConfirmPassword("");
+        // Handle Password Reset
+        if (password !== confirmPassword) {
+          setError("Passwords do not match");
+          setLoading(false);
+          return;
+        }
+        if (!passwordValidation.isValid) {
+          setError("New password must meet complexity requirements.");
+          setLoading(false);
+          return;
+        }
+        await authService.resetPassword(email, password);
+        alert("Password reset successfully! Please login with your new password.");
+        setIsReset(false);
+        setIsLogin(true);
+        setPassword("");
+        setConfirmPassword("");
       } else if (isLogin) {
         await authService.login(email, password, rememberMe);
         onLogin();
@@ -241,41 +241,41 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
         <div className="bg-white rounded-2xl p-8 shadow-2xl">
           {/* Hide tabs if in Reset mode */}
           {!isReset && (
-              <div className="flex gap-2 mb-6">
-                <button
-                  onClick={() => {
-                    setIsLogin(true);
-                    setError('');
-                    setShowSignupSuggestion(false);
-                  }}
-                  className={`flex-1 py-2 rounded-lg transition-colors ${isLogin
-                    ? 'bg-[#10B981] text-white'
-                    : 'bg-gray-100 text-[#0F172A]'
-                    }`}
-                >
-                  Login
-                </button>
-                <button
-                  onClick={() => {
-                    setIsLogin(false);
-                    setError('');
-                    setShowSignupSuggestion(false);
-                  }}
-                  className={`flex-1 py-2 rounded-lg transition-colors ${!isLogin
-                    ? 'bg-[#10B981] text-white'
-                    : 'bg-gray-100 text-[#0F172A]'
-                    }`}
-                >
-                  Sign Up
-                </button>
-              </div>
+            <div className="flex gap-2 mb-6">
+              <button
+                onClick={() => {
+                  setIsLogin(true);
+                  setError('');
+                  setShowSignupSuggestion(false);
+                }}
+                className={`flex-1 py-2 rounded-lg transition-colors ${isLogin
+                  ? 'bg-[#10B981] text-white'
+                  : 'bg-gray-100 text-[#0F172A]'
+                  }`}
+              >
+                Login
+              </button>
+              <button
+                onClick={() => {
+                  setIsLogin(false);
+                  setError('');
+                  setShowSignupSuggestion(false);
+                }}
+                className={`flex-1 py-2 rounded-lg transition-colors ${!isLogin
+                  ? 'bg-[#10B981] text-white'
+                  : 'bg-gray-100 text-[#0F172A]'
+                  }`}
+              >
+                Sign Up
+              </button>
+            </div>
           )}
 
           {isReset && (
-              <div className="mb-6 text-center">
-                  <h2 className="text-xl font-bold text-gray-800">Reset Password</h2>
-                  <p className="text-sm text-gray-500">Enter your email and new password</p>
-              </div>
+            <div className="mb-6 text-center">
+              <h2 className="text-xl font-bold text-gray-800">Reset Password</h2>
+              <p className="text-sm text-gray-500">Enter your email and new password</p>
+            </div>
           )}
 
           {error && (
@@ -389,27 +389,27 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
             )}
 
 
-// ... inside render ...
+
             {isLogin && !isReset && (
               <div className="flex items-center justify-between text-sm">
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input 
-                    type="checkbox" 
-                    className="rounded text-[#10B981] focus:ring-[#10B981]" 
+                  <input
+                    type="checkbox"
+                    className="rounded text-[#10B981] focus:ring-[#10B981]"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
                   />
                   <span className="text-gray-700 select-none">Remember me</span>
                 </label>
                 <button
-                    type="button"
-                    onClick={() => {
-                        setIsReset(true);
-                        setError('');
-                    }}
-                    className="text-[#10B981] hover:underline"
+                  type="button"
+                  onClick={() => {
+                    setIsReset(true);
+                    setError('');
+                  }}
+                  className="text-[#10B981] hover:underline"
                 >
-                    Forgot Password?
+                  Forgot Password?
                 </button>
               </div>
             )}
@@ -426,24 +426,24 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
                 : isReset
                   ? 'Reset Password'
                   : isLogin
-                  ? 'Login'
-                  : 'Create Account'}
+                    ? 'Login'
+                    : 'Create Account'}
             </Button>
 
             {isReset && (
-                <div className="mt-4 text-center">
-                    <button
-                    type="button"
-                    onClick={() => {
-                        setIsReset(false);
-                        setIsLogin(true);
-                        setError('');
-                    }}
-                    className="text-gray-600 hover:text-[#10B981] text-sm"
-                    >
-                    Cancel
-                    </button>
-                </div>
+              <div className="mt-4 text-center">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsReset(false);
+                    setIsLogin(true);
+                    setError('');
+                  }}
+                  className="text-gray-600 hover:text-[#10B981] text-sm"
+                >
+                  Cancel
+                </button>
+              </div>
             )}
 
             {showSignupSuggestion && !isReset && (
@@ -466,24 +466,24 @@ export function LoginSignup({ onLogin, onBackToHome }: LoginSignupProps) {
 
           {!isReset && (
             <div className="mt-4">
-                <div className="flex items-center gap-2 mb-3 text-xs text-gray-400">
+              <div className="flex items-center gap-2 mb-3 text-xs text-gray-400">
                 <span className="flex-1 h-px bg-gray-200" />
                 <span>or</span>
                 <span className="flex-1 h-px bg-gray-200" />
-                </div>
-                <button
+              </div>
+              <button
                 type="button"
                 onClick={handleGoogleClick}
                 disabled={!isGoogleReady}
                 className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 border border-gray-200 rounded-lg text-sm text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-60 disabled:cursor-not-allowed"
-                >
+              >
                 <img
-                    src="https://developers.google.com/identity/images/g-logo.png"
-                    alt="Google"
-                    className="w-4 h-4"
+                  src="https://developers.google.com/identity/images/g-logo.png"
+                  alt="Google"
+                  className="w-4 h-4"
                 />
                 <span>Continue with Google</span>
-                </button>
+              </button>
             </div>
           )}
 

@@ -48,12 +48,21 @@ We have built this platform through five rigorous development phases:
 *   **Dark Mode**: System-wide dark theme support.
 *   **Data Completeness**: Enriched 100% of tracked companies with missing CEO/Profit data.
 
+### Phase 6: Live Market Data Integration 📊
+*   **Real-Time Stock Prices**: Live market data for all PSX-listed companies via Yahoo Finance API.
+*   **Market Service**: High-performance parallel data fetching with timeout handling.
+*   **Sector Performance**: Aggregated sector-wise performance metrics and rankings.
+*   **Currency Tracking**: USD/PKR exchange rate monitoring with change indicators.
+*   **Data Source Documentation**: Comprehensive `DATA_SOURCES.md` for transparency and verification.
+
 ---
 
 ## 🌟 Key Features
 
 ### 🔍 For Analysts
-*   **Real-Time Ticker Integration**: Live price updates.
+*   **Real-Time Market Data**: Live stock prices, volume, and market cap tracking.
+*   **Sector Performance**: Aggregated sector-wise performance metrics and rankings.
+*   **Currency Monitoring**: USD/PKR exchange rate with change indicators.
 *   **Sector Analysis**: Compare companies within the same industry.
 *   **Financial Deep Dives**: Revenue, Net Profit, and Growth Tags.
 
@@ -126,8 +135,15 @@ This will fetch live data for companies like **SYS.KA, ENGRO.KA, HBL.KA** and po
 
 ---
 
+## 📚 Documentation
+
+For detailed information about our data sources, verification methods, and company coverage, see:
+*   **[DATA_SOURCES.md](DATA_SOURCES.md)**: Complete documentation of Yahoo Finance integration, sector classifications, and data verification process.
+
+---
+
 ## 🤝 Contributing
 Contributions are welcome! Please fork the repository and submit a Pull Request.
 
 ---
-*Built with ❤️ by Dheeraj Kumar and Maaz Siddique.*
+*Built with ❤️ by Dheeraj Kumar and Maaz Siddiqui.*

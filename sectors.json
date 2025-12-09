@@ -1,0 +1,92 @@
+[
+  {
+    "name": "Automotive",
+    "description": "Automobile manufacturing and parts",
+    "company_count": 5
+  },
+  {
+    "name": "Banking & Financial Services",
+    "description": "Commercial banks and financial institutions",
+    "company_count": 10
+  },
+  {
+    "name": "Cable & Electrical Goods",
+    "description": "Cables and electrical equipment",
+    "company_count": 2
+  },
+  {
+    "name": "Cement",
+    "description": "Cement manufacturing and distribution",
+    "company_count": 8
+  },
+  {
+    "name": "Chemicals & Fertilizers",
+    "description": "Chemical and fertilizer production",
+    "company_count": 6
+  },
+  {
+    "name": "Energy",
+    "description": "Oil, gas, and power generation companies",
+    "company_count": 13
+  },
+  {
+    "name": "Engineering",
+    "description": "Engineering and heavy machinery",
+    "company_count": 1
+  },
+  {
+    "name": "Food & Agriculture",
+    "description": "Food processing and agricultural products",
+    "company_count": 4
+  },
+  {
+    "name": "Insurance",
+    "description": "Insurance and assurance services",
+    "company_count": 4
+  },
+  {
+    "name": "Paper & Board",
+    "description": "Paper and board manufacturing",
+    "company_count": 2
+  },
+  {
+    "name": "Pharmaceuticals",
+    "description": "Pharmaceutical manufacturing and healthcare",
+    "company_count": 4
+  },
+  {
+    "name": "Steel & Materials",
+    "description": "Steel production and construction materials",
+    "company_count": 3
+  },
+  {
+    "name": "Sugar",
+    "description": "Sugar mills and refineries",
+    "company_count": 2
+  },
+  {
+    "name": "Technology",
+    "description": "IT services and software development",
+    "company_count": 3
+  },
+  {
+    "name": "Telecom",
+    "description": "Telecommunications and network services",
+    "company_count": 3
+  },
+  {
+    "name": "Textile & Apparel",
+    "description": "Textile manufacturing and garments",
+    "company_count": 7
+  },
+  {
+    "name": "Tobacco",
+    "description": "Tobacco products manufacturing",
+    "company_count": 1
+  },
+  {
+    "name": "Vanaspati & Allied",
+    "description": "Cooking oils and allied products",
+    "company_count": 1
+  }
+]
