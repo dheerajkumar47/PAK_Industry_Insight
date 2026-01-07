@@ -9,6 +9,7 @@ class UserBase(BaseModel):
     picture: Optional[str] = None
     email_notifs: bool = True
     push_notifs: bool = False
+    watchlist: list[str] = []
 
 class UserUpdate(BaseModel):
     full_name: Optional[str] = None

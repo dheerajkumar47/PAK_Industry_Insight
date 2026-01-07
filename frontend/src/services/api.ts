@@ -69,3 +69,29 @@ export const marketService = {
 };
 
 export default api;
+
+export const watchlistService = {
+  get: async () => {
+    const response = await api.get('/watchlist');
+    return response.data;
+  },
+  add: async (companyId: string) => {
+    const response = await api.post('/watchlist', { companyId });
+    return response.data;
+  },
+  remove: async (companyId: string) => {
+    const response = await api.delete(`/watchlist/${companyId}`);
+    return response.data;
+  }
+};
+
+export const aiService = {
+  getMarketPulse: async () => {
+    const response = await api.get('/ai/market-pulse');
+    return response.data;
+  },
+  getCompanyInsight: async (companyId: string) => {
+    const response = await api.get(`/ai/company-insight/${companyId}`);
+    return response.data;
+  }
+};

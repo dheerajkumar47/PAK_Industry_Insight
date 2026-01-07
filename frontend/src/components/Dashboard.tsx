@@ -2,7 +2,9 @@ import React from 'react';
 import { Navbar } from './Navbar';
 import { Sidebar } from './Sidebar';
 import { Card } from './Card';
-import { TrendingUp, TrendingDown, Users, DollarSign, Sparkles, ArrowUpRight, Building2 } from 'lucide-react';
+import { TrendingUp, TrendingDown, Users, DollarSign, Sparkles, ArrowUpRight, Building2, Loader2 } from 'lucide-react';
+import { WatchlistWidget } from './WatchlistWidget';
+import { marketService, aiService } from '../services/api';
 
 interface DashboardProps {
   onNavigate: (page: string) => void;
@@ -13,15 +15,72 @@ interface DashboardProps {
 export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProps) {
   const [activeItem, setActiveItem] = React.useState('dashboard');
   const [showIntroVideo, setShowIntroVideo] = React.useState(true);
+  const [marketData, setMarketData] = React.useState<any>(null);
+  const [loading, setLoading] = React.useState(true);
+
+  const [aiSummary, setAiSummary] = React.useState<string | null>(null);
 
   React.useEffect(() => {
+    const fetchAi = async () => {
+        try {
+            const data = await marketService.getLiveData();
+            setMarketData(data);
+            
+            // Only fetch AI if not already loaded (to save credits/time)
+            const aiData = await aiService.getMarketPulse();
+            if (aiData && aiData.summary) {
+                setAiSummary(aiData.summary);
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setLoading(false);
+        }
+    }
     const timer = setTimeout(() => {
       setShowIntroVideo(false);
     }, 8000);
+    // loadMarketData(); // Merged into fetchAi above
+    fetchAi();
     return () => clearTimeout(timer);
   }, []);
 
-  const industries = [
+  // ... (rest of code)
+
+                {/* AI Insights */}
+                <Card className="bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Sparkles className="w-5 h-5 text-[#10B981]" />
+                    <h2 className="text-lg sm:text-xl text-[#0F172A] dark:text-white">AI Market Pulse</h2>
+                  </div>
+                  <div className="space-y-3">
+                    {aiSummary ? (
+                        <div className="p-3 bg-[#10B981]/5 dark:bg-[#10B981]/10 rounded-lg border border-[#10B981]/20">
+                           <p className="text-sm text-[#0F172A] dark:text-gray-200 leading-relaxed">
+                             {aiSummary}
+                           </p>
+                           <div className="mt-2 flex items-center justify-end gap-1 text-[10px] text-gray-400">
+                                <Sparkles className="w-3 h-3" />
+                                <span>Powered by Google Gemini</span>
+                           </div>
+                        </div>
+                    ) : (
+                        <div className="flex items-center justify-center p-4">
+                             <Loader2 className="w-6 h-6 text-[#10B981] animate-spin" />
+                             <span className="ml-2 text-sm text-gray-500">Generating insights...</span>
+                        </div>
+                    )}
+                  </div>
+                </Card>
+
+  const industries = marketData?.sector_performance ? Object.entries(marketData.sector_performance)
+    .slice(0, 5)
+    .map(([name, change]: [string, any]) => ({
+        name,
+        growth: `${change > 0 ? '+' : ''}${(change ?? 0).toFixed(2)}%`,
+        trend: change >= 0 ? 'up' : 'down',
+        value: 'Live' 
+    })) : [
     { name: 'Textiles & Apparel', growth: '+12.5%', trend: 'up', value: '$15.2B' },
     { name: 'Information Technology', growth: '+24.8%', trend: 'up', value: '$4.8B' },
     { name: 'Agriculture', growth: '+8.3%', trend: 'up', value: '$42.1B' },
@@ -29,7 +88,19 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
     { name: 'Construction', growth: '-2.1%', trend: 'down', value: '$18.5B' }
   ];
 
-  const trendingCompanies = [
+  interface TrendingCompany {
+    name: string;
+    industry: string;
+    growth: string;
+    employees: string;
+  }
+
+  const trendingCompanies: TrendingCompany[] = marketData?.top_gainers ? marketData.top_gainers.slice(0, 3).map((stock: any) => ({
+      name: stock.ticker || "Unknown", 
+      industry: 'N/A', 
+      growth: `+${(stock.change_percent ?? 0).toFixed(2)}%`,
+      employees: `PKR ${stock.price ?? 0}`
+  })) : [
     { name: 'Systems Limited', industry: 'IT Services', growth: '+32%', employees: '4,500+' },
     { name: 'Lucky Cement', industry: 'Construction', growth: '+18%', employees: '3,200+' },
     { name: 'Engro Corporation', industry: 'Conglomerate', growth: '+15%', employees: '5,800+' }
@@ -192,23 +263,37 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
               
               {/* Right Column */}
               <div className="space-y-6">
+                {/* Watchlist Widget */}
+                <div className="h-80">
+                    <WatchlistWidget onNavigate={(page, id) => {
+                        if(page === 'company-detail') onViewCompany?.(id);
+                        else handleNavigation(page);
+                    }} />
+                </div>
+
                 {/* AI Insights */}
                 <Card className="bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700">
                   <div className="flex items-center gap-2 mb-4">
                     <Sparkles className="w-5 h-5 text-[#10B981]" />
-                    <h2 className="text-lg sm:text-xl text-[#0F172A] dark:text-white">AI Insights</h2>
+                    <h2 className="text-lg sm:text-xl text-[#0F172A] dark:text-white">AI Market Pulse</h2>
                   </div>
                   <div className="space-y-3">
-                    <div className="p-3 bg-[#10B981]/5 dark:bg-[#10B981]/10 rounded-lg border border-[#10B981]/20">
-                      <p className="text-sm text-[#0F172A] dark:text-gray-200">
-                        The IT sector is experiencing unprecedented growth with a 24.8% increase, driven by increased exports and digital transformation.
-                      </p>
-                    </div>
-                    <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800">
-                      <p className="text-sm text-[#0F172A] dark:text-gray-200">
-                        Textile industry recovery signals positive trends for Q4 2025, with major export markets showing renewed interest.
-                      </p>
-                    </div>
+                    {aiSummary ? (
+                        <div className="p-3 bg-[#10B981]/5 dark:bg-[#10B981]/10 rounded-lg border border-[#10B981]/20">
+                           <p className="text-sm text-[#0F172A] dark:text-gray-200 leading-relaxed">
+                             {aiSummary}
+                           </p>
+                           <div className="mt-2 flex items-center justify-end gap-1 text-[10px] text-gray-400">
+                                <Sparkles className="w-3 h-3" />
+                                <span>Powered by Google Gemini</span>
+                           </div>
+                        </div>
+                    ) : (
+                        <div className="flex items-center justify-center p-4">
+                             <Loader2 className="w-6 h-6 text-[#10B981] animate-spin" />
+                             <span className="ml-2 text-sm text-gray-500">Generating insights...</span>
+                        </div>
+                    )}
                   </div>
                 </Card>
                 

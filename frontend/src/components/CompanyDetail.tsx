@@ -3,8 +3,9 @@ import { Navbar } from './Navbar';
 import { Sidebar } from './Sidebar';
 import { Card } from './Card';
 import { DataWidget } from './DataWidget';
-import { Building2, Users, TrendingUp, Calendar, MapPin, Globe, Sparkles, ExternalLink, Youtube, Newspaper, ArrowLeft } from 'lucide-react';
-import { companyService } from '../services/api';
+import { Building2, Users, TrendingUp, Calendar, MapPin, Globe, Sparkles, ExternalLink, Youtube, Newspaper, ArrowLeft, AlertCircle, AlertTriangle, Loader2 } from 'lucide-react';
+import { companyService, watchlistService, aiService } from '../services/api';
+import { authService } from '../services/auth';
 
 interface CompanyDetailProps {
   onNavigate: (page: string) => void;
@@ -19,6 +20,8 @@ export function CompanyDetail({ onNavigate, onLogout, onViewCompany, companyId, 
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = React.useState(false);
   const [company, setCompany] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [isWatched, setIsWatched] = useState(false);
+  const [watchlistLoading, setWatchlistLoading] = useState(false);
 
   // Mock data for fallback
   const mockCompany = {
@@ -40,16 +43,26 @@ export function CompanyDetail({ onNavigate, onLogout, onViewCompany, companyId, 
     certifications: ['ISO 27001', 'CMMI Level 5']
   };
 
+  const [swot, setSwot] = useState<any>(null);
+  const [swotLoading, setSwotLoading] = useState(false);
+
   useEffect(() => {
-    const fetchCompany = async () => {
+    const fetchCompanyData = async () => {
       if (!companyId) {
         setLoading(false);
         return;
       }
       setLoading(true);
       try {
-        const data = await companyService.getById(companyId);
-        setCompany(data || mockCompany);
+        const [companyData, user] = await Promise.all([
+           companyService.getById(companyId),
+           authService.getCurrentUser().catch(() => null)
+        ]);
+        setCompany(companyData || mockCompany);
+        
+        if (user && user.watchlist && user.watchlist.includes(companyId)) {
+            setIsWatched(true);
+        }
       } catch (error) {
         console.error("Failed to fetch company:", error);
         setCompany(mockCompany);
@@ -57,7 +70,22 @@ export function CompanyDetail({ onNavigate, onLogout, onViewCompany, companyId, 
         setLoading(false);
       }
     };
-    fetchCompany();
+
+    const fetchAiData = async () => {
+        if (!companyId) return;
+        setSwotLoading(true);
+        try {
+            const data = await aiService.getCompanyInsight(companyId);
+            setSwot(data);
+        } catch (e) {
+            console.error("SWOT fetch failed", e);
+        } finally {
+            setSwotLoading(false);
+        }
+    };
+
+    fetchCompanyData();
+    fetchAiData();
   }, [companyId]);
 
   if (loading) {
@@ -186,8 +214,27 @@ export function CompanyDetail({ onNavigate, onLogout, onViewCompany, companyId, 
                         </span>
                       </div>
                     </div>
-                    <button className="px-6 py-2 bg-[#10B981] text-white rounded-lg hover:bg-[#059669] transition-colors shadow-sm font-medium">
-                      Follow Company
+                    <button 
+                      onClick={async () => {
+                        if (watchlistLoading) return;
+                        setWatchlistLoading(true);
+                        try {
+                            if (isWatched) {
+                                await watchlistService.remove(company.id);
+                                setIsWatched(false);
+                            } else {
+                                await watchlistService.add(company.id);
+                                setIsWatched(true);
+                            }
+                        } catch (e) {
+                            console.error(e);
+                        } finally {
+                            setWatchlistLoading(false);
+                        }
+                      }}
+                      className={`px-6 py-2 rounded-lg transition-colors shadow-sm font-medium flex items-center gap-2 ${isWatched ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' : 'bg-[#10B981] text-white hover:bg-[#059669]'}`}
+                    >
+                      {watchlistLoading ? '...' : isWatched ? 'Following' : 'Follow Company'}
                     </button>
                   </div>
                   <p className="text-[#64748B] dark:text-gray-300 leading-relaxed max-w-3xl">{company.description}</p>
@@ -227,23 +274,50 @@ export function CompanyDetail({ onNavigate, onLogout, onViewCompany, companyId, 
                 <Card className="bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700">
                   <div className="flex items-center gap-2 mb-4">
                     <Sparkles className="w-5 h-5 text-[#10B981]" />
-                    <h2 className="text-xl text-[#0F172A] dark:text-white">AI-Generated Summary</h2>
+                    <h2 className="text-xl text-[#0F172A] dark:text-white">AI Strategic Insight (SWOT)</h2>
                   </div>
-                  <div className="p-4 bg-[#10B981]/5 rounded-lg border border-[#10B981]/20">
-                    <p className="text-[#0F172A] dark:text-white mb-3">
-                      {company.name} is a high-performing company demonstrating exceptional growth.
-                    </p>
-                    <ul className="space-y-2 text-[#0F172A] dark:text-gray-300">
-                      <li className="flex items-start gap-2">
-                        <span className="text-[#10B981] mt-1">•</span>
-                        <span>Significant revenue growth YoY</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-[#10B981] mt-1">•</span>
-                        <span>Strong international presence</span>
-                      </li>
-                    </ul>
-                  </div>
+                  {swotLoading ? (
+                      <div className="flex flex-col items-center justify-center p-8 text-gray-400">
+                          <Loader2 className="w-8 h-8 animate-spin text-[#10B981] mb-2" />
+                          <span className="text-sm">Analyzing market data...</span>
+                      </div>
+                  ) : swot ? (
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-100 dark:border-green-800">
+                                <h4 className="font-bold text-green-700 dark:text-green-400 text-sm mb-2 flex items-center gap-1"><TrendingUp className="w-3 h-3"/> Strengths</h4>
+                                <ul className="text-xs space-y-1 text-gray-700 dark:text-gray-300">
+                                    {swot.strengths?.map((s: string, i: number) => <li key={i}>• {s}</li>)}
+                                </ul>
+                            </div>
+                            <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-100 dark:border-red-800">
+                                <h4 className="font-bold text-red-700 dark:text-red-400 text-sm mb-2 flex items-center gap-1"><AlertCircle className="w-3 h-3"/> Weaknesses</h4>
+                                <ul className="text-xs space-y-1 text-gray-700 dark:text-gray-300">
+                                    {swot.weaknesses?.map((s: string, i: number) => <li key={i}>• {s}</li>)}
+                                </ul>
+                            </div>
+                            <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800">
+                                <h4 className="font-bold text-blue-700 dark:text-blue-400 text-sm mb-2 flex items-center gap-1"><Globe className="w-3 h-3"/> Opportunities</h4>
+                                <ul className="text-xs space-y-1 text-gray-700 dark:text-gray-300">
+                                    {swot.opportunities?.map((s: string, i: number) => <li key={i}>• {s}</li>)}
+                                </ul>
+                            </div>
+                            <div className="p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-100 dark:border-orange-800">
+                                <h4 className="font-bold text-orange-700 dark:text-orange-400 text-sm mb-2 flex items-center gap-1"><AlertTriangle className="w-3 h-3"/> Threats</h4>
+                                <ul className="text-xs space-y-1 text-gray-700 dark:text-gray-300">
+                                    {swot.threats?.map((s: string, i: number) => <li key={i}>• {s}</li>)}
+                                </ul>
+                            </div>
+                        </div>
+                        <div className="text-[10px] text-right text-gray-400 flex items-center justify-end gap-1">
+                             <Sparkles className="w-3 h-3"/> Generated by Gemini AI
+                        </div>
+                      </div>
+                  ) : (
+                      <div className="p-4 text-center text-gray-500 text-sm">
+                          Unable to generate analysis.
+                      </div>
+                  )}
                 </Card>
 
                 <Card className="bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700">

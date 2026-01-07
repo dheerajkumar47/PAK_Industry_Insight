@@ -106,6 +106,55 @@ class DataEngine:
             return None
 
     @staticmethod
+    async def fetch_live_market_data():
+        """
+        Aggregates data for Dashboard and AI Service.
+        Returns:
+          - top_gainers: List of top 30 active stocks.
+          - sector_performance: Dict of sector -> avg_change.
+        """
+        try:
+            # 1. Sector Performance
+            pipeline = [
+                {"$group": {
+                    "_id": "$industry",
+                    "avg_change": {"$avg": "$change_percent"},
+                    "company_count": {"$sum": 1}
+                }},
+                {"$sort": {"avg_change": -1}}
+            ]
+            sectors_cursor = db.companies.aggregate(pipeline)
+            sector_performance = {}
+            for s in sectors_cursor:
+                if s["_id"]:
+                     sector_performance[s["_id"]] = s["avg_change"] if s["avg_change"] is not None else 0.0
+
+            # 2. Top Stocks (Proxy for Gainers)
+            stocks_cursor = db.companies.find(
+                {"price": {"$ne": None}}, 
+                {"name": 1, "ticker": 1, "industry": 1, "price": 1, "change": 1, "change_percent": 1}
+            ).sort("change_percent", -1).limit(30)
+            
+            top_gainers = []
+            for stock in stocks_cursor:
+                top_gainers.append({
+                    "name": stock.get("name"),
+                    "ticker": stock.get("ticker"),
+                    "industry": stock.get("industry"),
+                    "price": stock.get("price") or 0.0,
+                    "change": stock.get("change") or 0.0,
+                    "change_percent": (stock.get("change_percent") or 0.0)
+                })
+
+            return {
+                "sector_performance": sector_performance,
+                "top_gainers": top_gainers
+            }
+        except Exception as e:
+            print(f"Error fetching live market data: {e}")
+            return {"sector_performance": {}, "top_gainers": []}
+
+    @staticmethod
     def update_company(ticker: str):
         """
         Fetches and updates a single company in the database.
@@ -131,3 +180,5 @@ class DataEngine:
         for ticker in tickers:
             if ticker:
                 DataEngine.update_company(ticker)
+
+data_engine = DataEngine()

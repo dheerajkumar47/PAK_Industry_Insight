@@ -7,6 +7,7 @@ export interface User {
   picture?: string;
   email_notifs?: boolean;
   push_notifs?: boolean;
+  watchlist?: string[];
 }
 
 export interface AuthResponse {

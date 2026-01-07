@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     APP_NAME: str = "PAK Industry Insight API"
     # Look for GOOGLE_CLIENT_ID first, fallback to VITE_GOOGLE_CLIENT_ID for backward compatibility
     GOOGLE_CLIENT_ID: str = Field(default="", alias="VITE_GOOGLE_CLIENT_ID")
+    GEMINI_API_KEY: str = ""
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

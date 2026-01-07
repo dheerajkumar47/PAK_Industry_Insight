@@ -57,6 +57,16 @@ We have built this platform through five rigorous development phases:
 *   **Data Source Documentation**: Comprehensive `DATA_SOURCES.md` for transparency and verification.
 
 
+### Phase 7: AI Integration 🤖
+*   **Gemini AI Engine**: Integrated Google Gemini 1.5 Flash for high-speed financial analysis.
+*   **Market Pulse**: AI-generated daily summaries of market trends and news.
+*   **Company SWOT Analysis**: Automated Strengths, Weaknesses, Opportunities, and Threats generation for every company.
+
+### Phase 8: Advanced UX & Dashboard 🚀
+*   **Live Dashboard**: Dynamic widgets for Top Gainers, Sector Performance, and Market Cap.
+*   **Watchlist System**: "Star" companies to track them in a dedicated widget.
+*   **Error Boundaries**: Robust frontend crash protection with friendly error states.
+
 ---
 
 ## 🌟 Key Features
