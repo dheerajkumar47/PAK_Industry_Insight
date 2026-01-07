@@ -1,0 +1,148 @@
+{
+  "Banking & Financial Services": {
+    "HBL.KA": { "name": "Habib Bank Limited", "ceo": "Muhammad Aurangzeb", "net_profit": 35000000000, "founded_year": 1941, "website": "www.hbl.com", "employees_count": 14000, "revenue": 200000000000 },
+    "MCB.KA": { "name": "MCB Bank Limited", "ceo": "Shoaib Mumtaz", "net_profit": 30000000000, "founded_year": 1947, "website": "www.mcb.com.pk", "employees_count": 12000, "revenue": 150000000000 },
+    "UBL.KA": { "name": "United Bank Limited", "ceo": "Shazad G. Dada", "net_profit": 28000000000, "founded_year": 1959, "website": "www.ubldigital.com", "employees_count": 10000, "revenue": 130000000000 },
+    "MEBL.KA": { "name": "Meezan Bank Limited", "ceo": "Irfan Siddiqui", "net_profit": 45000000000, "founded_year": 1997, "website": "www.meezanbank.com", "employees_count": 10000, "revenue": 190000000000 },
+    "BAHL.KA": { "name": "Bank Al Habib Limited", "ceo": "Mansoor Ali Khan", "net_profit": 18000000000, "founded_year": 1991, "website": "www.bankalhabib.com", "employees_count": 8500, "revenue": 110000000000 },
+    "BAFL.KA": { "name": "Bank Alfalah Limited", "ceo": "Atif Bajwa", "net_profit": 14000000000, "founded_year": 1997, "website": "www.bankalfalah.com", "employees_count": 9000, "revenue": 100000000000 },
+    "AKBL.KA": { "name": "Askari Bank Limited", "ceo": "Atif R. Bokhari", "net_profit": 12000000000, "founded_year": 1991, "website": "www.askaribank.com.pk", "employees_count": 7000, "revenue": 80000000000 },
+    "FABL.KA": { "name": "Faysal Bank Limited", "ceo": "Yousaf Hussain", "net_profit": 11000000000, "founded_year": 1994, "website": "www.faysalbank.com", "employees_count": 6000, "revenue": 75000000000 },
+    "BOP.KA": { "name": "The Bank of Punjab", "ceo": "Zafar Masud", "net_profit": 8000000000, "founded_year": 1989, "website": "www.bop.com.pk", "employees_count": 5500, "revenue": 60000000000 },
+    "SNBL.KA": { "name": "Soneri Bank Limited", "ceo": "Muhtashim Ahmad Ashai", "net_profit": 2500000000, "founded_year": 1991, "website": "www.soneribank.com", "employees_count": 4000, "revenue": 30000000000 },
+    "JSBL.KA": { "name": "JS Bank Limited", "ceo": "Basir Shamsie", "net_profit": 2000000000, "founded_year": 2006, "website": "www.jsbl.com", "employees_count": 4500, "revenue": 25000000000 },
+    "SBL.KA": { "name": "Samba Bank Limited", "ceo": "Ahmad Tariq Azam", "net_profit": 850000000, "founded_year": 2002, "website": "www.samba.com.pk", "employees_count": 1500, "revenue": 10000000000 }
+  },
+  "Cement": {
+    "LUCK.KA": { "name": "Lucky Cement Limited", "ceo": "Muhammad Ali Tabba", "net_profit": 15000000000, "founded_year": 1993, "website": "www.lucky-cement.com", "revenue": 100000000000, "employees_count": 5000 },
+    "DGKC.KA": { "name": "D.G. Khan Cement Company", "ceo": "Raza Mansha", "net_profit": 3000000000, "founded_year": 1986, "website": "www.dgcement.com", "revenue": 40000000000, "employees_count": 2500 },
+    "MLCF.KA": { "name": "Maple Leaf Cement", "ceo": "Sayeman Suhail Pasha", "net_profit": 4500000000, "founded_year": 1956, "website": "www.mapleleaf.com.pk", "revenue": 45000000000, "employees_count": 2200 },
+    "CHCC.KA": { "name": "Cherat Cement Company", "ceo": "Azam Faruque", "net_profit": 4200000000, "founded_year": 1981, "website": "www.gfg.com.pk", "revenue": 35000000000, "employees_count": 1800 },
+    "PIOC.KA": { "name": "Pioneer Cement Limited", "ceo": "Syed Mazher Iqbal", "net_profit": 2800000000, "founded_year": 1986, "website": "www.pioneercement.com", "revenue": 25000000000, "employees_count": 1200 },
+    "FCCL.KA": { "name": "Fauji Cement Company", "ceo": "Qamar Haris Manzoor", "net_profit": 5500000000, "founded_year": 1992, "website": "www.fccl.com.pk", "revenue": 50000000000, "employees_count": 3000 },
+    "KOHC.KA": { "name": "Kohat Cement Company", "ceo": "Aizaz Mansoor Sheikh", "net_profit": 3500000000, "founded_year": 1980, "website": "www.kohatcement.com", "revenue": 30000000000, "employees_count": 1500 },
+    "BWCL.KA": { "name": "Bestway Cement Limited", "ceo": "Irfan A. Sheikh", "net_profit": 12000000000, "founded_year": 1993, "website": "www.bestway.com.pk", "revenue": 80000000000, "employees_count": 3500 },
+    "ACPL.KA": { "name": "Attock Cement Pakistan", "ceo": "Baber Bashir Nawaz", "net_profit": 1100000000, "founded_year": 1981, "website": "www.attockcement.com", "revenue": 15000000000, "employees_count": 1000 },
+    "THCCL.KA": { "name": "Thatta Cement Company", "ceo": "Muhammad Kashif Habib", "net_profit": 400000000, "founded_year": 1980, "website": "www.thattacement.com", "revenue": 5000000000, "employees_count": 800 },
+    "POWER.KA": { "name": "Power Cement Limited", "ceo": "Muhammad Kashif Habib", "net_profit": -500000000, "founded_year": 1981, "website": "www.powercement.com.pk", "revenue": 8000000000, "employees_count": 900 },
+    "FLYNG.KA": { "name": "Flying Cement Company", "ceo": "Agha Hamayun Khan", "net_profit": 150000000, "founded_year": 1992, "website": "www.flyingcement.com", "revenue": 4000000000, "employees_count": 600 }
+  },
+  "Energy": {
+    "OGDC.KA": { "name": "Oil & Gas Development Company", "ceo": "Ahmed Hayat Lak", "net_profit": 150000000000, "founded_year": 1961, "website": "www.ogdcl.com", "revenue": 300000000000, "employees_count": 11000 },
+    "PPL.KA": { "name": "Pakistan Petroleum Limited", "ceo": "Imran Abbasy", "net_profit": 60000000000, "founded_year": 1950, "website": "www.ppl.com.pk", "revenue": 180000000000, "employees_count": 2800 },
+    "MARI.KA": { "name": "Mari Petroleum Company", "ceo": "Faheem Haider", "net_profit": 35000000000, "founded_year": 1983, "website": "www.mari.com.pk", "revenue": 95000000000, "employees_count": 1500 },
+    "POL.KA": { "name": "Pakistan Oilfields Limited", "ceo": "Shuaib A. Malik", "net_profit": 25000000000, "founded_year": 1950, "website": "www.pakoil.com.pk", "revenue": 60000000000, "employees_count": 1200 },
+    "PSO.KA": { "name": "Pakistan State Oil", "ceo": "Syed Taha", "net_profit": 8000000000, "founded_year": 1976, "website": "www.psopk.com", "revenue": 2500000000000, "employees_count": 3000 },
+    "SHEL.KA": { "name": "Shell Pakistan Limited", "ceo": "Waqar Siddiqui", "net_profit": 2000000000, "founded_year": 1899, "website": "www.shell.com.pk", "revenue": 300000000000, "employees_count": 800 },
+    "APL.KA": { "name": "Attock Petroleum Limited", "ceo": "Shuaib A. Malik", "net_profit": 10000000000, "founded_year": 1998, "website": "www.apl.com.pk", "revenue": 250000000000, "employees_count": 600 },
+    "CNERGY.KA": { "name": "Cnergyico PK Limited", "ceo": "Amir Abbassciy", "net_profit": -2500000000, "founded_year": 1995, "website": "www.cnergyico.com", "revenue": 150000000000, "employees_count": 1500 },
+    "HASCOL.KA": { "name": "Hascol Petroleum Limited", "ceo": "Aqeel Ahmed Khan", "net_profit": -8000000000, "founded_year": 2001, "website": "www.hascol.com", "revenue": 50000000000, "employees_count": 800 },
+     "HUBC.KA": { "name": "The Hub Power Company", "ceo": "Kamran Kamal", "net_profit": 20000000000, "founded_year": 1991, "website": "www.hubpower.com", "revenue": 80000000000, "employees_count": 2500 },
+    "KAPCO.KA": { "name": "Kot Addu Power Company", "ceo": "Aftab Mahmood Butt", "net_profit": 8000000000, "founded_year": 1996, "website": "www.kapco.com.pk", "revenue": 45000000000, "employees_count": 600 },
+    "LPL.KA": { "name": "Lalpir Power Limited", "ceo": "Ghulam Nabi", "net_profit": 2500000000, "founded_year": 1994, "website": "www.lalpir.com", "revenue": 15000000000, "employees_count": 300 },
+    "NCPL.KA": { "name": "Nishat Chunian Power", "ceo": "Farrukh Ifzal", "net_profit": 2200000000, "founded_year": 2007, "website": "www.nishat.net", "revenue": 12000000000, "employees_count": 400 },
+    "PKGP.KA": { "name": "Pakgen Power Limited", "ceo": "Ghulam Nabi", "net_profit": 1800000000, "founded_year": 1995, "website": "www.pakgenpower.com", "revenue": 10000000000, "employees_count": 300 },
+    "EPQL.KA": { "name": "Engro Powergen Qadirpur", "ceo": "Syed Manzoor Hussain", "net_profit": 1500000000, "founded_year": 2008, "website": "www.engroenergy.com", "revenue": 8000000000, "employees_count": 200 }
+  },
+  "Chemicals & Fertilizers": {
+    "ENGRO.KA": { "name": "Engro Corporation", "ceo": "Ghias Khan", "net_profit": 45000000000, "founded_year": 1965, "website": "www.engro.com", "revenue": 350000000000, "employees_count": 4000 },
+    "FFC.KA": { "name": "Fauji Fertilizer Company", "ceo": "Sarfaraz Ahmed Rehman", "net_profit": 25000000000, "founded_year": 1978, "website": "www.ffc.com.pk", "revenue": 120000000000, "employees_count": 3000 },
+    "EFERT.KA": { "name": "Engro Fertilizers Limited", "ceo": "Ahsan Zafar Syed", "net_profit": 18000000000, "founded_year": 2009, "website": "www.engrofertilizers.com", "revenue": 150000000000, "employees_count": 1800 },
+    "FFBL.KA": { "name": "Fauji Fertilizer Bin Qasim", "ceo": "Arif Ur Rehman", "net_profit": 6000000000, "founded_year": 1993, "website": "www.ffbl.com", "revenue": 80000000000, "employees_count": 1500 },
+    "FATIMA.KA": { "name": "Fatima Fertilizer Company", "ceo": "Fawad Ahmed Mukhtar", "net_profit": 14000000000, "founded_year": 2003, "website": "www.fatima-group.com", "revenue": 95000000000, "employees_count": 2200 },
+    "AHCL.KA": { "name": "Arif Habib Corporation", "ceo": "Arif Habib", "net_profit": 3500000000, "founded_year": 1994, "website": "www.arifhabibcorp.com", "revenue": 15000000000, "employees_count": 500 },
+     "EPCL.KA": { "name": "Engro Polymer & Chemicals", "ceo": "Jahangir Piracha", "net_profit": 7000000000, "founded_year": 1997, "website": "www.engropolymer.com", "revenue": 60000000000, "employees_count": 1200 },
+    "LOTCHEM.KA": { "name": "Lotte Chemical Pakistan", "ceo": "Humair Ijaz", "net_profit": 5500000000, "founded_year": 1998, "website": "www.lottechem.pk", "revenue": 70000000000, "employees_count": 800 },
+    "COLG.KA": { "name": "Colgate-Palmolive Pakistan", "ceo": "Zulfiqar Ali Lakhani", "net_profit": 6000000000, "founded_year": 1977, "website": "www.colgate.com.pk", "revenue": 85000000000, "employees_count": 1500 },
+    "ICI.KA": { "name": "Lucky Core Industries", "ceo": "Asif Jooma", "net_profit": 5800000000, "founded_year": 1944, "website": "www.luckycore.com", "revenue": 90000000000, "employees_count": 3000 },
+    "SITC.KA": { "name": "Sitara Chemical Industries", "ceo": "Muhammad Adrees", "net_profit": 1200000000, "founded_year": 1981, "website": "www.sitara.com.pk", "revenue": 18000000000, "employees_count": 900 }
+  },
+  "Technology": {
+    "SYS.KA": { "name": "Systems Limited", "ceo": "Asif Peer", "net_profit": 8500000000, "founded_year": 1977, "website": "www.systemsltd.com", "revenue": 53000000000, "employees_count": 5500 },
+    "TRG.KA": { "name": "TRG Pakistan", "ceo": "Zia Chishti", "net_profit": -2000000000, "founded_year": 2002, "website": "www.trgworld.com", "revenue": 5000000000, "employees_count": 3000 },
+    "NETSOL.KA": { "name": "NetSol Technologies", "ceo": "Salim Ghauri", "net_profit": 900000000, "founded_year": 1996, "website": "www.netsoltech.com", "revenue": 6500000000, "employees_count": 1500 },
+    "AVN.KA": { "name": "Avanceon Limited", "ceo": "Bakhtiar Wain", "net_profit": 1200000000, "founded_year": 2003, "website": "www.avanceon.ae", "revenue": 8000000000, "employees_count": 800 },
+    "AIRLINK.KA": { "name": "Air Link Communication", "ceo": "Muzzaffar Hayat Piracha", "net_profit": 1500000000, "founded_year": 2011, "website": "www.airlinkcommunication.com", "revenue": 60000000000, "employees_count": 1200 },
+    "OCTOPUS.KA": { "name": "Octopus Digital", "ceo": "Tanveer Karamat", "net_profit": 400000000, "founded_year": 2017, "website": "www.octopusdtl.com", "revenue": 1000000000, "employees_count": 200 },
+    "HUMNL.KA": { "name": "Hum Network Limited", "ceo": "Duraid Qureshi", "net_profit": 800000000, "founded_year": 2004, "website": "www.hum.tv", "revenue": 5500000000, "employees_count": 600 },
+    "PTC.KA": { "name": "Pakistan Telecommunication", "ceo": "Hatem Bamatraf", "net_profit": 2000000000, "founded_year": 1947, "website": "www.ptcl.com.pk", "revenue": 140000000000, "employees_count": 15000 },
+    "TELE.KA": { "name": "Telecard Limited", "ceo": "Syed Aamir Hussain", "net_profit": 150000000, "founded_year": 1992, "website": "www.telecard.com.pk", "revenue": 2000000000, "employees_count": 350 }
+  },
+  "Automotive": {
+    "INDU.KA": { "name": "Indus Motor Company", "ceo": "Ali Asghar Jamali", "net_profit": 12000000000, "founded_year": 1989, "website": "www.toyota-indus.com", "revenue": 180000000000, "employees_count": 3000 },
+    "HCAR.KA": { "name": "Honda Atlas Cars", "ceo": "Takafumi Koike", "net_profit": 2500000000, "founded_year": 1992, "website": "www.honda.com.pk", "revenue": 95000000000, "employees_count": 2500 },
+    "MTL.KA": { "name": "Millat Tractors Limited", "ceo": "Raheel Asghar", "net_profit": 5500000000, "founded_year": 1964, "website": "www.millat.com.pk", "revenue": 45000000000, "employees_count": 1500 },
+    "AGTL.KA": { "name": "Al-Ghazi Tractors", "ceo": "Malik Ehtisham", "net_profit": 3000000000, "founded_year": 1983, "website": "www.alghazitractors.com", "revenue": 28000000000, "employees_count": 800 },
+    "GHNI.KA": { "name": "Ghandhara Industries", "ceo": "Ahmad Kuli Khan Khattak", "net_profit": 500000000, "founded_year": 1963, "website": "www.gil.com.pk", "revenue": 18000000000, "employees_count": 1200 },
+    "PSMC.KA": { "name": "Pak Suzuki Motor Company", "ceo": "Hiroshi Kawamura", "net_profit": -1500000000, "founded_year": 1983, "website": "www.paksuzuki.com.pk", "revenue": 120000000000, "employees_count": 2800 },
+    "SAZEW.KA": { "name": "Sazgar Engineering Works", "ceo": "Mian Asad Hameed", "net_profit": 800000000, "founded_year": 1991, "website": "www.sazgarautos.com", "revenue": 12000000000, "employees_count": 1000 }
+  },
+  "Textile & Apparel": {
+    "NML.KA": { "name": "Nishat Mills Limited", "ceo": "Mian Umer Mansha", "net_profit": 9000000000, "founded_year": 1951, "website": "www.nishatmillsltd.com", "revenue": 130000000000, "employees_count": 18000 },
+    "ILP.KA": { "name": "Interloop Limited", "ceo": "Navid Fazil", "net_profit": 8500000000, "founded_year": 1992, "website": "www.interloop-pk.com", "revenue": 95000000000, "employees_count": 23000 },
+    "GATM.KA": { "name": "Gul Ahmed Textile Mills", "ceo": "Ziad Bashir", "net_profit": 4000000000, "founded_year": 1953, "website": "www.gulahmed.com", "revenue": 105000000000, "employees_count": 15000 },
+    "KTML.KA": { "name": "Kohinoor Textile Mills", "ceo": "Taufique Sayeed Saigol", "net_profit": 6500000000, "founded_year": 1953, "website": "www.kmlg.com", "revenue": 45000000000, "employees_count": 5000 },
+    "FASM.KA": { "name": "Faisal Spinning Mills", "ceo": "Bilal Sharif", "net_profit": 3500000000, "founded_year": 1985, "website": "www.umergroup.com", "revenue": 20000000000, "employees_count": 2500 }
+  },
+  "Pharmaceuticals": {
+    "SEARL.KA": { "name": "The Searle Company", "ceo": "Syed Nadeem Ahmed", "net_profit": 2800000000, "founded_year": 1965, "website": "www.searlecompany.com", "revenue": 25000000000, "employees_count": 3000 },
+    "ABOT.KA": { "name": "Abbott Laboratories", "ceo": "Syed Anis Ahmed", "net_profit": 5000000000, "founded_year": 1948, "website": "www.abbott.com.pk", "revenue": 40000000000, "employees_count": 3500 },
+    "GLAXO.KA": { "name": "GlaxoSmithKline Pakistan", "ceo": "Eram Hasan", "net_profit": 3500000000, "founded_year": 2002, "website": "www.gsk.com.pk", "revenue": 38000000000, "employees_count": 2800 },
+    "AGP.KA": { "name": "AGP Limited", "ceo": "Nusrat Munshi", "net_profit": 1400000000, "founded_year": 1989, "website": "www.agp.com.pk", "revenue": 12000000000, "employees_count": 1500 },
+    "HALEON.KA": { "name": "Haleon Pakistan", "ceo": "Farhan Muhammad Haroon", "net_profit": 2100000000, "founded_year": 2022, "website": "www.haleon.com", "revenue": 18000000000, "employees_count": 1200 },
+    "FEROZ.KA": { "name": "Ferozsons Laboratories", "ceo": "Osman Khalid Waheed", "net_profit": 900000000, "founded_year": 1954, "website": "www.ferozsons-labs.com", "revenue": 8000000000, "employees_count": 800 }
+  },
+  "Food & Agriculture": {
+    "NESTLE.KA": { "name": "Nestlé Pakistan", "ceo": "Jason Avancena", "net_profit": 12000000000, "founded_year": 1988, "website": "www.nestle.pk", "revenue": 140000000000, "employees_count": 3800 },
+    "NATF.KA": { "name": "National Foods Limited", "ceo": "Abrar Hasan", "net_profit": 2400000000, "founded_year": 1970, "website": "www.nfoods.com", "revenue": 45000000000, "employees_count": 2200 },
+    "UNITY.KA": { "name": "Unity Foods Limited", "ceo": "Farrukh Amin", "net_profit": 3500000000, "founded_year": 1991, "website": "www.unityfoods.pk", "revenue": 85000000000, "employees_count": 900 },
+    "MUREB.KA": { "name": "Murree Brewery", "ceo": "Isphanyar M. Bhandara", "net_profit": 1800000000, "founded_year": 1860, "website": "www.murreebrewery.com", "revenue": 14000000000, "employees_count": 1500 },
+    "RAFHAN.KA": { "name": "Rafhan Maize Products", "ceo": "Rakhshanda Rashid", "net_profit": 6500000000, "founded_year": 1953, "website": "www.rafhanmaize.com", "revenue": 40000000000, "employees_count": 1200 }
+  },
+  "Steel & Materials": {
+    "ISL.KA": { "name": "International Steels", "ceo": "Yousuf H. Mirza", "net_profit": 4500000000, "founded_year": 2007, "website": "www.isl.com.pk", "revenue": 65000000000, "employees_count": 800 },
+    "INIL.KA": { "name": "International Industries", "ceo": "Suhail Jameel", "net_profit": 3800000000, "founded_year": 1948, "website": "www.iil.com.pk", "revenue": 35000000000, "employees_count": 1100 },
+    "ASTL.KA": { "name": "Amreli Steels Limited", "ceo": "Shayan Akberali", "net_profit": 1200000000, "founded_year": 1972, "website": "www.amrelisteels.com", "revenue": 38000000000, "employees_count": 1500 },
+    "CSAP.KA": { "name": "Crescent Steel & Allied", "ceo": "Ahsan M. Saleem", "net_profit": 800000000, "founded_year": 1983, "website": "www.crescent.com.pk", "revenue": 8000000000, "employees_count": 700 },
+    "MUGHAL.KA": { "name": "Mughal Iron & Steel", "ceo": "Khurram Javaid", "net_profit": 3500000000, "founded_year": 1950, "website": "www.mughalsteel.com", "revenue": 45000000000, "employees_count": 1200 }
+  },
+  "Sugar": {
+    "JDW.KA": { "name": "JDW Sugar Mills", "ceo": "Raheal Masud", "net_profit": 4500000000, "founded_year": 1990, "website": "www.jdw-group.com", "revenue": 60000000000, "employees_count": 4000 },
+    "HABSM.KA": { "name": "Habib Sugar Mills", "ceo": "Asghar D. Habib", "net_profit": 2000000000, "founded_year": 1962, "website": "www.habibsugar.com", "revenue": 14000000000, "employees_count": 1500 },
+    "SHSML.KA": { "name": "Shahmurad Sugar Mills", "ceo": "Yusuf Ayoob", "net_profit": 1500000000, "founded_year": 1979, "website": "www.shahmurad.com", "revenue": 12000000000, "employees_count": 1200 },
+    "ALNRS.KA": { "name": "Al-Noor Sugar Mills", "ceo": "Ismail H. Zakaria", "net_profit": 1200000000, "founded_year": 1960, "website": "www.alnoorsugar.com", "revenue": 15000000000, "employees_count": 1100 },
+    "FTSM.KA": { "name": "Faran Sugar Mills", "ceo": "Ahmed Ali Bari", "net_profit": 850000000, "founded_year": 1981, "website": "www.faran.com.pk", "revenue": 8000000000, "employees_count": 800 }
+  },
+  "Insurance": {
+    "AICL.KA": { "name": "Adamjee Insurance", "ceo": "Muhammad Ali Zeb", "net_profit": 3500000000, "founded_year": 1960, "website": "www.adamjeeinsurance.com", "revenue": 25000000000, "employees_count": 2500 },
+    "EFUL.KA": { "name": "EFU Life Assurance", "ceo": "Taher G. Sachak", "net_profit": 2800000000, "founded_year": 1992, "website": "www.efulife.com", "revenue": 38000000000, "employees_count": 1800 },
+    "JGICL.KA": { "name": "Jubilee General Insurance", "ceo": "Hassan Khan", "net_profit": 1500000000, "founded_year": 1953, "website": "www.jubileegeneral.com.pk", "revenue": 12000000000, "employees_count": 1200 },
+    "IGIHL.KA": { "name": "IGI Holdings", "ceo": "Tahira Raza", "net_profit": 2200000000, "founded_year": 1953, "website": "www.igi.com.pk", "revenue": 15000000000, "employees_count": 1000 }
+  },
+  "Cable & Electrical Goods": {
+    "PAEL.KA": { "name": "Pak Elektron Limited", "ceo": "Murad Saigol", "net_profit": 1500000000, "founded_year": 1956, "website": "www.pel.com.pk", "revenue": 45000000000, "employees_count": 6000 },
+    "WAVES.KA": { "name": "Waves Singer Pakistan", "ceo": "Haroon Khan", "net_profit": 800000000, "founded_year": 1976, "website": "www.waves.com.pk", "revenue": 10000000000, "employees_count": 1500 }
+  },
+  "Paper & Board": {
+    "PKGS.KA": { "name": "Packages Limited", "ceo": "Syed Hyder Ali", "net_profit": 7000000000, "founded_year": 1956, "website": "www.packages.com.pk", "revenue": 65000000000, "employees_count": 4000 },
+    "CPPL.KA": { "name": "Century Paper & Board", "ceo": "Aftab Ahmad Khan", "net_profit": 2500000000, "founded_year": 1984, "website": "www.centurypaper.com.pk", "revenue": 28000000000, "employees_count": 1800 },
+    "SEPL.KA": { "name": "Security Papers Limited", "ceo": "Imran Qureshi", "net_profit": 1200000000, "founded_year": 1965, "website": "www.security-papers.com", "revenue": 5500000000, "employees_count": 800 },
+    "CEPB.KA": { "name": "Cherat Packaging", "ceo": "Amer Faruque", "net_profit": 1500000000, "founded_year": 1989, "website": "www.gfg.com.pk", "revenue": 9500000000, "employees_count": 600 }
+  },
+  "Vanaspati & Allied": {
+     "PUNJ.KA": { "name": "Punjab Oil Mills", "ceo": "Tahir Jahangir", "net_profit": 300000000, "founded_year": 1980, "website": "www.punjaboilmills.com", "revenue": 7000000000, "employees_count": 400 }
+  },
+  "Tobacco": {
+     "PAKT.KA": { "name": "Pakistan Tobacco Company", "ceo": "Ali Akbar", "net_profit": 18000000000, "founded_year": 1947, "website": "www.ptc.com.pk", "revenue": 200000000000, "employees_count": 1200 },
+     "KHTC.KA": { "name": "Khyber Tobacco Company", "ceo": "Zahid Hussain", "net_profit": 550000000, "founded_year": 1954, "website": "www.khybertobacco.com", "revenue": 4000000000, "employees_count": 600 }
+  },
+  "Refinery": {
+    "ATRL.KA": { "name": "Attock Refinery Limited", "ceo": "M. Adil Khattak", "net_profit": 15000000000, "founded_year": 1922, "website": "www.arl.com.pk", "revenue": 220000000000, "employees_count": 1800 },
+    "NRL.KA": { "name": "National Refinery Limited", "ceo": "Jamil A. Khan", "net_profit": 4000000000, "founded_year": 1963, "website": "www.nrlpak.com", "revenue": 180000000000, "employees_count": 1500 },
+    "PRL.KA": { "name": "Pakistan Refinery Limited", "ceo": "Zahid Mir", "net_profit": 2500000000, "founded_year": 1960, "website": "www.prl.com.pk", "revenue": 130000000000, "employees_count": 1200 }
+  },
+  "Telecom": {
+     "PTC.KA": { "name": "Pakistan Telecommunication", "ceo": "Hatem Bamatraf", "net_profit": 2000000000, "founded_year": 1947, "website": "www.ptcl.com.pk", "revenue": 140000000000, "employees_count": 15000 },
+     "TELE.KA": { "name": "Telecard Limited", "ceo": "Syed Aamir Hussain", "net_profit": 150000000, "founded_year": 1992, "website": "www.telecard.com.pk", "revenue": 2000000000, "employees_count": 350 }
+  }
+}

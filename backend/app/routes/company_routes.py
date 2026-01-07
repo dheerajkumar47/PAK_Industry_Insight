@@ -4,7 +4,7 @@ from ..schemas.company_schema import CompanySchema
 
 router = APIRouter(prefix="/companies", tags=["Companies"])
 
-@router.post("/")
+@router.post("")
 def add_company(company: CompanySchema):
     db.companies.insert_one(company.dict())
     return {"message": "Company added successfully"}
@@ -22,7 +22,7 @@ def trigger_seed():
 from bson import ObjectId
 from fastapi import HTTPException
 
-@router.get("/")
+@router.get("")
 def list_companies(industry: str = None, location: str = None, growth: str = None):
     query = {}
     if industry:

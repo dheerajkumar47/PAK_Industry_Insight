@@ -48,12 +48,14 @@ We have built this platform through five rigorous development phases:
 *   **Dark Mode**: System-wide dark theme support.
 *   **Data Completeness**: Enriched 100% of tracked companies with missing CEO/Profit data.
 
-### Phase 6: Live Market Data Integration 📊
-*   **Real-Time Stock Prices**: Live market data for all PSX-listed companies via Yahoo Finance API.
-*   **Market Service**: High-performance parallel data fetching with timeout handling.
-*   **Sector Performance**: Aggregated sector-wise performance metrics and rankings.
-*   **Currency Tracking**: USD/PKR exchange rate monitoring with change indicators.
+### Phase 6: Live Market Trends & Polish 📊
+*   **Live Market Data Engine**: Full integration with `yfinance` to fetch Price, Volume, and Change% for 113+ companies.
+*   **Interactive Market Heatmap**: Professional TradingView-style heatmap visualizing the entire PSX (Green/Red blocks).
+*   **Smart Search & Filtering**: Advanced search by Ticker/Name and instant sector filtering (Cement, Tech, etc.).
+*   **Performance Optimization**: Fixed `307 Temporary Redirect` loop for faster API responses.
+*   **Security Patches**: Stability fixes for Authentication (`401` errors handled) and secure Token generation.
 *   **Data Source Documentation**: Comprehensive `DATA_SOURCES.md` for transparency and verification.
+
 
 ---
 

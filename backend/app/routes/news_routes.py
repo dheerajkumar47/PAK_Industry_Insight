@@ -9,7 +9,7 @@ def trigger_fetch(background_tasks: BackgroundTasks):
     background_tasks.add_task(fetch_news)
     return {"message": "News fetch started in background. Updates will appear shortly."}
 
-@router.get("/")
+@router.get("")
 def list_news(skip: int = 0, limit: int = 10, sort: str = "latest"):
     query = {}
     

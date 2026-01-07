@@ -4,6 +4,7 @@ import { Sidebar } from './Sidebar';
 import { Card } from './Card';
 import { TrendingUp, TrendingDown, DollarSign, BarChart3, ArrowUpRight, ArrowDownRight, Building2 } from 'lucide-react';
 import { marketService } from '../services/api';
+import { StockHeatmap } from './StockHeatmap';
 
 interface MarketTrendsProps {
   onNavigate: (page: string) => void;
@@ -15,10 +16,30 @@ export function MarketTrends({ onNavigate, onLogout }: MarketTrendsProps) {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = React.useState(false);
   const [marketData, setMarketData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedSector, setSelectedSector] = useState('All');
 
   useEffect(() => {
     loadMarketData();
   }, []);
+
+  // Compute unique sectors from stocks
+  const uniqueSectors = React.useMemo(() => {
+    if (!marketData?.stocks) return [];
+    const sectors = marketData.stocks.map((s: any) => s.industry);
+    return Array.from(new Set(sectors)).sort() as string[];
+  }, [marketData]);
+
+  // Filter stocks
+  const filteredStocks = React.useMemo(() => {
+    if (!marketData?.stocks) return [];
+    return marketData.stocks.filter((stock: any) => {
+      const matchesSearch = stock.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                            stock.ticker.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSector = selectedSector === 'All' || stock.industry === selectedSector;
+      return matchesSearch && matchesSector;
+    });
+  }, [marketData, searchQuery, selectedSector]);
 
   const loadMarketData = async () => {
     setLoading(true);
@@ -122,13 +143,46 @@ export function MarketTrends({ onNavigate, onLogout }: MarketTrendsProps) {
                   </div>
                 )}
 
+                {/* Market Heatmap - NEW */}
+                <div className="mb-8">
+                   <h2 className="text-xl font-bold text-[#0F172A] dark:text-white mb-4">Market Heatmap (PSX)</h2>
+                   <StockHeatmap />
+                </div>
+
                 {/* Top Stocks */}
                 {marketData?.stocks && marketData.stocks.length > 0 && (
                   <div>
-                    <div className="flex items-center justify-between mb-4">
-                      <h2 className="text-xl font-bold text-[#0F172A] dark:text-white">Live Stock Prices</h2>
-                      <span className="text-sm text-gray-500 dark:text-gray-400">{marketData.total_stocks} stocks tracked</span>
+                    <div className="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4">
+                      <div>
+                        <h2 className="text-xl font-bold text-[#0F172A] dark:text-white">Live Stock Prices</h2>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">{filteredStocks.length} stocks found</span>
+                      </div>
+                      
+                      <div className="flex items-center gap-3 w-full sm:w-auto">
+                         <div className="relative flex-1 sm:w-64">
+                            <input
+                              type="text"
+                              placeholder="Search company or ticker..."
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                              className="w-full pl-10 pr-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#10B981] dark:text-white"
+                            />
+                            <svg className="w-4 h-4 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                         </div>
+
+                         <select
+                            value={selectedSector}
+                            onChange={(e) => setSelectedSector(e.target.value)}
+                            className="px-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#10B981] dark:text-white"
+                         >
+                            <option value="All">All Sectors</option>
+                            {uniqueSectors.map((sector: string) => (
+                              <option key={sector} value={sector}>{sector}</option>
+                            ))}
+                         </select>
+                      </div>
                     </div>
+
                     <Card className="bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700">
                       <div className="overflow-x-auto">
                         <table className="w-full">
@@ -143,7 +197,7 @@ export function MarketTrends({ onNavigate, onLogout }: MarketTrendsProps) {
                             </tr>
                           </thead>
                           <tbody>
-                            {marketData.stocks.map((stock: any, index: number) => (
+                            {filteredStocks.map((stock: any, index: number) => (
                               <tr key={index} className="border-b border-gray-100 dark:border-slate-700 last:border-0 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
                                 <td className="py-3 px-4">
                                   <div className="font-medium text-[#0F172A] dark:text-white">{stock.name}</div>
