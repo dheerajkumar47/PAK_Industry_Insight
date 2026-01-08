@@ -1,10 +1,11 @@
 import React from 'react';
-import { Search, Layers, Building2, TrendingUp, Sparkles, ArrowRight } from 'lucide-react';
+import { Search, Layers, Building2, TrendingUp, Sparkles, ArrowRight, ArrowDown } from 'lucide-react';
 import { Navbar } from './Navbar';
 import { Button } from './Button';
 import { Highlight } from './ui/hero-highlight';
 import { FlipWords } from './ui/flip-words';
-import { BackgroundBeams } from './ui/background-beams';
+import { ShootingStars } from './ui/shooting-stars';
+import { StarsBackground } from './ui/stars-background';
 import { motion } from 'framer-motion';
 
 interface LandingPageProps {
@@ -15,69 +16,95 @@ interface LandingPageProps {
 
 export function LandingPage({ onGetStarted, onLoginClick, onNavigate }: LandingPageProps) {
   return (
-    <div className="min-h-screen bg-slate-950 relative overflow-hidden flex flex-col">
+    <div className="min-h-screen bg-neutral-950 relative overflow-hidden flex flex-col font-sans">
       <div className="z-50 relative">
         <Navbar showSearch={false} showProfile={false} onLoginClick={onLoginClick} />
       </div>
       
-      {/* Background Beams */}
-      <BackgroundBeams className="opacity-20" />
+      {/* Background Animation */}
+      <div className="fixed inset-0 z-0">
+        <StarsBackground 
+            starDensity={0.0002}
+            allStarsTwinkle={true}
+            twinkleProbability={0.8}
+            minTwinkleSpeed={0.8}
+            maxTwinkleSpeed={1.2}
+        />
+        <ShootingStars 
+            starColor="#10B981" 
+            trailColor="#34D399" 
+            minSpeed={15} 
+            maxSpeed={35} 
+            minDelay={1000} 
+            maxDelay={3000} 
+        />
+      </div>
 
       {/* Hero Section */}
-      <div className="flex flex-col items-center justify-center flex-1 w-full px-4 sm:px-6 relative z-10 pt-20 pb-32">
+      <div className="flex flex-col items-center justify-center flex-1 w-full px-4 sm:px-6 relative z-10 pt-16 pb-20">
         <motion.div
-           initial={{ opacity: 0, y: 20 }}
+           initial={{ opacity: 0, y: 30 }}
            animate={{ opacity: 1, y: 0 }}
            transition={{ duration: 0.8 }}
            className="text-center max-w-5xl mx-auto"
         >
-          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 py-8 leading-tight">
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white via-neutral-200 to-neutral-500 py-4 leading-tight tracking-tight">
             Discover Pakistan's Industries <br />
-            <span className="text-white">With Real-Time Intelligence.</span>
+            <span className="text-white drop-shadow-2xl">With Real-Time Intelligence.</span>
           </h1>
           
-          <div className="mt-4 text-lg sm:text-xl text-neutral-400 max-w-2xl mx-auto leading-relaxed">
+          <div className="mt-6 text-lg sm:text-xl text-neutral-400 max-w-2xl mx-auto leading-relaxed font-light">
              One platform to track
              <FlipWords words={["Market Trends", "Top Companies", "Investments", "Growth Sectors"]} className="text-emerald-400 font-semibold px-2" />
              across the entire PSX ecosystem.
           </div>
 
-          {/* Search Bar */}
+          {/* Search Bar - Fixed "Out of Box" Issue */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-            className="mt-10 max-w-xl mx-auto relative group"
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="mt-12 max-w-xl mx-auto relative group"
           >
-             <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full blur opacity-30 group-hover:opacity-60 transition duration-500"></div>
-             <div className="relative bg-slate-900 rounded-full flex items-center p-1.5 border border-slate-800">
-                <Search className="ml-4 text-emerald-500 w-5 h-5" />
+             {/* Glow Effect */}
+             <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500/50 to-teal-500/50 rounded-full blur-xl opacity-30 group-hover:opacity-60 transition duration-500"></div>
+             
+             <div className="relative bg-black/80 backdrop-blur-md rounded-full flex items-center p-1.5 border border-white/10 group-hover:border-emerald-500/50 transition-colors shadow-2xl">
+                <Search className="ml-4 text-emerald-500 w-5 h-5 shrink-0" />
                 <input
                   type="text"
-                  placeholder="Search engaged companies (e.g. Systems)..."
-                  className="w-full pl-3 pr-4 py-3 bg-transparent border-none focus:outline-none text-base text-white placeholder-slate-500"
+                  placeholder="Search (e.g. Systems, Engro)..."
+                  className="w-full pl-3 pr-2 py-3 bg-transparent border-none focus:outline-none text-base text-white placeholder-neutral-500"
                 />
-                <Button variant="primary" onClick={onGetStarted} className="rounded-full px-6 py-2 shadow-lg shadow-emerald-500/20 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium">
+                
+                {/* Explore Button - Snug Fit */}
+                <button 
+                  onClick={onGetStarted} 
+                  className="shrink-0 rounded-full px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium transition-all shadow-lg hover:shadow-emerald-500/25"
+                >
                   Explore
-                </Button>
+                </button>
             </div>
           </motion.div>
         
-          <div className="mt-8 flex justify-center gap-4">
-            <button 
-              onClick={onGetStarted}
-              className="px-8 py-3 rounded-full bg-slate-800 text-white text-sm font-semibold border border-slate-700 hover:bg-slate-700 transition-colors flex items-center gap-2"
-            >
-              Get Started <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="mt-12 flex justify-center gap-4"
+          >
+             <div className="flex flex-col items-center gap-2 cursor-pointer animate-bounce text-neutral-500 hover:text-emerald-400 transition-colors">
+                <span className="text-xs uppercase tracking-widest">Scroll to Explore</span>
+                <ArrowDown className="w-4 h-4" />
+             </div>
+          </motion.div>
         </motion.div>
       </div>
       
-      {/* Feature Section */}
-      <section className="relative z-10 py-24 bg-slate-950/50 border-t border-slate-900">
+      {/* Feature Section - Reduced Gap */}
+      <section className="relative z-10 py-20 bg-black/50 border-t border-white/5 backdrop-blur-sm">
          <div className="max-w-7xl mx-auto px-6">
-            <h2 className="text-2xl md:text-3xl font-bold text-center mb-16 text-white">Why <span className="text-emerald-500">PAK Insight?</span></h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-center mb-12 text-white">Why <span className="text-emerald-500">PAK Insight?</span></h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
                 {
@@ -96,12 +123,12 @@ export function LandingPage({ onGetStarted, onLoginClick, onNavigate }: LandingP
                     icon: <Layers className="w-6 h-6 text-emerald-400" />
                 }
             ].map((feature, i) => (
-                <div key={i} className="p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500/30 transition-all hover:shadow-2xl hover:shadow-emerald-900/20">
-                    <div className="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center mb-4">
+                <div key={i} className="p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-emerald-500/50 transition-all hover:bg-white/10 group cursor-default">
+                    <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                         {feature.icon}
                     </div>
                     <h3 className="text-lg font-semibold text-white mb-2">{feature.title}</h3>
-                    <p className="text-slate-400 text-sm leading-relaxed">
+                    <p className="text-neutral-400 text-sm leading-relaxed">
                         {feature.description}
                     </p>
                 </div>
@@ -110,9 +137,27 @@ export function LandingPage({ onGetStarted, onLoginClick, onNavigate }: LandingP
          </div>
       </section>
       
-      {/* Simple Footer */}
-      <footer className="relative z-10 py-8 text-center text-slate-600 text-sm">
-        <p>© 2025 PAK Industry Insight</p>
+      {/* Footer - Enhanced Visibility */}
+      <footer className="relative z-10 py-12 bg-black border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-6 text-center">
+            <div className="flex items-center justify-center gap-2 mb-8 text-white font-bold text-xl tracking-tight">
+                <div className="w-8 h-8 rounded bg-emerald-500/20 flex items-center justify-center">
+                    <Sparkles className="w-5 h-5 text-emerald-400" /> 
+                </div>
+                PAK Industry Insight
+            </div>
+            
+            <div className="flex flex-wrap justify-center gap-8 text-neutral-400 text-sm mb-8 font-medium">
+                <button onClick={() => onNavigate('about')} className="hover:text-emerald-400 transition-colors">About Us</button>
+                <button onClick={() => onNavigate('contact')} className="hover:text-emerald-400 transition-colors">Contact Support</button>
+                <button onClick={() => onNavigate('terms')} className="hover:text-emerald-400 transition-colors">Privacy Policy</button>
+                <button onClick={() => onNavigate('terms')} className="hover:text-emerald-400 transition-colors">Terms of Service</button>
+            </div>
+            
+            <div className="text-neutral-600 text-xs uppercase tracking-wider">
+                © 2025 PAK Industry Insight. Built for Pakistan's Future.
+            </div>
+        </div>
       </footer>
     </div>
   );

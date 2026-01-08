@@ -230,7 +230,7 @@ export function Navbar({
             ) : (
               <button 
                 onClick={onLoginClick}
-                className="px-4 sm:px-6 py-2 bg-[#10B981] text-white rounded-lg hover:bg-[#059669] transition-colors text-sm sm:text-base"
+                className="px-6 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full font-medium transition-all shadow-lg shadow-emerald-500/20 text-sm sm:text-base"
               >
                 Login
               </button>
