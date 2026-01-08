@@ -51,3 +51,49 @@ Since your app has a **Background Scheduler** (for daily stock updates) and a **
 3.  Test "Login" and "AI Insights".
 
 **Note**: The free tier of Render "spins down" after inactivity. The first request might take 30-50 seconds. This is normal for free hosting.
+
+---
+
+## Part 3: Google OAuth Setup (Required for Login) 🔐
+
+To make "Login with Google" work on your live site, you need to tell Google about your new Vercel domain.
+
+### Step 1: Create a Project
+1.  Go to the [Google Cloud Console](https://console.cloud.google.com/).
+2.  Click the dropdown next to the Google Cloud logo (top left).
+3.  Click **"New Project"**.
+4.  Name it `PAK-Industry-Insight` and click **Create**.
+
+### Step 2: Configure Consent Screen
+1.  In the search bar, type "OAuth Consent Screen" and select it.
+2.  Select **External** -> **Create**.
+3.  **App Information**:
+    *   App Name: `PAK Industry Insight`
+    *   Support Email: (Your email)
+4.  **Developer Contact**: (Your email).
+5.  Click **Save and Continue** (Skip scopes and test users for now).
+6.  Click **Back to Dashboard**.
+
+### Step 3: Create Credentials
+1.  Click **Credentials** on the left sidebar.
+2.  Click **+ CREATE CREDENTIALS** -> **OAuth client ID**.
+3.  **Application Type**: Web application.
+4.  **Name**: `PAK Industry Frontend`.
+
+### Step 4: Authorize Vercel (Crucial Step!) ⚠️
+This is where you fix the "Login" error.
+
+1.  Under **Authorized JavaScript origins**, click **ADD URI**.
+2.  Paste your **Vercel URL** (e.g., `https://pak-industry-insight.vercel.app`).
+    *   *Do NOT put a trailing slash `/` at the end.*
+3.  Under **Authorized redirect URIs**, click **ADD URI**.
+4.  Paste your Vercel URL again (Google sometimes requires this even for popup flows).
+5.  Click **CREATE**.
+
+### Step 5: Update Variables (If changed)
+If you created a *new* Client ID, make sure to update:
+1.  **Frontend (Vercel)**: Update `VITE_GOOGLE_CLIENT_ID` in Vercel Environment Variables.
+2.  **Backend (Render)**: Update `GOOGLE_CLIENT_ID` in Render Environment Variables.
+
+Redeploy if you changed variables!
+

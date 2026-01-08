@@ -6,7 +6,7 @@ pydantic
 passlib
 bcrypt==3.2.2
 python-jose[cryptography]
-google-generativeai
+google-generativeai>=0.4.0
 dnspython
 email-validator
 google-auth
