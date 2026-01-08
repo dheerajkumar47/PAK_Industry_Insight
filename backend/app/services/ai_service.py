@@ -17,7 +17,7 @@ class AiService:
             except Exception as e:
                 print(f"DEBUG: Could not list models: {e}")
 
-            self.model = genai.GenerativeModel('gemini-1.5-flash')
+            self.model = genai.GenerativeModel('gemini-flash-latest')
 
     async def generate_market_pulse(self, market_data: dict, news_headlines: list[str]) -> str:
         """
