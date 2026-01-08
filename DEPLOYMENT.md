@@ -37,7 +37,7 @@ Since your app has a **Background Scheduler** (for daily stock updates) and a **
     *   **Framework Preset**: Vite
     *   **Root Directory**: Click "Edit" and select `frontend`.
     *   **Build Command**: `npm run build` (Default)
-    *   **Output Directory**: `build` (Important! We changed this in your config).
+    *   **Output Directory**: `dist` (Default Vite output).
 5.  **Environment Variables**:
     *   Name: `VITE_API_URL`
     *   Value: (Paste your Render Backend URL here, e.g., `https://pak-industry-insight.onrender.com`) - **No trailing slash**.
