@@ -1,5 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import Field
+from pydantic import Field, AliasChoices
 from dotenv import load_dotenv
 import os
 
@@ -14,8 +14,8 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     APP_NAME: str = "PAK Industry Insight API"
-    # Look for GOOGLE_CLIENT_ID first, fallback to VITE_GOOGLE_CLIENT_ID for backward compatibility
-    GOOGLE_CLIENT_ID: str = Field(default="", validation_alias="VITE_GOOGLE_CLIENT_ID")
+    # Look for GOOGLE_CLIENT_ID first, fallback to VITE_GOOGLE_CLIENT_ID
+    GOOGLE_CLIENT_ID: str = Field(default="", validation_alias=AliasChoices('GOOGLE_CLIENT_ID', 'VITE_GOOGLE_CLIENT_ID'))
     GEMINI_API_KEY: str = ""
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
