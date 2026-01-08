@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = ''; // Relative path to use Vite proxy
+const API_URL = import.meta.env.VITE_API_URL || ''; // Use env var for Prod, proxy for Dev
 
 const api = axios.create({
   baseURL: API_URL,
