@@ -266,6 +266,8 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
                     ))}
                   </div>
                 </Card>
+              </div>
+
               {/* Right Column (Span 1) */}
               <div className="md:col-span-1 space-y-6">
                 {/* Watchlist Widget */}
