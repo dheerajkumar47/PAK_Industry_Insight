@@ -2,6 +2,7 @@ import React from 'react';
 import { Navbar } from './Navbar';
 import { Sidebar } from './Sidebar';
 import { Card } from './Card';
+import { GlowingCard } from './ui/glowing-card';
 import { TrendingUp, TrendingDown, Users, DollarSign, Sparkles, ArrowUpRight, Building2, Loader2 } from 'lucide-react';
 import { WatchlistWidget } from './WatchlistWidget';
 import { marketService, aiService } from '../services/api';
@@ -149,8 +150,8 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
             
             {/* Quick Stats */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
-              <Card className="bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700">
-                <div className="flex items-start justify-between">
+              <GlowingCard>
+                <div className="flex items-start justify-between p-6">
                   <div>
                     <div className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm mb-1">Total Industries</div>
                     <div className="text-xl sm:text-2xl text-[#0F172A] dark:text-white">24</div>
@@ -159,10 +160,10 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
                     <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-[#10B981]" />
                   </div>
                 </div>
-              </Card>
+              </GlowingCard>
               
-              <Card className="bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700">
-                <div className="flex items-start justify-between">
+              <GlowingCard>
+                <div className="flex items-start justify-between p-6">
                   <div>
                     <div className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm mb-1">Active Companies</div>
                     <div className="text-xl sm:text-2xl text-[#0F172A] dark:text-white">1,247</div>
@@ -171,10 +172,10 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
                     <Building2 className="w-4 h-4 sm:w-5 sm:h-5 text-[#10B981]" />
                   </div>
                 </div>
-              </Card>
+              </GlowingCard>
               
-              <Card className="bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700">
-                <div className="flex items-start justify-between">
+              <GlowingCard>
+                 <div className="flex items-start justify-between p-6">
                   <div>
                     <div className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm mb-1">Market Cap</div>
                     <div className="text-xl sm:text-2xl text-[#0F172A] dark:text-white">PKR 382B</div>
@@ -183,10 +184,10 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
                     <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-[#10B981]" />
                   </div>
                 </div>
-              </Card>
+              </GlowingCard>
               
-              <Card className="bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700">
-                <div className="flex items-start justify-between">
+              <GlowingCard>
+                <div className="flex items-start justify-between p-6">
                   <div>
                     <div className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm mb-1">Total Employment</div>
                     <div className="text-xl sm:text-2xl text-[#0F172A] dark:text-white">45M+</div>
@@ -195,7 +196,7 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
                     <Users className="w-4 h-4 sm:w-5 sm:h-5 text-[#10B981]" />
                   </div>
                 </div>
-              </Card>
+              </GlowingCard>
             </div>
             
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
