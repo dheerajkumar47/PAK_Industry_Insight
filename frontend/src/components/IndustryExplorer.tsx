@@ -212,7 +212,7 @@ export function IndustryExplorer({ onNavigate, onViewCompany, onLogout, initialV
                             <div className="text-[#64748B] dark:text-gray-400">
                               REVENUE
                               <div className="font-semibold text-[#0F172A] dark:text-white">
-                                {company.revenue ? (typeof company.revenue === 'number' ? `$${(company.revenue / 1000000000).toFixed(1)}B` : company.revenue) : "N/A"}
+                                {company.revenue ? (typeof company.revenue === 'number' ? `PKR ${(company.revenue / 1000000000).toFixed(1)}B` : company.revenue) : "N/A"}
                               </div>
                             </div>
                             <div className="text-right text-[#64748B] dark:text-gray-400">

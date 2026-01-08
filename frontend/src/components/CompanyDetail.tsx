@@ -247,7 +247,7 @@ export function CompanyDetail({ onNavigate, onLogout, onViewCompany, companyId, 
               <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm">
                 <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Revenue</div>
                 <div className="text-xl sm:text-2xl font-bold text-[#0F172A] dark:text-white flex items-center gap-2">
-                  {company.revenue ? (typeof company.revenue === 'number' ? `$${(company.revenue / 1000000000).toFixed(1)}B` : company.revenue) : "N/A"}
+                  {company.revenue ? (typeof company.revenue === 'number' ? `PKR ${(company.revenue / 1000000000).toFixed(1)}B` : company.revenue) : "N/A"}
                   <span className="text-xs text-[#10B981] bg-[#10B981]/10 px-2 py-0.5 rounded-full">+12%</span>
                 </div>
               </div>
@@ -258,7 +258,7 @@ export function CompanyDetail({ onNavigate, onLogout, onViewCompany, companyId, 
               <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm">
                 <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Market Cap</div>
                 <div className="text-xl sm:text-2xl font-bold text-[#0F172A] dark:text-white">
-                  {company.market_cap ? `$${(company.market_cap / 1000000000).toFixed(1)}B` : company.marketCap || "N/A"}
+                  {company.market_cap ? `PKR ${(company.market_cap / 1000000000).toFixed(1)}B` : company.marketCap || "N/A"}
                 </div>
               </div>
               <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm">

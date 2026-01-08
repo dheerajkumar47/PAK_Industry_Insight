@@ -177,7 +177,7 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
                 <div className="flex items-start justify-between">
                   <div>
                     <div className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm mb-1">Market Cap</div>
-                    <div className="text-xl sm:text-2xl text-[#0F172A] dark:text-white">$382B</div>
+                    <div className="text-xl sm:text-2xl text-[#0F172A] dark:text-white">PKR 382B</div>
                   </div>
                   <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#10B981]/10 rounded-lg flex items-center justify-center">
                     <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-[#10B981]" />
