@@ -3,6 +3,8 @@ import { Navbar } from './Navbar';
 import { Sidebar } from './Sidebar';
 import { Card } from './Card';
 import { GlowingCard } from './ui/glowing-card';
+import { BentoGrid, BentoGridItem } from './ui/bento-grid';
+import { FlipWords } from './ui/flip-words';
 import { TrendingUp, TrendingDown, Users, DollarSign, Sparkles, ArrowUpRight, Building2, Loader2 } from 'lucide-react';
 import { WatchlistWidget } from './WatchlistWidget';
 import { marketService, aiService } from '../services/api';
@@ -145,7 +147,11 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
           <div className="max-w-[1600px] mx-auto">
             <div className="mb-6 sm:mb-8">
               <h1 className="text-2xl sm:text-3xl text-[#0F172A] dark:text-white mb-2">Welcome Back</h1>
-              <p className="text-sm sm:text-base text-[#1E293B] dark:text-gray-400">Here's what's happening in Pakistan's industries today</p>
+              <div className="text-sm sm:text-base text-[#1E293B] dark:text-gray-400 flex items-center">
+                Here's what's happening in 
+                <FlipWords words={["Pakistan's Industries", "The Stock Market", "Your Watchlist"]} className="font-semibold text-[#10B981] dark:text-[#10B981] px-1" />
+                today
+              </div>
             </div>
             
             {/* Quick Stats */}
@@ -199,9 +205,9 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
               </GlowingCard>
             </div>
             
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-              {/* Industry Highlights */}
-              <div className="lg:col-span-2 space-y-6">
+            <BentoGrid>
+              {/* Industry Highlights (Span 2) */}
+              <div className="md:col-span-2">
                 <Card className="bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700">
                   <div className="flex items-center justify-between mb-4 sm:mb-6">
                     <h2 className="text-lg sm:text-xl text-[#0F172A] dark:text-white">Industry Highlights</h2>
@@ -262,8 +268,10 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
                 </Card>
               </div>
               
-              {/* Right Column */}
-              <div className="space-y-6">
+              </div>
+              
+              {/* Right Column (Span 1) */}
+              <div className="md:col-span-1 space-y-6">
                 {/* Watchlist Widget */}
                 <div className="h-80">
                     <WatchlistWidget onNavigate={(page, id) => {
@@ -322,7 +330,8 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
                     ))}
                   </div>
                 </Card>
-              </div>
+                </div>
+            </BentoGrid>
             </div>
           </div>
         </main>
