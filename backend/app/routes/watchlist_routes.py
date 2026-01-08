@@ -5,7 +5,7 @@ from bson import ObjectId
 
 router = APIRouter(prefix="/watchlist", tags=["Watchlist"])
 
-@router.get("/")
+@router.get("")
 async def get_watchlist(current_user: dict = Depends(get_current_user)):
     """
     Get all companies in the user's watchlist.
