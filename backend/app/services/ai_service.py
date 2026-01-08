@@ -9,8 +9,15 @@ class AiService:
             print("WARNING: GEMINI_API_KEY is not set. AI features will return mock data.")
             self.model = None
         else:
-            genai.configure(api_key=self.api_key)
-            self.model = genai.GenerativeModel('gemini-pro')
+            try:
+                print("DEBUG: Listing available Gemini models...")
+                for m in genai.list_models():
+                    if 'generateContent' in m.supported_generation_methods:
+                        print(f"DEBUG: Found model: {m.name}")
+            except Exception as e:
+                print(f"DEBUG: Could not list models: {e}")
+
+            self.model = genai.GenerativeModel('gemini-1.5-flash')
 
     async def generate_market_pulse(self, market_data: dict, news_headlines: list[str]) -> str:
         """
