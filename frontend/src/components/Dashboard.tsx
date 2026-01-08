@@ -329,7 +329,7 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
                 </div>
             </BentoGrid>
             </div>
-          </div>
+
         </main>
       </div>
       
