@@ -245,7 +245,7 @@ export function CompanyDetail({ onNavigate, onLogout, onViewCompany, companyId, 
             {/* Stats Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-8">
               <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm">
-                <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Revenue</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Last Year Revenue</div>
                 <div className="text-xl sm:text-2xl font-bold text-[#0F172A] dark:text-white flex items-center gap-2">
                   {company.revenue ? (typeof company.revenue === 'number' ? `PKR ${(company.revenue / 1000000000).toFixed(1)}B` : company.revenue) : "N/A"}
                   <span className="text-xs text-[#10B981] bg-[#10B981]/10 px-2 py-0.5 rounded-full">+12%</span>
@@ -358,8 +358,20 @@ export function CompanyDetail({ onNavigate, onLogout, onViewCompany, companyId, 
                       <span className="text-[#10B981] font-bold bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded">{company.ticker || company.stockSymbol || "N/A"}</span>
                     </div>
                     <div className="flex items-center justify-between py-2 border-b border-[#E5E7EB] dark:border-slate-700">
+                      <span className="text-gray-600 dark:text-gray-400">Last Year Revenue</span>
+                      <span className="text-[#0F172A] dark:text-white">
+                        {company.revenue ? (typeof company.revenue === 'number' ? `PKR ${(company.revenue / 1000000000).toFixed(1)}B` : company.revenue) : "N/A"}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between py-2 border-b border-[#E5E7EB] dark:border-slate-700">
                       <span className="text-gray-600 dark:text-gray-400">Net Profit</span>
-                      <span className="text-[#0F172A] dark:text-white">{company.net_profit || "N/A"}</span>
+                      <span className="text-[#0F172A] dark:text-white">
+                          {company.net_profit ? (
+                              !isNaN(Number(company.net_profit)) && Number(company.net_profit) > 1000000 
+                              ? `PKR ${(Number(company.net_profit) / 1000000000).toFixed(1)}B` 
+                              : company.net_profit
+                          ) : "N/A"}
+                      </span>
                     </div>
                   </div>
                 </Card>
