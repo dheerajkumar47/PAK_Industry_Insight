@@ -76,6 +76,11 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
                   </div>
                 </Card>
 
+  // ==========================================
+  // 3. DATA TRANSFORMATION (Preparing for UI)
+  // ==========================================
+  
+  // Transform raw sector data into a clean array for the list
   const industries = marketData?.sector_performance ? Object.entries(marketData.sector_performance)
     .slice(0, 5)
     .map(([name, change]: [string, any]) => ({
@@ -84,6 +89,7 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
         trend: change >= 0 ? 'up' : 'down',
         value: 'Live' 
     })) : [
+    // Fallback data if API fails
     { name: 'Textiles & Apparel', growth: '+12.5%', trend: 'up', value: '$15.2B' },
     { name: 'Information Technology', growth: '+24.8%', trend: 'up', value: '$4.8B' },
     { name: 'Agriculture', growth: '+8.3%', trend: 'up', value: '$42.1B' },
@@ -98,11 +104,12 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
     employees: string;
   }
 
+  // Map the top gainers from API to the card format
   const trendingCompanies: TrendingCompany[] = marketData?.top_gainers ? marketData.top_gainers.slice(0, 3).map((stock: any) => ({
       name: stock.ticker || "Unknown", 
-      industry: 'N/A', 
+      industry: 'N/A', // The API might not return industry for gainers list to save bandwidth
       growth: `+${(stock.change_percent ?? 0).toFixed(2)}%`,
-      employees: `PKR ${stock.price ?? 0}`
+      employees: `PKR ${stock.price ?? 0}` // Using this field to show Price instead of employees
   })) : [
     { name: 'Systems Limited', industry: 'IT Services', growth: '+32%', employees: '4,500+' },
     { name: 'Lucky Cement', industry: 'Construction', growth: '+18%', employees: '3,200+' },
@@ -125,6 +132,7 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] dark:bg-slate-900 pb-20 lg:pb-0 transition-colors duration-200">
+      {/* Top Navigation Bar */}
       <Navbar 
         showSearch={true} 
         showProfile={true} 
@@ -136,6 +144,7 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
       />
       
       <div className="flex">
+        {/* Left Sidebar (Collapsible on mobile) */}
         <Sidebar 
           activeItem={activeItem} 
           onNavigate={handleNavigation}
@@ -143,6 +152,7 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
           onMobileClose={() => setIsMobileSidebarOpen(false)}
         />
         
+        {/* Main Content Area */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8">
           <div className="max-w-[1600px] mx-auto">
             <div className="mb-6 sm:mb-8">

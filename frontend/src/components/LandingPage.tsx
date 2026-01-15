@@ -21,17 +21,26 @@ export function LandingPage({ onGetStarted, onLoginClick, onNavigate }: LandingP
         <Navbar showSearch={false} showProfile={false} onLoginClick={onLoginClick} />
       </div>
       
-      {/* Background Animation */}
+      {/* 
+         ==========================================
+         BACKGROUND ANIMATION LAYER
+         ==========================================
+         We use two overlapping animations to create the "Aurora" effect:
+         1. StarsBackground: A static or slowly twinkling field of stars.
+         2. ShootingStars: Dynamic meteors that streak across every few seconds.
+         
+         The 'fixed inset-0' class ensures this covers the entire screen behind the content.
+      */}
       <div className="fixed inset-0 z-0">
         <StarsBackground 
-            starDensity={0.0002}
+            starDensity={0.0002} // Controls how many stars appear
             allStarsTwinkle={true}
             twinkleProbability={0.8}
             minTwinkleSpeed={0.8}
             maxTwinkleSpeed={1.2}
         />
         <ShootingStars 
-            starColor="#10B981" 
+            starColor="#10B981" // Emerald Green shooting stars
             trailColor="#34D399" 
             minSpeed={15} 
             maxSpeed={35} 
