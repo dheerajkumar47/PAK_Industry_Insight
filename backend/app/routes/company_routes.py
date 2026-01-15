@@ -40,7 +40,12 @@ def list_companies(industry: str = None, location: str = None, growth: str = Non
 
 @router.get("/search")
 def search_companies(q: str):
-    query = {"name": {"$regex": q, "$options": "i"}}
+    query = {
+        "$or": [
+            {"name": {"$regex": q, "$options": "i"}},
+            {"symbol": {"$regex": q, "$options": "i"}}
+        ]
+    }
     companies = list(db.companies.find(query))
     for company in companies:
         company["id"] = str(company["_id"])

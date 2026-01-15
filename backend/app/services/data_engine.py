@@ -138,6 +138,7 @@ class DataEngine:
             top_gainers = []
             for stock in stocks_cursor:
                 top_gainers.append({
+                    "id": str(stock.get("_id")), 
                     "name": stock.get("name"),
                     "ticker": stock.get("ticker"),
                     "industry": stock.get("industry"),

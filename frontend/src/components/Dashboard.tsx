@@ -5,8 +5,9 @@ import { Card } from './Card';
 import { GlowingCard } from './ui/glowing-card';
 import { BentoGrid, BentoGridItem } from './ui/bento-grid';
 import { FlipWords } from './ui/flip-words';
-import { TrendingUp, TrendingDown, Users, DollarSign, Sparkles, ArrowUpRight, Building2, Loader2 } from 'lucide-react';
+import { TrendingUp, TrendingDown, Users, DollarSign, Sparkles, ArrowUpRight, Building2, Loader2, RefreshCcw } from 'lucide-react';
 import { WatchlistWidget } from './WatchlistWidget';
+import { AIChatWidget } from './AIChatWidget';
 import { marketService, aiService } from '../services/api';
 
 interface DashboardProps {
@@ -15,12 +16,44 @@ interface DashboardProps {
   onLogout?: () => void;
 }
 
+  // Helper: Get Market Status (Pakistan Time)
+  const getMarketStatus = () => {
+    const now = new Date();
+    // Convert to PST (UTC+5)
+    // Simple check: UTC hours + 5
+    const utcHours = now.getUTCHours();
+    const pstHours = (utcHours + 5) % 24;
+    const day = now.getUTCDay(); // 0=Sun, 6=Sat
+
+    // Trading days: Mon(1) to Fri(5)
+    // Timings: 9:30 AM - 4:00 PM (Simple approx)
+    const isTradingDay = day >= 1 && day <= 5;
+    const isTradingTime = (pstHours > 9 || (pstHours === 9 && now.getUTCMinutes() >= 30)) && pstHours < 16; 
+
+    return isTradingDay && isTradingTime ? 'Open' : 'Closed';
+  };
+
+  const tickerMap: Record<string, string> = {
+    'SYS': 'Systems Limited',
+    'LUCK': 'Lucky Cement', 
+    'ENGRO': 'Engro Corp',
+    'TRG': 'TRG Pakistan',
+    'OGDC': 'Oil & Gas Dev',
+    'PPL': 'Pakistan Petroleum',
+    'GHNI': 'Ghandhara Nissan',
+    'IGIHL': 'IGI Holdings',
+    'ALNRS': 'Al-Noor Sugar',
+    'KEL': 'K-Electric',
+    'HUBC': 'Hub Power Co'
+  };
+
 export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProps) {
   const [activeItem, setActiveItem] = React.useState('dashboard');
   const [showIntroVideo, setShowIntroVideo] = React.useState(true);
   const [marketData, setMarketData] = React.useState<any>(null);
   const [loading, setLoading] = React.useState(true);
   const [aiSummary, setAiSummary] = React.useState<string | null>(null);
+  const [marketStatus, setMarketStatus] = React.useState(getMarketStatus());
 
   React.useEffect(() => {
     // Check if intro has already been shown in this session
@@ -112,18 +145,25 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
     industry: string;
     growth: string;
     employees: string;
+    symbol: string;
+    id?: string;
   }
 
   // Map the top gainers from API to the card format
-  const trendingCompanies: TrendingCompany[] = marketData?.top_gainers ? marketData.top_gainers.slice(0, 3).map((stock: any) => ({
-      name: stock.ticker || "Unknown", 
-      industry: 'N/A', // The API might not return industry for gainers list to save bandwidth
-      growth: `+${(stock.change_percent ?? 0).toFixed(2)}%`,
-      employees: `PKR ${stock.price ?? 0}` // Using this field to show Price instead of employees
-  })) : [
-    { name: 'Systems Limited', industry: 'IT Services', growth: '+32%', employees: '4,500+' },
-    { name: 'Lucky Cement', industry: 'Construction', growth: '+18%', employees: '3,200+' },
-    { name: 'Engro Corporation', industry: 'Conglomerate', growth: '+15%', employees: '5,800+' }
+  const trendingCompanies: TrendingCompany[] = marketData?.top_gainers ? marketData.top_gainers.slice(0, 3).map((stock: any) => {
+      const cleanTicker = (stock.ticker || "Unknown").replace('.KA', '');
+      return {
+          name: tickerMap[cleanTicker] || stock.ticker || "Unknown", 
+          industry: 'N/A', // The API might not return industry for gainers list to save bandwidth
+          growth: `+${(stock.change_percent ?? 0).toFixed(2)}%`,
+          employees: `PKR ${stock.price ?? 0}`, // Using this field to show Price instead of employees
+          symbol: cleanTicker,
+          id: stock.id // Use the ID from backend for navigation
+      };
+  }) : [
+    { name: 'Systems Limited', industry: 'IT Services', growth: '+32%', employees: '4,500+', symbol: 'SYS' },
+    { name: 'Lucky Cement', industry: 'Construction', growth: '+18%', employees: '3,200+', symbol: 'LUCK' },
+    { name: 'Engro Corporation', industry: 'Conglomerate', growth: '+15%', employees: '5,800+', symbol: 'ENGRO' }
   ];
 
   const newsItems = [
@@ -162,6 +202,8 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
           onMobileClose={() => setIsMobileSidebarOpen(false)}
         />
         
+        {/* ... imports ... */}
+        
         {/* Main Content Area */}
         <main className="flex-1 p-4 lg:p-6 overflow-hidden">
           <div className="max-w-7xl mx-auto space-y-6">
@@ -171,16 +213,51 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
                <div>
                   <h1 className="text-xl sm:text-2xl font-semibold text-[#0F172A] dark:text-white tracking-tight">Dashboard Overview</h1>
                   <div className="text-sm text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-1">
-                    Market Status: <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> <span className="text-emerald-500 font-medium">Open</span>
+                    Market Status: 
+                    <span className={`inline-block w-2 h-2 rounded-full ${marketStatus === 'Open' ? 'bg-emerald-500' : 'bg-red-500'} animate-pulse`}></span> 
+                    <span className={`font-medium ${marketStatus === 'Open' ? 'text-emerald-500' : 'text-red-500'}`}>
+                        {marketStatus}
+                    </span>
+                    <span className="text-xs text-gray-400 ml-1">(Mon-Fri, 9:30-4:00 PST)</span>
                   </div>
                </div>
-               <div className="hidden sm:block text-right">
-                  <div className="text-xs font-medium text-gray-400 uppercase tracking-wider">Today's Focus</div>
-                  <FlipWords words={["Growth Sectors", "Top Gainers", "AI Insights"]} className="text-sm font-semibold text-[#0F172A] dark:text-white" />
+               <div className="flex items-center gap-3">
+                  <div className="hidden sm:block text-right mr-2">
+                     <div className="text-xs font-medium text-gray-400 uppercase tracking-wider">Today's Focus</div>
+                     <FlipWords words={["Growth Sectors", "Top Gainers", "AI Insights"]} className="text-sm font-semibold text-[#0F172A] dark:text-white" />
+                  </div>
+                  <button 
+                    onClick={() => {
+                        setLoading(true);
+                        // Re-fetch data
+                        const fetchAi = async () => {
+                            try {
+                                const data = await marketService.getLiveData();
+                                setMarketData(data);
+                                setMarketStatus(getMarketStatus());
+                            } catch (e) {
+                                console.error(e);
+                            } finally {
+                                setLoading(false);
+                            }
+                        }
+                        fetchAi();
+                    }}
+                    disabled={loading}
+                    className="flex items-center gap-2 px-3 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200"
+                  >
+                    <RefreshCcw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                    <span>{loading ? 'Refreshing...' : 'Refresh Data'}</span>
+                  </button>
                </div>
             </div>
+
             
             {/* Quick Stats - Sleek Row */}
+            {/* ... (Keep existing Quick Stats code, omitted for brevity if unchanged, but I must return contiguous block if using replace_file_content...) */}
+            {/* Since I cannot skip lines in replace_file_content effectively without context, I will include the stats section to be safe or target specific block. */}
+            {/* Actually, let's just target the Header through the end of the BentoGrid to ensure we catch everything. */}
+            
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
               <GlowingCard className="bg-white dark:bg-slate-800/50 backdrop-blur-sm border border-gray-100 dark:border-slate-700/50">
                 <div className="p-4 flex items-center justify-between">
@@ -233,7 +310,7 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
             
             <BentoGrid>
               {/* Industry Highlights (Span 2) */}
-              <div className="md:col-span-2">
+              <div className="md:col-span-2 space-y-6">
                 <Card className="bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700">
                   <div className="flex items-center justify-between mb-4 sm:mb-6">
                     <h2 className="text-lg sm:text-xl text-[#0F172A] dark:text-white">Industry Highlights</h2>
@@ -267,7 +344,10 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
                 {/* Trending Companies */}
                 <Card className="bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700">
                   <div className="flex items-center justify-between mb-4 sm:mb-6">
-                    <h2 className="text-lg sm:text-xl text-[#0F172A] dark:text-white">Trending Companies</h2>
+                    <div className="flex items-center gap-2">
+                         <h2 className="text-lg sm:text-xl text-[#0F172A] dark:text-white">Trending Companies</h2>
+                         <span className="px-2 py-0.5 rounded-full bg-red-100 text-red-600 text-[10px] font-bold uppercase animate-pulse">Live</span>
+                    </div>
                     <button 
                       onClick={() => handleNavigation('industry-explorer')}
                       className="text-[#10B981] text-xs sm:text-sm hover:underline"
@@ -278,15 +358,27 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {trendingCompanies.map((company, index) => (
-                      <div key={index} className="p-4 border border-[#E5E7EB] dark:border-slate-700 rounded-lg hover:border-[#10B981] dark:hover:border-[#10B981] cursor-pointer transition-colors bg-white dark:bg-slate-800">
+                      <div 
+                        key={index} 
+                        onClick={() => company.id && onViewCompany?.(company.id)}
+                        className="relative p-4 border border-[#E5E7EB] dark:border-slate-700 rounded-lg hover:border-[#10B981] dark:hover:border-[#10B981] cursor-pointer transition-all hover:shadow-md bg-white dark:bg-slate-800 group"
+                      >
+                         <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button className="p-1 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full text-gray-400 hover:text-yellow-400 transition-colors" title="Add to Watchlist" onClick={(e) => {
+                                e.stopPropagation();
+                                // Add logic to add to watchlist (dummy for now as we need context/service)
+                            }}>
+                                <Sparkles className="w-4 h-4" />
+                            </button>
+                         </div>
                         <div className="w-12 h-12 bg-[#0F172A] dark:bg-slate-900 rounded-lg mb-3 flex items-center justify-center">
-                          <span className="text-white">{company.name.charAt(0)}</span>
+                          <span className="text-white font-bold">{company.name.charAt(0)}</span>
                         </div>
-                        <h3 className="text-[#0F172A] dark:text-white mb-1">{company.name}</h3>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{company.industry}</p>
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-500 dark:text-gray-400">{company.employees}</span>
-                          <span className="text-[#10B981]">{company.growth}</span>
+                        <h3 className="text-[#0F172A] dark:text-white mb-1 font-semibold">{company.name}</h3>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">{company.industry}</p>
+                        <div className="flex items-center justify-between text-sm pt-2 border-t border-gray-100 dark:border-slate-700">
+                          <span className="font-mono text-[#0F172A] dark:text-white">{company.employees}</span>
+                          <span className="text-[#10B981] font-bold bg-[#10B981]/10 px-2 py-0.5 rounded text-xs">{company.growth}</span>
                         </div>
                       </div>
                     ))}
@@ -297,38 +389,16 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
               {/* Right Column (Span 1) */}
               <div className="md:col-span-1 space-y-6">
                 {/* Watchlist Widget */}
-                <div className="h-80">
+                <div className="min-h-[300px]">
+                    <h3 className="text-sm font-semibold text-gray-500 mb-3 uppercase tracking-wider">Your Watchlist</h3>
                     <WatchlistWidget onNavigate={(page, id) => {
                         if(page === 'company-detail') onViewCompany?.(id);
                         else handleNavigation(page);
                     }} />
                 </div>
 
-                {/* AI Insights */}
-                <Card className="bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Sparkles className="w-5 h-5 text-[#10B981]" />
-                    <h2 className="text-lg sm:text-xl text-[#0F172A] dark:text-white">AI Market Pulse</h2>
-                  </div>
-                  <div className="space-y-3">
-                    {aiSummary ? (
-                        <div className="p-3 bg-[#10B981]/5 dark:bg-[#10B981]/10 rounded-lg border border-[#10B981]/20">
-                           <p className="text-sm text-[#0F172A] dark:text-gray-200 leading-relaxed">
-                             {aiSummary}
-                           </p>
-                           <div className="mt-2 flex items-center justify-end gap-1 text-[10px] text-gray-400">
-                                <Sparkles className="w-3 h-3" />
-                                <span>Powered by Google Gemini</span>
-                           </div>
-                        </div>
-                    ) : (
-                        <div className="flex items-center justify-center p-4">
-                             <Loader2 className="w-6 h-6 text-[#10B981] animate-spin" />
-                             <span className="ml-2 text-sm text-gray-500">Generating insights...</span>
-                        </div>
-                    )}
-                  </div>
-                </Card>
+                {/* AI Chat Bot (Replaces Static Pulse) */}
+                <AIChatWidget />
                 
                 {/* Latest News */}
                 <Card className="bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700">
