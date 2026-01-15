@@ -5,11 +5,35 @@ from concurrent.futures import ThreadPoolExecutor, as_completed, TimeoutError
 from datetime import datetime, timedelta
 
 class MarketService:
-    """Service to fetch live market data for Pakistani stocks and currency"""
+    """
+    Service responsible for fetching LIVE market data from the Yahoo Finance API (yfinance).
+    
+    Why this exists:
+    - The database (Mongo) stores static info (Company name, industry).
+    - This service enriches that data with Real-Time Prices, Volume, and Change metrics.
+    
+    Key Features:
+    - **Parallel Processing**: Uses logic to fetch 100+ stocks concurrently (Threadpool).
+    - **Caching/Timeouts**: Prevents the UI from hanging if Yahoo Finance is slow.
+    - **Aggregations**: Calculates "Sector Performance" on the fly based on individual stock movements.
+    """
     
     @staticmethod
     def fetch_stock_data(company: Dict) -> Dict[str, Any]:
-        """Fetch data for a single stock (used for parallel processing)"""
+        """
+        Worker function to fetch data for a SINGLE stock.
+        
+        Args:
+            company (Dict): A dictionary containing at least 'ticker' and 'industry'.
+            
+        Returns:
+            Dict: Enriched stock data (Price, Change, Market Cap, Volume). Returns None if fetch fails.
+            
+        Logic:
+            1. Tries to get `regularMarketPrice` (Live Price).
+            2. Tries to get `previousClose` to calculate daily change %.
+            3. Fallback: If `previousClose` is missing (common in yfinance), fetches 2-day history to manually calculate it.
+        """
         ticker = company.get("ticker")
         if not ticker:
             return None
@@ -27,17 +51,15 @@ class MarketService:
             # Try to get previous close from info first
             prev_close = info.get('previousClose')
             
-            # If previousClose is missing or same as current (market closed), 
-            # try to fetch last 2 days of history to calculate change
-            # But use a short timeout to avoid hanging
+            # If previousClose is missing or same as current (market closed/bad data), 
+            # try to fetch last 2 days of history to manually calculate change
             if not prev_close or prev_close == current_price:
                 try:
                     # Use period="2d" instead of "5d" for faster response
-                    # Suppress yfinance warnings
                     import warnings
                     with warnings.catch_warnings():
                         warnings.simplefilter("ignore")
-                        hist = stock.history(period="2d", timeout=2)
+                        hist = stock.history(period="2d", timeout=2) # Short timeout
                     if len(hist) >= 2:
                         prev_close = hist['Close'].iloc[-2]
                     elif len(hist) == 1:
@@ -45,7 +67,7 @@ class MarketService:
                     else:
                         prev_close = current_price
                 except Exception:
-                    # If history fetch fails, just use current price (0% change)
+                    # If history fetch fails, just use current price (shows 0% change)
                     prev_close = current_price
             
             change = current_price - prev_close
@@ -63,33 +85,39 @@ class MarketService:
             }
             
         except Exception as e:
+            # Silently fail for individual stocks to not crash the whole dashboard
             print(f"Error fetching {ticker}: {e}")
             return None
     
     @staticmethod
     def get_live_market_data() -> Dict[str, Any]:
         """
-        Fetches live market data including:
-        - Stock prices for all companies in database
-        - USD/PKR exchange rate
-        - Sector performance summary
+        Main function called by the API to get the full dashboard payload.
+        
+        Returns:
+             Dict with:
+             - stocks: List of individual stock data.
+             - sectors: List of average performance per industry.
+             - currency: Current USD/PKR rate.
+             
+        Performance Optimization:
+             - Uses `ThreadPoolExecutor` with 15 workers.
+             - Sets a hard 5-second timeout per stock to ensure the request returns quickly.
         """
         try:
-            # Get all companies from database
+            # Get all companies from database (Static list)
             companies = list(db.companies.find({}, {"ticker": 1, "name": 1, "industry": 1}))
             
             stock_data = []
             sector_performance = {}
             
-            # Fetch stocks in parallel with timeout for better performance
-            # Each stock has max 5 seconds to complete
+            # Fetch stocks in parallel
             with ThreadPoolExecutor(max_workers=15) as executor:
                 future_to_company = {
                     executor.submit(MarketService.fetch_stock_data, company): company 
                     for company in companies
                 }
                 
-                # Remove timeout from as_completed to allow all companies to finish
                 for future in as_completed(future_to_company):
                     company = future_to_company[future]
                     try:
@@ -98,7 +126,7 @@ class MarketService:
                         if stock_info:
                             stock_data.append(stock_info)
                             
-                            # Aggregate by sector
+                            # Aggregate by sector for "Sector Performance" chart
                             sector = stock_info["industry"]
                             if sector not in sector_performance:
                                 sector_performance[sector] = {
@@ -126,10 +154,10 @@ class MarketService:
                     "companies": data["companies"]
                 })
             
-            # Sort sectors by performance
+            # Sort sectors: Winners first
             sector_summary.sort(key=lambda x: x["avg_change"], reverse=True)
             
-            # Fetch USD/PKR exchange rate (with timeout)
+            # Fetch USD/PKR exchange rate (Critical for Pakistan context)
             currency_data = {}
             try:
                 pkr = yf.Ticker("PKR=X")
@@ -138,9 +166,9 @@ class MarketService:
                     current_rate = pkr_info.get('regularMarketPrice', 0)
                     prev_rate = pkr_info.get('previousClose', current_rate)
                     
-                    # If no previous close, try history with short timeout
                     if not prev_rate or prev_rate == current_rate:
                         try:
+                             # Fallback history fetch
                             hist = pkr.history(period="2d", timeout=2)
                             if len(hist) >= 2:
                                 prev_rate = hist['Close'].iloc[-2]
@@ -160,12 +188,12 @@ class MarketService:
                 print(f"Error fetching PKR: {e}")
                 currency_data = {
                     "pair": "USD/PKR",
-                    "rate": 280.15,  # Fallback to approximate current rate
+                    "rate": 280.15,  # Fallback manual rate if API fails
                     "change": 0,
                     "change_percent": 0
                 }
             
-            # Sort stocks by market cap
+            # Sort stocks by market cap (Biggest companies first)
             stock_data.sort(key=lambda x: x.get("market_cap", 0), reverse=True)
             
             return {
