@@ -99,7 +99,7 @@ export function Navbar({
   };
 
   return (
-    <nav className="bg-white dark:bg-slate-900 border-b border-[#E5E7EB] dark:border-slate-800 px-4 sm:px-6 py-4 relative z-50 transition-colors duration-200">
+    <nav className="sticky top-0 z-[100] backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border-b border-[#E5E7EB] dark:border-slate-800 px-4 sm:px-6 py-3 transition-colors duration-200">
       <div className="w-full">
         <div className="flex items-center justify-between">
           {/* Mobile Menu Button */}
@@ -108,50 +108,47 @@ export function Navbar({
               onClick={onMenuClick}
               className="lg:hidden p-2 hover:bg-[#E5E7EB] dark:hover:bg-slate-800 rounded-lg transition-colors"
             >
-              <Menu className="w-6 h-6 text-[#0F172A] dark:text-white" />
+              <Menu className="w-5 h-5 text-[#0F172A] dark:text-white" />
             </button>
           )}
           
           {/* Logo */}
-          <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="Logo" className="w-10 h-10 rounded-lg shadow-sm" />
-            <span className="text-[#0F172A] dark:text-white font-bold text-lg sm:text-xl hidden sm:inline tracking-tight">
+          <div className="flex items-center gap-2 group cursor-pointer">
+            <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded-lg shadow-sm group-hover:scale-110 transition-transform" />
+            <span className="text-[#0F172A] dark:text-white font-bold text-base sm:text-lg hidden sm:inline tracking-tight">
               PAK Industry Insight
-            </span>
-            <span className="text-[#0F172A] dark:text-white font-bold text-lg sm:hidden tracking-tight">
-              PAK Insight
             </span>
           </div>
           
-          {/* Desktop Search */}
+          {/* Desktop Search - Compact & Sleek */}
           {showSearch && (
-            <div className="hidden md:flex flex-1 max-w-2xl mx-8 relative" ref={searchRef}>
-              <div className="relative w-full">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <div className="hidden md:flex flex-1 max-w-lg mx-6 relative" ref={searchRef}>
+              <div className="relative w-full group">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 group-focus-within:text-[#10B981] transition-colors" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => handleSearch(e.target.value)}
-                  placeholder="Search companies..."
-                  className="w-full pl-12 pr-4 py-3 border border-[#E5E7EB] dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20 placeholder-gray-400 dark:placeholder-gray-500 transition-colors"
+                  placeholder="Search companies (e.g. Systems)..."
+                  className="w-full pl-10 pr-4 py-2 text-sm border border-[#E5E7EB] dark:border-slate-700 bg-gray-50/50 dark:bg-slate-800/50 text-gray-900 dark:text-white rounded-full focus:outline-none focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/10 placeholder-gray-400 dark:placeholder-gray-500 transition-all hover:bg-white dark:hover:bg-slate-800 shadow-sm"
                 />
               </div>
 
               {/* Search Results Dropdown */}
               {searchResults.length > 0 && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 border border-[#E5E7EB] dark:border-slate-700 rounded-lg shadow-lg max-h-96 overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 border border-[#E5E7EB] dark:border-slate-700 rounded-xl shadow-xl max-h-96 overflow-y-auto">
                   {searchResults.map((company) => (
                     <button
                       key={company.id}
                       onClick={() => handleResultClick(company.id)}
-                      className="w-full text-left p-3 hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center gap-3 border-b border-gray-100 dark:border-slate-700 last:border-0"
+                      className="w-full text-left p-2.5 hover:bg-gray-50 dark:hover:bg-slate-700/50 flex items-center gap-3 border-b border-gray-100 dark:border-slate-700 last:border-0"
                     >
-                      <div className="w-8 h-8 bg-[#0F172A] rounded flex items-center justify-center text-white text-xs">
+                      <div className="w-7 h-7 bg-[#0F172A] rounded-lg flex items-center justify-center text-white text-[10px] font-bold">
                         {company.name.charAt(0)}
                       </div>
                       <div>
-                        <div className="font-medium text-[#0F172A] dark:text-white">{company.name}</div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                        <div className="font-medium text-sm text-[#0F172A] dark:text-white">{company.name}</div>
+                        <div className="text-[10px] text-gray-500 dark:text-gray-400 flex items-center gap-1">
                           <Building2 className="w-3 h-3" />
                           {company.industry}
                         </div>
@@ -164,7 +161,7 @@ export function Navbar({
           )}
           
           {/* Right Side Actions */}
-          <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-3">
             {/* Mobile Search Toggle */}
             {showSearch && (
               <button 

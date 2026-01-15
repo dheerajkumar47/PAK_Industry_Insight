@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Layers, Building2, TrendingUp, Newspaper, BookmarkCheck, X } from 'lucide-react';
+import { Home, Layers, Building2, TrendingUp, Newspaper, BookmarkCheck, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface SidebarProps {
   activeItem: string;
@@ -9,6 +9,8 @@ interface SidebarProps {
 }
 
 export function Sidebar({ activeItem, onNavigate, isMobileOpen = false, onMobileClose }: SidebarProps) {
+  const [isCollapsed, setIsCollapsed] = React.useState(false);
+
   const menuItems = [
     { id: 'dashboard', label: 'Home', icon: Home },
     { id: 'industry-explorer', label: 'Industry Explorer', icon: Layers },
@@ -30,14 +32,18 @@ export function Sidebar({ activeItem, onNavigate, isMobileOpen = false, onMobile
       {/* Mobile Overlay */}
       {isMobileOpen && (
         <div 
-          className="lg:hidden fixed inset-0 bg-black/50 z-40"
+          className="lg:hidden fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"
           onClick={onMobileClose}
         />
       )}
       
-      {/* Desktop Sidebar */}
-      <aside className="hidden lg:block w-64 bg-white dark:bg-slate-900 border-r border-[#E5E7EB] dark:border-slate-800 h-screen sticky top-0 transition-colors duration-200">
-        <div className="p-6">
+      {/* Desktop Sidebar (Collapsible) */}
+      <aside 
+         className={`hidden lg:flex flex-col border-r border-[#E5E7EB] dark:border-slate-800 h-[calc(100vh-64px)] sticky top-16 bg-white dark:bg-slate-900 transition-all duration-300 ease-in-out ${
+           isCollapsed ? 'w-20' : 'w-64'
+         }`}
+      >
+        <div className="flex-1 p-4 space-y-2">
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeItem === item.id;
@@ -46,17 +52,43 @@ export function Sidebar({ activeItem, onNavigate, isMobileOpen = false, onMobile
               <button
                 key={item.id}
                 onClick={() => handleNavigation(item.id)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-all ${
+                className={`w-full flex items-center ${isCollapsed ? 'justify-center' : 'gap-3 px-4'} py-3 rounded-xl transition-all group ${
                   isActive 
-                    ? 'bg-[#10B981] text-white' 
-                    : 'text-[#0F172A] dark:text-gray-300 hover:bg-[#E5E7EB] dark:hover:bg-slate-800'
+                    ? 'bg-[#10B981] text-white shadow-lg shadow-emerald-500/20' 
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white'
                 }`}
+                title={isCollapsed ? item.label : undefined}
               >
-                <Icon className="w-5 h-5" />
-                <span>{item.label}</span>
+                <Icon className={`flex-shrink-0 ${isCollapsed ? 'w-6 h-6' : 'w-5 h-5'}`} />
+                {!isCollapsed && (
+                    <span className="text-sm font-medium whitespace-nowrap overflow-hidden transition-opacity duration-200">
+                        {item.label}
+                    </span>
+                )}
+                {/* Tooltip for collapsed mode */}
+                {isCollapsed && (
+                    <div className="absolute left-16 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50">
+                        {item.label}
+                    </div>
+                )}
               </button>
             );
           })}
+        </div>
+        
+        {/* Toggle Button */}
+        <div className="p-4 border-t border-[#E5E7EB] dark:border-slate-800">
+             <button 
+                onClick={() => setIsCollapsed(!isCollapsed)}
+                className={`w-full flex items-center ${isCollapsed ? 'justify-center' : 'justify-end'} p-2 text-gray-400 hover:text-[#10B981] transition-colors`}
+             >
+                 {isCollapsed ? <ChevronRight className="w-5 h-5"/> : (
+                     <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider">
+                         <span>Collapse</span>
+                         <ChevronLeft className="w-5 h-5"/>
+                     </div>
+                 )}
+             </button>
         </div>
       </aside>
       

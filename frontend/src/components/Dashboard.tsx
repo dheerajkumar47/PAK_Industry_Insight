@@ -20,10 +20,24 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
   const [showIntroVideo, setShowIntroVideo] = React.useState(true);
   const [marketData, setMarketData] = React.useState<any>(null);
   const [loading, setLoading] = React.useState(true);
-
   const [aiSummary, setAiSummary] = React.useState<string | null>(null);
 
   React.useEffect(() => {
+    // Check if intro has already been shown in this session
+    const hasSeenIntro = sessionStorage.getItem('introShown');
+    if (hasSeenIntro) {
+        setShowIntroVideo(false);
+    } else {
+        setShowIntroVideo(true);
+        sessionStorage.setItem('introShown', 'true');
+        
+        // Auto-hide after 8 seconds
+        const timer = setTimeout(() => {
+          setShowIntroVideo(false);
+        }, 8000);
+        return () => clearTimeout(timer);
+    }
+
     const fetchAi = async () => {
         try {
             const data = await marketService.getLiveData();
@@ -40,12 +54,8 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
             setLoading(false);
         }
     }
-    const timer = setTimeout(() => {
-      setShowIntroVideo(false);
-    }, 8000);
-    // loadMarketData(); // Merged into fetchAi above
+    
     fetchAi();
-    return () => clearTimeout(timer);
   }, []);
 
   // ... (rest of code)
@@ -153,63 +163,69 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
         />
         
         {/* Main Content Area */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8">
-          <div className="max-w-[1600px] mx-auto">
-            <div className="mb-6 sm:mb-8">
-              <h1 className="text-2xl sm:text-3xl text-[#0F172A] dark:text-white mb-2">Welcome Back</h1>
-              <div className="text-sm sm:text-base text-[#1E293B] dark:text-gray-400 flex items-center">
-                Here's what's happening in 
-                <FlipWords words={["Pakistan's Industries", "The Stock Market", "Your Watchlist"]} className="font-semibold text-[#10B981] dark:text-[#10B981] px-1" />
-                today
-              </div>
+        <main className="flex-1 p-4 lg:p-6 overflow-hidden">
+          <div className="max-w-7xl mx-auto space-y-6">
+            
+            {/* Header Section */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+               <div>
+                  <h1 className="text-xl sm:text-2xl font-semibold text-[#0F172A] dark:text-white tracking-tight">Dashboard Overview</h1>
+                  <div className="text-sm text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-1">
+                    Market Status: <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> <span className="text-emerald-500 font-medium">Open</span>
+                  </div>
+               </div>
+               <div className="hidden sm:block text-right">
+                  <div className="text-xs font-medium text-gray-400 uppercase tracking-wider">Today's Focus</div>
+                  <FlipWords words={["Growth Sectors", "Top Gainers", "AI Insights"]} className="text-sm font-semibold text-[#0F172A] dark:text-white" />
+               </div>
             </div>
             
-            {/* Quick Stats */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
-              <GlowingCard>
-                <div className="flex items-start justify-between p-6">
+            {/* Quick Stats - Sleek Row */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+              <GlowingCard className="bg-white dark:bg-slate-800/50 backdrop-blur-sm border border-gray-100 dark:border-slate-700/50">
+                <div className="p-4 flex items-center justify-between">
                   <div>
-                    <div className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm mb-1">Total Industries</div>
-                    <div className="text-xl sm:text-2xl text-[#0F172A] dark:text-white">24</div>
+                    <div className="text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Industries</div>
+                    <div className="text-lg md:text-xl font-bold text-[#0F172A] dark:text-white mt-1">24</div>
                   </div>
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#10B981]/10 rounded-lg flex items-center justify-center">
-                    <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-[#10B981]" />
+                  <div className="w-8 h-8 rounded-full bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center">
+                    <TrendingUp className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                   </div>
                 </div>
               </GlowingCard>
               
-              <GlowingCard>
-                <div className="flex items-start justify-between p-6">
+              <GlowingCard className="bg-white dark:bg-slate-800/50 backdrop-blur-sm border border-gray-100 dark:border-slate-700/50">
+                <div className="p-4 flex items-center justify-between">
                   <div>
-                    <div className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm mb-1">Active Companies</div>
-                    <div className="text-xl sm:text-2xl text-[#0F172A] dark:text-white">1,247</div>
+                    <div className="text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Active Co.</div>
+                    <div className="text-lg md:text-xl font-bold text-[#0F172A] dark:text-white mt-1">1,247</div>
                   </div>
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#10B981]/10 rounded-lg flex items-center justify-center">
-                    <Building2 className="w-4 h-4 sm:w-5 sm:h-5 text-[#10B981]" />
+                  <div className="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center">
+                    <Building2 className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                   </div>
                 </div>
               </GlowingCard>
               
-              <GlowingCard>
-                 <div className="flex items-start justify-between p-6">
+              <GlowingCard className="bg-white dark:bg-slate-800/50 backdrop-blur-sm border border-gray-100 dark:border-slate-700/50">
+                 <div className="p-4 flex items-center justify-between">
                   <div>
-                    <div className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm mb-1">Market Cap</div>
-                    <div className="text-xl sm:text-2xl text-[#0F172A] dark:text-white">PKR 382B</div>
+                    <div className="text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Market Cap</div>
+                    <div className="text-lg md:text-xl font-bold text-[#0F172A] dark:text-white mt-1">PKR 382B</div>
                   </div>
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#10B981]/10 rounded-lg flex items-center justify-center">
-                    <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-[#10B981]" />
+                  <div className="w-8 h-8 rounded-full bg-purple-50 dark:bg-purple-500/10 flex items-center justify-center">
+                    <DollarSign className="w-4 h-4 text-purple-600 dark:text-purple-400" />
                   </div>
                 </div>
               </GlowingCard>
               
-              <GlowingCard>
-                <div className="flex items-start justify-between p-6">
+              <GlowingCard className="bg-white dark:bg-slate-800/50 backdrop-blur-sm border border-gray-100 dark:border-slate-700/50">
+                <div className="p-4 flex items-center justify-between">
                   <div>
-                    <div className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm mb-1">Total Employment</div>
-                    <div className="text-xl sm:text-2xl text-[#0F172A] dark:text-white">45M+</div>
+                    <div className="text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Employment</div>
+                    <div className="text-lg md:text-xl font-bold text-[#0F172A] dark:text-white mt-1">45M+</div>
                   </div>
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#10B981]/10 rounded-lg flex items-center justify-center">
-                    <Users className="w-4 h-4 sm:w-5 sm:h-5 text-[#10B981]" />
+                  <div className="w-8 h-8 rounded-full bg-orange-50 dark:bg-orange-500/10 flex items-center justify-center">
+                    <Users className="w-4 h-4 text-orange-600 dark:text-orange-400" />
                   </div>
                 </div>
               </GlowingCard>

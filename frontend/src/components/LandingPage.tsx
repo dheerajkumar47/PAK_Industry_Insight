@@ -17,8 +17,19 @@ interface LandingPageProps {
 export function LandingPage({ onGetStarted, onLoginClick, onNavigate }: LandingPageProps) {
   return (
     <div className="min-h-screen bg-neutral-950 relative overflow-hidden flex flex-col font-sans">
-      <div className="z-50 relative">
-        <Navbar showSearch={false} showProfile={false} onLoginClick={onLoginClick} />
+      <div className="absolute top-0 left-0 right-0 z-50 px-6 py-6 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-emerald-500/20 backdrop-blur-md rounded-lg flex items-center justify-center border border-emerald-500/30">
+                <Sparkles className="w-6 h-6 text-emerald-400" />
+            </div>
+            <span className="text-white font-bold text-xl tracking-tight">PAK Industry Insight</span>
+          </div>
+          <button 
+            onClick={onLoginClick}
+            className="px-6 py-2 bg-white/10 hover:bg-white/20 hover:scale-105 active:scale-95 border border-white/10 backdrop-blur-md text-white rounded-full font-medium transition-all duration-200"
+          >
+            Login
+          </button>
       </div>
       
       {/* 
@@ -50,7 +61,7 @@ export function LandingPage({ onGetStarted, onLoginClick, onNavigate }: LandingP
       </div>
 
       {/* Hero Section */}
-      <div className="flex flex-col items-center justify-center flex-1 w-full px-4 sm:px-6 relative z-10 pt-16 pb-20">
+      <div className="flex flex-col items-center justify-center flex-1 w-full px-4 sm:px-6 relative z-10 pt-24 pb-12">
         <motion.div
            initial={{ opacity: 0, y: 30 }}
            animate={{ opacity: 1, y: 0 }}
@@ -100,7 +111,7 @@ export function LandingPage({ onGetStarted, onLoginClick, onNavigate }: LandingP
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="mt-12 flex justify-center gap-4"
+            className="mt-8 flex justify-center gap-4"
           >
              <div className="flex flex-col items-center gap-2 cursor-pointer animate-bounce text-neutral-500 hover:text-emerald-400 transition-colors">
                 <span className="text-xs uppercase tracking-widest">Scroll to Explore</span>
@@ -111,7 +122,7 @@ export function LandingPage({ onGetStarted, onLoginClick, onNavigate }: LandingP
       </div>
       
       {/* Feature Section - Reduced Gap */}
-      <section className="relative z-10 py-20 bg-black/50 border-t border-white/5 backdrop-blur-sm">
+      <section className="relative z-10 py-12 bg-black/50 border-t border-white/5 backdrop-blur-sm">
          <div className="max-w-7xl mx-auto px-6">
             <h2 className="text-2xl md:text-3xl font-bold text-center mb-12 text-white">Why <span className="text-emerald-500">PAK Insight?</span></h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
