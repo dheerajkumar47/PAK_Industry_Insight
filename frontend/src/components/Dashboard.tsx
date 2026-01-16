@@ -228,10 +228,14 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
                   </div>
                   <button 
                     onClick={() => {
-                        setLoading(true);
-                        // Re-fetch data
-                        const fetchAi = async () => {
+                        const refresh = async () => {
+                            setLoading(true);
                             try {
+                                // Trigger backend update
+                                await marketService.refresh();
+                                // Wait for backend to process some updates
+                                await new Promise(r => setTimeout(r, 4000));
+                                // Re-fetch displayed data
                                 const data = await marketService.getLiveData();
                                 setMarketData(data);
                                 setMarketStatus(getMarketStatus());
@@ -240,14 +244,14 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
                             } finally {
                                 setLoading(false);
                             }
-                        }
-                        fetchAi();
+                        };
+                        refresh();
                     }}
                     disabled={loading}
                     className="flex items-center gap-2 px-3 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200"
                   >
                     <RefreshCcw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-                    <span>{loading ? 'Refreshing...' : 'Refresh Data'}</span>
+                    <span>{loading ? 'Updating Live...' : 'Refresh Data'}</span>
                   </button>
                </div>
             </div>

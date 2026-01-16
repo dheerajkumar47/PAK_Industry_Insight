@@ -114,7 +114,7 @@ export function Navbar({
           
           {/* Logo */}
           <div className="flex items-center gap-2 group cursor-pointer">
-            <img src="/logo_icon.png" alt="Logo" className="w-8 h-8 rounded-lg shadow-sm group-hover:scale-110 transition-transform" />
+            <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded-lg shadow-sm group-hover:scale-110 transition-transform" />
             <span className="text-[#0F172A] dark:text-white font-bold text-base sm:text-lg hidden sm:inline tracking-tight">
               PAK Industry Insight
             </span>

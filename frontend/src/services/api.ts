@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || ''; // Use env var for Prod, proxy for Dev
+const API_URL = (import.meta as any).env?.VITE_API_URL || ''; // Use env var for Prod, proxy for Dev
 
 const api = axios.create({
   baseURL: API_URL,
@@ -64,6 +64,10 @@ export const newsService = {
 export const marketService = {
   getLiveData: async () => {
     const response = await api.get('/market/live');
+    return response.data;
+  },
+  refresh: async () => {
+    const response = await api.post('/market/refresh');
     return response.data;
   }
 };
