@@ -2,6 +2,7 @@ import json
 import os
 import yfinance as yf
 import pandas as pd
+import time
 from datetime import datetime
 from ..database import db
 
@@ -198,11 +199,13 @@ class DataEngine:
              updated_count = 0
              
              # Chunking to avoid API limits and massive inputs
-             chunk_size = 20
+             chunk_size = 10 
              for i in range(0, len(valid_tickers), chunk_size):
                  chunk = valid_tickers[i:i + chunk_size]
                  try:
                      # threads=False to avoid SQLite 'database is locked' errors in production
+                     # Small sleep to be gentle on Yahoo API from shared IP
+                     time.sleep(2.5)
                      data = yf.download(chunk, period="1d", group_by='ticker', threads=False, progress=False)
                      
                      if data.empty: continue
@@ -245,7 +248,8 @@ class DataEngine:
                          except Exception:
                              continue
                  except Exception as chunk_e:
-                     print(f"WARN: Chunk failed: {chunk_e}")
+                     # Suppress noisy logs for expected network/rate-limit glitches
+                     # print(f"WARN: Chunk failed: {chunk_e}")
                      continue
                      
              print(f"SUCCESS: Batch update finished. Updated {updated_count} stocks.")

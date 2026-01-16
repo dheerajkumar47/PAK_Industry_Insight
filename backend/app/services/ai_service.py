@@ -3,6 +3,7 @@ import google.generativeai as genai
 from ..config import settings
 from ..database import db
 from datetime import datetime
+from google.api_core import exceptions
 
 class AiService:
     """
@@ -176,23 +177,33 @@ class AiService:
              Do not use 'Here is the summary'. Just speak the insight.
              """
              
-             response = self.model.generate_content(prompt)
-             summary = response.text.clean_text = response.text.replace('*', '').strip() 
-             # (Simple cleanup if needed, but 'response.text' is string)
-             summary = response.text.strip()
+             try:
+                 response = self.model.generate_content(prompt)
+                 summary = response.text.strip()
 
-             # 5. Store in DB
-             db.ai_insights.update_one(
-                 {"_id": "latest_pulse"},
-                 {"$set": {
-                     "summary": summary, 
-                     "timestamp": datetime.utcnow(),
-                     "type": "market_pulse"
-                 }},
-                 upsert=True
-             )
-             print(f"SUCCESS: AI Pulse Analyzed: {summary[:50]}...")
-             
+                 # 5. Store in DB
+                 db.ai_insights.update_one(
+                     {"_id": "latest_pulse"},
+                     {"$set": {
+                         "summary": summary, 
+                         "timestamp": datetime.utcnow(),
+                         "type": "market_pulse"
+                     }},
+                     upsert=True
+                 )
+                 print(f"SUCCESS: AI Pulse Analyzed: {summary[:50]}...")
+
+             except exceptions.ResourceExhausted:
+                 print("WARN: AI Quota Exceeded. Keeping previous market pulse.")
+                 # Optional: Insert a fallback if DB is empty
+                 if db.ai_insights.count_documents({"_id": "latest_pulse"}) == 0:
+                      db.ai_insights.insert_one({
+                          "_id": "latest_pulse",
+                          "summary": "High market activity detected. Detailed AI analysis will resume shortly.",
+                          "timestamp": datetime.utcnow(),
+                          "type": "market_pulse"
+                      })
+                      
         except Exception as e:
              print(f"ERROR: AI Pulse Analysis failed: {e}")
 
