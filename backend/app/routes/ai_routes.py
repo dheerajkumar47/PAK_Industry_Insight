@@ -3,6 +3,7 @@ from ..services.ai_service import ai_service
 from ..services.data_engine import data_engine
 from ..database import db
 from bson import ObjectId
+from datetime import datetime
 
 router = APIRouter(prefix="/ai", tags=["AI Integration"])
 
@@ -15,7 +16,10 @@ async def get_market_pulse():
     # 1. Try Cached Insight (Proactive AI)
     cached = db.ai_insights.find_one({"_id": "latest_pulse"})
     if cached and cached.get("summary"):
-        return {"summary": cached["summary"]}
+        return {
+            "summary": cached["summary"],
+            "timestamp": cached.get("timestamp")
+        }
 
     # 2. Fallback: Generate Fresh (Reactive)
     try:
@@ -29,10 +33,13 @@ async def get_market_pulse():
         # Call AI Service
         summary = await ai_service.generate_market_pulse(market_data, news_headlines)
         
-        return {"summary": summary}
+        return {
+            "summary": summary,
+            "timestamp": datetime.utcnow()
+        }
     except Exception as e:
         print(f"Error in market-pulse: {e}")
-        return {"summary": "Unable to generate AI summary at this time."}
+        return {"summary": "Unable to generate AI summary at this time.", "timestamp": None}
 
 @router.get("/company-insight/{company_id}")
 async def get_company_insight(company_id: str):

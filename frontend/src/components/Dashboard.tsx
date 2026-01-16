@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Navbar } from './Navbar';
 import { Sidebar } from './Sidebar';
 import { Card } from './Card';
 import { GlowingCard } from './ui/glowing-card';
 import { BentoGrid, BentoGridItem } from './ui/bento-grid';
 import { FlipWords } from './ui/flip-words';
-import { TrendingUp, TrendingDown, Users, DollarSign, Sparkles, ArrowUpRight, Building2, Loader2, RefreshCcw } from 'lucide-react';
+import { StockTicker } from './ui/stock-ticker';
+import { TrendingUp, TrendingDown, Users, DollarSign, Sparkles, ArrowUpRight, Building2, Loader2, RefreshCcw, Clock } from 'lucide-react';
 import { WatchlistWidget } from './WatchlistWidget';
 import { AIChatWidget } from './AIChatWidget';
 import { marketService, aiService } from '../services/api';
@@ -52,8 +53,28 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
   const [showIntroVideo, setShowIntroVideo] = React.useState(true);
   const [marketData, setMarketData] = React.useState<any>(null);
   const [loading, setLoading] = React.useState(true);
-  const [aiSummary, setAiSummary] = React.useState<string | null>(null);
+  const [aiSummary, setAiSummary] = React.useState<{summary: string, timestamp?: string} | null>(null);
   const [marketStatus, setMarketStatus] = React.useState(getMarketStatus());
+  const [lastUpdated, setLastUpdated] = React.useState<Date>(new Date());
+
+  const fetchData = async (silent = false) => {
+      if (!silent) setLoading(true);
+      try {
+          const data = await marketService.getLiveData();
+          setMarketData(data);
+          
+          const aiData = await aiService.getMarketPulse();
+          if (aiData && aiData.summary) {
+              setAiSummary(aiData);
+          }
+          setLastUpdated(new Date());
+          setMarketStatus(getMarketStatus());
+      } catch (e) {
+          console.error("Live Data Fetch failed", e);
+      } finally {
+          if (!silent) setLoading(false);
+      }
+  };
 
   React.useEffect(() => {
     // Check if intro has already been shown in this session
@@ -68,27 +89,20 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
         const timer = setTimeout(() => {
           setShowIntroVideo(false);
         }, 8000);
-        return () => clearTimeout(timer);
+        // Clean up timer if component unmounts (rare for dashboard but good practice)
+        // Note: we don't return clear here because it might clear active timer if effect re-runs?
+        // Actually, dependency array is empty, so it runs once.
     }
 
-    const fetchAi = async () => {
-        try {
-            const data = await marketService.getLiveData();
-            setMarketData(data);
-            
-            // Only fetch AI if not already loaded (to save credits/time)
-            const aiData = await aiService.getMarketPulse();
-            if (aiData && aiData.summary) {
-                setAiSummary(aiData.summary);
-            }
-        } catch (e) {
-            console.error(e);
-        } finally {
-            setLoading(false);
-        }
-    }
-    
-    fetchAi();
+    // Initial Fetch
+    fetchData();
+
+    // Auto-Poll every 10 seconds for Live Trading experience
+    const interval = setInterval(() => {
+        fetchData(true); // Silent update
+    }, 10000);
+
+    return () => clearInterval(interval);
   }, []);
 
   // ... (rest of code)
@@ -102,12 +116,20 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
                   <div className="space-y-3">
                     {aiSummary ? (
                         <div className="p-3 bg-[#10B981]/5 dark:bg-[#10B981]/10 rounded-lg border border-[#10B981]/20">
-                           <p className="text-sm text-[#0F172A] dark:text-gray-200 leading-relaxed">
-                             {aiSummary}
+                           <p className="text-sm text-[#0F172A] dark:text-gray-200 leading-relaxed font-medium">
+                             {aiSummary.summary}
                            </p>
-                           <div className="mt-2 flex items-center justify-end gap-1 text-[10px] text-gray-400">
-                                <Sparkles className="w-3 h-3" />
-                                <span>Powered by Google Gemini</span>
+                           <div className="mt-3 flex items-center justify-between text-[10px] text-gray-400">
+                                <div className="flex items-center gap-1.5">
+                                    <Clock className="w-3 h-3 text-[#10B981]" />
+                                    <span>
+                                        Updated: {aiSummary.timestamp ? new Date(aiSummary.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'Just now'}
+                                    </span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <Sparkles className="w-3 h-3" />
+                                    <span>Gemini AI</span>
+                                </div>
                            </div>
                         </div>
                     ) : (
@@ -192,6 +214,11 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
         onSettingsClick={() => onNavigate('settings')}
         onViewCompany={onViewCompany}
       />
+
+      {/* Live Market Ticker */}
+      {marketData?.top_gainers && marketData.top_gainers.length > 0 && (
+         <StockTicker stocks={marketData.top_gainers} />
+      )}
       
       <div className="flex">
         {/* Left Sidebar (Collapsible on mobile) */}
@@ -227,31 +254,19 @@ export function Dashboard({ onNavigate, onViewCompany, onLogout }: DashboardProp
                      <FlipWords words={["Growth Sectors", "Top Gainers", "AI Insights"]} className="text-sm font-semibold text-[#0F172A] dark:text-white" />
                   </div>
                   <button 
-                    onClick={() => {
-                        const refresh = async () => {
-                            setLoading(true);
-                            try {
-                                // Trigger backend update
-                                await marketService.refresh();
-                                // Wait for backend to process some updates
-                                await new Promise(r => setTimeout(r, 4000));
-                                // Re-fetch displayed data
-                                const data = await marketService.getLiveData();
-                                setMarketData(data);
-                                setMarketStatus(getMarketStatus());
-                            } catch (e) {
-                                console.error(e);
-                            } finally {
-                                setLoading(false);
-                            }
-                        };
-                        refresh();
+                    onClick={async () => {
+                        setLoading(true);
+                        try {
+                            await marketService.refresh(); 
+                            await new Promise(r => setTimeout(r, 3000));
+                            await fetchData(false);
+                        } catch (e) { console.error(e); }
                     }}
                     disabled={loading}
                     className="flex items-center gap-2 px-3 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200"
                   >
                     <RefreshCcw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-                    <span>{loading ? 'Updating Live...' : 'Refresh Data'}</span>
+                    <span>{loading ? 'Scanning Market...' : 'Force Refresh'}</span>
                   </button>
                </div>
             </div>
