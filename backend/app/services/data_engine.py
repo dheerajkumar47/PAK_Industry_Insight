@@ -1,6 +1,7 @@
 import json
 import os
 import yfinance as yf
+import pandas as pd
 from datetime import datetime
 from ..database import db
 
@@ -185,8 +186,8 @@ class DataEngine:
     @staticmethod
     def update_live_prices():
         """
-        FAST UPDATE: Fetches only Price/Volume for all tickers in batch.
-        Runs frequently (e.g. every 60s) for the Real-Time AI engine.
+        FAST UPDATE: Fetches only Price/Volume for all tickers in chunks.
+        Runs frequently (e.g. every 60s).
         """
         try:
              tickers = db.companies.distinct("ticker")
@@ -194,48 +195,57 @@ class DataEngine:
              if not valid_tickers: return
              
              print(f"INFO: Fetching live prices for {len(valid_tickers)} companies...")
-             
-             # Fetch data in batch (much faster than 100 requests)
-             # progress=False to keep logs clean
-             data = yf.download(valid_tickers, period="1d", group_by='ticker', threads=True, progress=False)
-             
              updated_count = 0
              
-             for ticker in valid_tickers:
+             # Chunking to avoid API limits and massive inputs
+             chunk_size = 20
+             for i in range(0, len(valid_tickers), chunk_size):
+                 chunk = valid_tickers[i:i + chunk_size]
                  try:
-                     # Handle single ticker case vs multiple (yfinance structure varies)
-                     if len(valid_tickers) == 1:
-                         df = data
-                     else:
-                         if ticker not in data.columns.levels[0]: continue
-                         df = data[ticker]
+                     # threads=False to avoid SQLite 'database is locked' errors in production
+                     data = yf.download(chunk, period="1d", group_by='ticker', threads=False, progress=False)
                      
-                     if df.empty: continue
-                     
-                     # Get latest candle
-                     last_row = df.iloc[-1]
-                     
-                     # Extract values
-                     current_price = float(last_row['Close'])
-                     open_price = float(last_row['Open'])
-                     
-                     # Simple logic: If we have yesterday's close, better. 
-                     # But for now, Intraday Change = Current - Open
-                     change = current_price - open_price
-                     change_percent = (change / open_price) * 100 if open_price != 0 else 0.0
-                     
-                     db.companies.update_one(
-                         {"ticker": ticker},
-                         {"$set": {
-                             "price": current_price,
-                             "change": round(change, 2),
-                             "change_percent": round(change_percent, 2),
-                             "volume": int(last_row['Volume']),
-                             "last_updated": datetime.utcnow()
-                         }}
-                     )
-                     updated_count += 1
-                 except Exception as inner_e:
+                     if data.empty: continue
+
+                     for ticker in chunk:
+                         try:
+                             # Handle single ticker result vs multiple
+                             if len(chunk) == 1:
+                                 df = data
+                             else:
+                                 # If ticker not in columns, it failed or no data
+                                 if ticker not in data.columns.levels[0]: continue
+                                 df = data[ticker]
+                             
+                             if df.empty: continue
+                             
+                             # Get latest candle
+                             last_row = df.iloc[-1]
+                             
+                             # Check for NaN values which can happen if market is closed/delisted
+                             if pd.isna(last_row['Close']): continue
+                             
+                             current_price = float(last_row['Close'])
+                             open_price = float(last_row['Open'])
+                             
+                             change = current_price - open_price
+                             change_percent = (change / open_price) * 100 if open_price != 0 else 0.0
+                             
+                             db.companies.update_one(
+                                 {"ticker": ticker},
+                                 {"$set": {
+                                     "price": current_price,
+                                     "change": round(change, 2),
+                                     "change_percent": round(change_percent, 2),
+                                     "volume": int(last_row['Volume']) if not pd.isna(last_row['Volume']) else 0,
+                                     "last_updated": datetime.utcnow()
+                                 }}
+                             )
+                             updated_count += 1
+                         except Exception:
+                             continue
+                 except Exception as chunk_e:
+                     print(f"WARN: Chunk failed: {chunk_e}")
                      continue
                      
              print(f"SUCCESS: Batch update finished. Updated {updated_count} stocks.")
