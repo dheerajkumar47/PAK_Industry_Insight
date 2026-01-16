@@ -8,6 +8,7 @@ app = FastAPI(title="PAK Industry Insight API")
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from .services.data_engine import DataEngine
+from .services.ai_service import ai_service
 
 scheduler = BackgroundScheduler()
 
@@ -15,10 +16,17 @@ scheduler = BackgroundScheduler()
 async def startup_event():
     print(f"Startup Config: GOOGLE_CLIENT_ID={settings.GOOGLE_CLIENT_ID[:10]}... (masked)")
     
-    # Schedule daily data refresh at midnight
+    # Schedule daily data refresh at midnight (Full Sync - Metadata)
     scheduler.add_job(DataEngine.update_all_tracked_companies, 'cron', hour=0)
+
+    # Schedule fast price updates every 60s (Live Data - Price/Vol)
+    scheduler.add_job(DataEngine.update_live_prices, 'interval', seconds=60)
+    
+    # Schedule AI Analyst every 5 minutes (Strategic Insights)
+    scheduler.add_job(ai_service.analyze_and_store_pulse, 'interval', seconds=300)
+    
     scheduler.start()
-    print("INFO: Daily Data Scheduler Started")
+    print("INFO: Market Data Scheduler Started (Daily + Live 1m + AI 5m)")
 
 # CORS Middleware
 app.add_middleware(

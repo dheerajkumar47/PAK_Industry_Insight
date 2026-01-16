@@ -12,7 +12,12 @@ async def get_market_pulse():
     Generates a Daily Market Summary using AI.
     It fetches the latest news and live market data, then asks Gemeni to summarize it.
     """
-    # 1. Gather Context
+    # 1. Try Cached Insight (Proactive AI)
+    cached = db.ai_insights.find_one({"_id": "latest_pulse"})
+    if cached and cached.get("summary"):
+        return {"summary": cached["summary"]}
+
+    # 2. Fallback: Generate Fresh (Reactive)
     try:
         # Get live market snapshot
         market_data = await data_engine.fetch_live_market_data()
@@ -21,7 +26,7 @@ async def get_market_pulse():
         news_cursor = db.news.find().sort("published_date", -1).limit(6)
         news_headlines = [n.get("title", "") for n in news_cursor]
         
-        # 2. Call AI Service
+        # Call AI Service
         summary = await ai_service.generate_market_pulse(market_data, news_headlines)
         
         return {"summary": summary}

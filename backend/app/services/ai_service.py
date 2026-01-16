@@ -1,6 +1,8 @@
 import os
 import google.generativeai as genai
 from ..config import settings
+from ..database import db
+from datetime import datetime
 
 class AiService:
     """
@@ -134,5 +136,64 @@ class AiService:
                 "opportunities": [],
                 "threats": []
             }
+
+    def analyze_and_store_pulse(self):
+        """
+        Scheduled Job: Analyzes market data and updates the 'latest_pulse' document in DB.
+        Sync method for Scheduler.
+        """
+        try:
+             print("INFO: Starting AI Market Pulse Analysis...")
+             # Gather Data (Re-implementing logic directly to ensure synchronous execution)
+             
+             # 1. Top Gainers
+             stocks_cursor = db.companies.find({"price": {"$ne": None}, "change_percent": {"$ne": None}}).sort("change_percent", -1).limit(5)
+             top_gainers = [f"{s.get('ticker')} ({s.get('change_percent', 0):.1f}%)" for s in stocks_cursor]
+             
+             # 2. Sector Perf
+             pipeline = [{"$group": {"_id": "$industry", "avg": {"$avg": "$change_percent"}}}]
+             sectors_cursor = db.companies.aggregate(pipeline)
+             sector_map = {s["_id"]: round(s["avg"] or 0, 2) for s in sectors_cursor if s["_id"]}
+             
+             # 3. News
+             news_cursor = db.news.find().sort("published_date", -1).limit(3)
+             headlines = [n.get("title", "") for n in news_cursor]
+             
+             # 4. Generate AI Insight
+             if not self.model:
+                 print("WARN: AI Model missing, skipping pulse generation.")
+                 return
+
+             prompt = f"""
+             You are a high-frequency trading analyst. Analyze this LIVE market data:
+             
+             **Top Movers:** {', '.join(top_gainers)}
+             **Sector Heatmap:** {str(sector_map)}
+             **Breaking News:** {headlines}
+             
+             **Task:** Write a live, urgency-driven commentary (max 3 sentences) for a trader's dashboard. 
+             Highlight where the momentum is RIGHT NOW. Use financial terminology (bullish, breakout, volume, rally).
+             Do not use 'Here is the summary'. Just speak the insight.
+             """
+             
+             response = self.model.generate_content(prompt)
+             summary = response.text.clean_text = response.text.replace('*', '').strip() 
+             # (Simple cleanup if needed, but 'response.text' is string)
+             summary = response.text.strip()
+
+             # 5. Store in DB
+             db.ai_insights.update_one(
+                 {"_id": "latest_pulse"},
+                 {"$set": {
+                     "summary": summary, 
+                     "timestamp": datetime.utcnow(),
+                     "type": "market_pulse"
+                 }},
+                 upsert=True
+             )
+             print(f"SUCCESS: AI Pulse Analyzed: {summary[:50]}...")
+             
+        except Exception as e:
+             print(f"ERROR: AI Pulse Analysis failed: {e}")
 
 ai_service = AiService()
