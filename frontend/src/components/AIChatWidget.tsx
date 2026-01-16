@@ -73,7 +73,7 @@ export function AIChatWidget() {
                     
                     // Try to get detailed live data using ID
                      try {
-                         // Use ID for lookup, as Symbol lookup is not supported by backend getById
+                         // Use ID for lookup
                          const detail = await companyService.getById(company.id);
                          if (detail) {
                              const price = detail.current_price || detail.price || "N/A";
@@ -83,8 +83,10 @@ export function AIChatWidget() {
                              throw new Error("No detail");
                          }
                      } catch (e) {
-                         // Fallback to basic info if Detail API fails
-                         responseText = `**${company.name} (${company.symbol})**\nFound, but live data is currently unavailable.`;
+                         console.error("Live quote failed", e);
+                         // Fallback to basic info from search result
+                         const fallbackPrice = company.price || company.current_price || "Unavailable";
+                         responseText = `**${company.name} (${company.symbol})**\nPrice: ${fallbackPrice}\n(Live data temporarily unavailable, showing cached info)`;
                      }
                 } else {
                     responseText = `I searched for "${cleanTicker}" but couldn't find a matching stock. Try full name or ticker (e.g. SYSTEMS).`;

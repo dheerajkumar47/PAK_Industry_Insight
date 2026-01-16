@@ -3,7 +3,7 @@ import { Navbar } from './Navbar';
 import { Sidebar } from './Sidebar';
 import { Card } from './Card';
 import { Filter, TrendingUp, TrendingDown, Grid, List, Building2, MapPin, ArrowLeft, Server, Layers, Leaf, Zap, DollarSign, ArrowUpRight, ArrowRight, Search } from 'lucide-react';
-import { companyService, industryService } from '../services/api';
+import { companyService, industryService, marketService } from '../services/api';
 import {
   Popover,
   PopoverContent,
@@ -25,6 +25,21 @@ export function IndustryExplorer({ onNavigate, onViewCompany, onLogout, initialV
   const [companies, setCompanies] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = React.useState(false);
+  const [sectorPerformance, setSectorPerformance] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+     const fetchMarketData = async () => {
+         try {
+             const data = await marketService.getLiveData();
+             if (data?.sector_performance) {
+                 setSectorPerformance(data.sector_performance);
+             }
+         } catch (e) {
+             console.error("Failed to load sector performance", e);
+         }
+     };
+     fetchMarketData();
+  }, []);
 
   // Hardcoded sectors for the "Sector View"
   // Updated to match expanded PSX sectors from database (79 companies, 18 sectors)
@@ -181,6 +196,10 @@ export function IndustryExplorer({ onNavigate, onViewCompany, onLogout, initialV
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 {sectors.map((sector) => {
                   const Icon = sector.icon;
+                  const liveVal = sectorPerformance[sector.name] || parseFloat(sector.growth) || 0; 
+                  const growthStr = `${liveVal > 0 ? '+' : ''}${liveVal.toFixed(2)}%`;
+                  const isPositive = liveVal >= 0;
+
                   return (
                     <Card
                       key={sector.id}
@@ -192,9 +211,9 @@ export function IndustryExplorer({ onNavigate, onViewCompany, onLogout, initialV
                           <div className="w-10 h-10 bg-[#10B981]/10 rounded-lg flex items-center justify-center group-hover:bg-[#10B981] transition-colors duration-300">
                             <Icon className="w-5 h-5 text-[#10B981] group-hover:text-white transition-colors duration-300" />
                           </div>
-                          <div className={`flex items-center gap-0.5 text-xs font-semibold ${sector.growth.startsWith('+') ? 'text-[#10B981]' : 'text-red-500'} bg-[#10B981]/5 px-1.5 py-0.5 rounded`}>
-                            {sector.growth}
-                            {sector.growth.startsWith('+') ? <ArrowUpRight className="w-3 h-3" /> : <ArrowRight className="w-3 h-3 rotate-45" />}
+                          <div className={`flex items-center gap-0.5 text-xs font-semibold ${isPositive ? 'text-[#10B981]' : 'text-red-500'} bg-[#10B981]/5 px-1.5 py-0.5 rounded`}>
+                            {growthStr}
+                            {isPositive ? <ArrowUpRight className="w-3 h-3" /> : <ArrowRight className="w-3 h-3 rotate-45" />}
                           </div>
                         </div>
                         <h3 className="text-sm font-bold text-[#0F172A] dark:text-white mb-1 leading-tight group-hover:text-[#10B981] transition-colors">{sector.name}</h3>
