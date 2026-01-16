@@ -1,9 +1,9 @@
 import os
 import google.generativeai as genai
+from google.api_core import exceptions
 from ..config import settings
 from ..database import db
 from datetime import datetime
-from google.api_core import exceptions
 
 class AiService:
     """
@@ -193,16 +193,12 @@ class AiService:
                  )
                  print(f"SUCCESS: AI Pulse Analyzed: {summary[:50]}...")
 
-             except exceptions.ResourceExhausted:
-                 print("WARN: AI Quota Exceeded. Keeping previous market pulse.")
-                 # Optional: Insert a fallback if DB is empty
-                 if db.ai_insights.count_documents({"_id": "latest_pulse"}) == 0:
-                      db.ai_insights.insert_one({
-                          "_id": "latest_pulse",
-                          "summary": "High market activity detected. Detailed AI analysis will resume shortly.",
-                          "timestamp": datetime.utcnow(),
-                          "type": "market_pulse"
-                      })
+             except Exception as e:
+                  if "429" in str(e) or "Quota exceeded" in str(e) or "ResourceExhausted" in str(e):
+                      print("WARN: AI Quota Exceeded (429). Keeping previous market pulse.")
+                      # Fallback logic if needed
+                  else:
+                      print(f"ERROR: AI Pulse Analysis failed: {e}")
                       
         except Exception as e:
              print(f"ERROR: AI Pulse Analysis failed: {e}")
