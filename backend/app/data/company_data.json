@@ -1,6 +1,6 @@
 {
   "Banking & Financial Services": {
-    "HBL.KA": { "name": "Habib Bank Limited", "ceo": "Muhammad Aurangzeb", "net_profit": 35000000000, "founded_year": 1941, "website": "www.hbl.com", "employees_count": 14000, "revenue": 200000000000 },
+    "HBL.KA": { "name": "Habib Bank Limited", "ceo": "Muhammad Aurangzeb", "net_profit": 35000000000, "founded_year": 1941, "website": "www.hbl.com", "employees_count": 14000, "revenue": 200000000000, "market_cap": 160000000000 },
     "MCB.KA": { "name": "MCB Bank Limited", "ceo": "Shoaib Mumtaz", "net_profit": 30000000000, "founded_year": 1947, "website": "www.mcb.com.pk", "employees_count": 12000, "revenue": 150000000000 },
     "UBL.KA": { "name": "United Bank Limited", "ceo": "Shazad G. Dada", "net_profit": 28000000000, "founded_year": 1959, "website": "www.ubldigital.com", "employees_count": 10000, "revenue": 130000000000 },
     "MEBL.KA": { "name": "Meezan Bank Limited", "ceo": "Irfan Siddiqui", "net_profit": 45000000000, "founded_year": 1997, "website": "www.meezanbank.com", "employees_count": 10000, "revenue": 190000000000 },
