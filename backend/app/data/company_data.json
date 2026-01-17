@@ -144,5 +144,10 @@
   "Telecom": {
      "PTC.KA": { "name": "Pakistan Telecommunication", "ceo": "Hatem Bamatraf", "net_profit": 2000000000, "founded_year": 1947, "website": "www.ptcl.com.pk", "revenue": 140000000000, "employees_count": 15000 },
      "TELE.KA": { "name": "Telecard Limited", "ceo": "Syed Aamir Hussain", "net_profit": 150000000, "founded_year": 1992, "website": "www.telecard.com.pk", "revenue": 2000000000, "employees_count": 350 }
+  },
+  "Technology": {
+    "SYS.KA": { "name": "Systems Limited", "ceo": "Asif Peer", "net_profit": 8500000000, "founded_year": 1977, "website": "www.systemsltd.com", "revenue": 35000000000, "employees_count": 6000, "market_cap": 120000000000 },
+    "TRG.KA": { "name": "TRG Pakistan", "ceo": "Hasnain Aslam", "net_profit": -1000000000, "founded_year": 2002, "website": "www.trg.com.pk", "revenue": 5000000000, "employees_count": 12000, "market_cap": 25000000000 },
+    "NETSOL.KA": { "name": "NetSol Technologies", "ceo": "Salim Ghauri", "net_profit": 800000000, "founded_year": 1996, "website": "www.netsolpk.com", "revenue": 7000000000, "employees_count": 2500, "market_cap": 9000000000 }
   }
 }

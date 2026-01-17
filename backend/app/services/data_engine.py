@@ -65,7 +65,7 @@ class DataEngine:
                 "ceo": static_data.get("ceo"), 
                 # Try to get Live Net Profit, fallback to Static
                 "net_profit": info.get("netIncomeToCommon") or info.get("netIncome") or static_data.get("net_profit"), 
-                "market_cap": info.get("marketCap"), # Keep live
+                "market_cap": info.get("marketCap") or static_data.get("market_cap"), # Live fallback to Static
                 "price": info.get("currentPrice") or info.get("regularMarketPrice"),
                 "change": info.get("regularMarketChange"),
                 "change_percent": info.get("regularMarketChangePercent"),

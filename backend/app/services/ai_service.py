@@ -41,8 +41,8 @@ class AiService:
             except Exception as e:
                 print(f"DEBUG: Could not list models: {e}")
 
-            # switch to 'gemini-1.5-flash' for better free tier limits (15 RPM, 1500 RPD)
-            self.model = genai.GenerativeModel('gemini-1.5-flash')
+            # switch back to 'gemini-flash-latest' as 'gemini-1.5-flash' caused 404s with current lib
+            self.model = genai.GenerativeModel('gemini-flash-latest')
 
     async def generate_market_pulse(self, market_data: dict, news_headlines: list[str]) -> str:
         """
