@@ -36,6 +36,10 @@ def list_companies(industry: str = None, location: str = None, growth: str = Non
     for company in companies:
         company["id"] = str(company["_id"])
         del company["_id"]
+        # Convert BSON Int64 to int for serialization
+        for field in ["market_cap", "revenue", "net_profit"]:
+             if company.get(field) is not None:
+                 company[field] = int(company[field])
     return companies
 
 @router.get("/search")
@@ -50,6 +54,10 @@ def search_companies(q: str):
     for company in companies:
         company["id"] = str(company["_id"])
         del company["_id"]
+        # Convert BSON Int64 to int for serialization
+        for field in ["market_cap", "revenue", "net_profit"]:
+             if company.get(field) is not None:
+                 company[field] = int(company[field])
     return companies
 
 @router.get("/{company_id}")
@@ -63,4 +71,8 @@ def get_company(company_id: str):
     
     company["id"] = str(company["_id"])
     del company["_id"]
+    # Convert BSON Int64 to int for serialization
+    for field in ["market_cap", "revenue", "net_profit"]:
+         if company.get(field) is not None:
+             company[field] = int(company[field])
     return company
