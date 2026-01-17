@@ -19,8 +19,9 @@ async def startup_event():
     # Schedule daily data refresh at midnight (Full Sync - Metadata)
     scheduler.add_job(DataEngine.update_all_tracked_companies, 'cron', hour=0)
 
-    # Schedule fast price updates every 60s (Live Data - Price/Vol)
-    scheduler.add_job(DataEngine.update_live_prices, 'interval', seconds=60)
+    # Schedule fast price updates every 120s (Live Data - Price/Vol)
+    # Increased to 2m to allow for rate-limit sleep times (2.5s * 11 chunks = ~30s execution time)
+    scheduler.add_job(DataEngine.update_live_prices, 'interval', seconds=120)
     
     # Schedule AI Analyst every 15 minutes to respect Free Tier Limits
     scheduler.add_job(ai_service.analyze_and_store_pulse, 'interval', seconds=900)
