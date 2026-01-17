@@ -99,10 +99,10 @@ class DataEngine:
                     "founded_year": static_data.get("founded_year"),
                     "location": "Pakistan",
                     "employees_count": static_data.get("employees_count"),
-                    "revenue": 0,
+                    "revenue": static_data.get("revenue"),
                     "ceo": static_data.get("ceo"),
                     "net_profit": static_data.get("net_profit"),
-                    "market_cap": 0,
+                    "market_cap": static_data.get("market_cap"),
                     "last_updated": datetime.utcnow()
                 }
             return None
