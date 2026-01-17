@@ -41,9 +41,8 @@ class AiService:
             except Exception as e:
                 print(f"DEBUG: Could not list models: {e}")
 
-            # We use 'gemini-flash-latest' for speed and cost-efficiency.
-            # If this model is deprecated, switch to 'gemini-1.5-flash' or 'gemini-pro'.
-            self.model = genai.GenerativeModel('gemini-flash-latest')
+            # switch to 'gemini-1.5-flash' for better free tier limits (15 RPM, 1500 RPD)
+            self.model = genai.GenerativeModel('gemini-1.5-flash')
 
     async def generate_market_pulse(self, market_data: dict, news_headlines: list[str]) -> str:
         """

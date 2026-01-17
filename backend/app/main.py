@@ -22,8 +22,8 @@ async def startup_event():
     # Schedule fast price updates every 60s (Live Data - Price/Vol)
     scheduler.add_job(DataEngine.update_live_prices, 'interval', seconds=60)
     
-    # Schedule AI Analyst every 5 minutes (Strategic Insights)
-    scheduler.add_job(ai_service.analyze_and_store_pulse, 'interval', seconds=300)
+    # Schedule AI Analyst every 15 minutes to respect Free Tier Limits
+    scheduler.add_job(ai_service.analyze_and_store_pulse, 'interval', seconds=900)
     
     scheduler.start()
     print("INFO: Market Data Scheduler Started (Daily + Live 1m + AI 5m)")
