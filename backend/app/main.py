@@ -21,13 +21,14 @@ async def startup_event():
 
     # Schedule fast price updates every 120s (Live Data - Price/Vol)
     # Increased to 2m to allow for rate-limit sleep times (2.5s * 11 chunks = ~30s execution time)
-    scheduler.add_job(DataEngine.update_live_prices, 'interval', seconds=120)
+    # Schedule fast price updates every 300s (5 min) to prevent Yahoo Rate Limits/Bans
+    scheduler.add_job(DataEngine.update_live_prices, 'interval', seconds=300)
     
     # Schedule AI Analyst every 15 minutes to respect Free Tier Limits
     scheduler.add_job(ai_service.analyze_and_store_pulse, 'interval', seconds=900)
     
     scheduler.start()
-    print("INFO: Market Data Scheduler Started (Daily + Live 1m + AI 5m)")
+    print("INFO: Market Data Scheduler Started (Daily + Live 5m + AI 15m)")
 
 # CORS Middleware
 app.add_middleware(

@@ -205,7 +205,7 @@ class DataEngine:
                  try:
                      # threads=False to avoid SQLite 'database is locked' errors in production
                      # Small sleep to be gentle on Yahoo API from shared IP
-                     time.sleep(2.5)
+                     time.sleep(4.5)
                      data = yf.download(chunk, period="1d", group_by='ticker', threads=False, progress=False)
                      
                      if data.empty: continue
