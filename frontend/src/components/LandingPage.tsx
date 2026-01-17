@@ -19,9 +19,7 @@ export function LandingPage({ onGetStarted, onLoginClick, onNavigate }: LandingP
     <div className="min-h-screen bg-neutral-950 relative overflow-hidden flex flex-col font-sans">
       <div className="absolute top-0 left-0 right-0 z-50 px-6 py-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-emerald-500/20 backdrop-blur-md rounded-lg flex items-center justify-center border border-emerald-500/30">
-                <Sparkles className="w-6 h-6 text-emerald-400" />
-            </div>
+            <img src="/logo_icon.png" alt="PAK Industry Insight" className="w-10 h-10 object-contain" />
             <span className="text-white font-bold text-xl tracking-tight">PAK Industry Insight</span>
           </div>
           <button 
